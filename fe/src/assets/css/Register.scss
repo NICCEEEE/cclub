@@ -1,0 +1,18 @@
+@charset "UTF-8";
+
+.registerPage {
+  .registerBox {
+    text-align: right;
+    input {
+      width: 300px;
+      margin: 15px;
+      margin-bottom: 5px;
+    }
+    button {
+      margin: 10px 0px;
+    }
+    .ant-alert {
+      text-align: center;
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAGE,0BAAa;EACX,UAAU,EAAE,KAAK;EACjB,gCAAM;IACJ,KAAK,EAAE,KAAK;IACZ,MAAM,EAAE,IAAI;IACZ,aAAa,EAAE,GAAG;EAEpB,iCAAO;IACL,MAAM,EAAE,QAAQ;EAElB,qCAAW;IACT,UAAU,EAAE,MAAM",
+"sources": ["Register.scss"],
+"names": [],
+"file": "Register.css"
+}

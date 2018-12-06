@@ -1,0 +1,25 @@
+@charset "UTF-8";
+
+header {
+  display: flex;
+  justify-content: space-between;
+  height: 60px;
+  align-items: center;
+  border-bottom: 1px solid white;
+  box-shadow: 0px 2px 3px rgb(213, 213, 213);
+  img {
+    width: 160px;
+    height: 40px;
+    margin-left: 20px;
+  }
+  .ant-input-search {
+    width: 300px;
+  }
+
+  button {
+    margin-left: 5px;
+  }
+  .buttonGroup {
+    width: 450px;
+  }
+}

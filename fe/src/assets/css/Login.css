@@ -1,0 +1,9 @@
+.loginPage .loginBox {
+  text-align: center; }
+  .loginPage .loginBox input {
+    width: 300px;
+    margin: 15px; }
+  .loginPage .loginBox button {
+    margin: 10px 0px; }
+
+/*# sourceMappingURL=Login.css.map */

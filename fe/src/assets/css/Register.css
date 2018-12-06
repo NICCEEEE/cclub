@@ -1,0 +1,12 @@
+.registerPage .registerBox {
+  text-align: right; }
+  .registerPage .registerBox input {
+    width: 300px;
+    margin: 15px;
+    margin-bottom: 5px; }
+  .registerPage .registerBox button {
+    margin: 10px 0px; }
+  .registerPage .registerBox .ant-alert {
+    text-align: center; }
+
+/*# sourceMappingURL=Register.css.map */

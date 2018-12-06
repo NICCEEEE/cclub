@@ -1,19 +1,22 @@
+@charset "UTF-8";
+
 .App {
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
-  justify-content: space-between; }
-  .App .content {
+  justify-content: space-between;
+  .content {
     width: 80%;
     margin-top: 15px;
     margin-left: 10%;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center; }
-    .App .content .ant-breadcrumb {
+    justify-content: center;
+    .ant-breadcrumb {
       flex-basis: 100%;
       font-size: 20px;
       height: 30px;
-      line-height: 30px; }
-
-/*# sourceMappingURL=App.css.map */
+      line-height: 30px;
+    }
+  }
+}
