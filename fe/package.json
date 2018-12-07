@@ -14,10 +14,13 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
+    "prebuild":"rm -rf ../be/templates/index.html && rm -rf ../be/static/build",
     "build": "react-app-rewired build",
+    "postbuild": "mv build/index.html ../be/templates/ &&  mv build ../be/static/",
     "test": "react-app-rewired test",
     "eject": "react-scripts eject"
   },
+  "homepage": "../static/build",
   "eslintConfig": {
     "extends": "react-app"
   },

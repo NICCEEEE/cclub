@@ -63,7 +63,6 @@ class Register extends React.Component {
     }
     change = (target) => {
         let name = target.name
-        console.log('$$$$$', name)
         let value = target.value
         let pattern
         switch (name) {
@@ -124,7 +123,7 @@ class Register extends React.Component {
                     <Breadcrumb.Item><Link to={'/'}>Home</Link></Breadcrumb.Item>
                     <Breadcrumb.Item>注册</Breadcrumb.Item>
                 </Breadcrumb>
-                <form className={'registerBox'}>
+                <form className={'registerBox'} action={'/register'} method={'post'}>
                     <label><Icon type="user" style={{fontSize: '20px'}}/> <span style={{fontSize: '20px'}}>用户名:</span>
                         <Input required={true} size={'large'}
                                name={'new_username'}
