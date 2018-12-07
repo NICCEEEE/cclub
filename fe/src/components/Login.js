@@ -1,8 +1,22 @@
 import React from 'react'
-import {Breadcrumb, Icon, Input, Button, Alert} from 'antd';
+import {Breadcrumb, Icon, Input, Button, message} from 'antd';
 import {Link} from 'react-router-dom'
 import '../assets/css/Login.css'
 
+const success = () => {
+    message.config({
+        top: '6%',
+        duration: 3,
+    })
+    message.success('成功登录！正在跳转。');
+};
+const error = () => {
+    message.config({
+        top: '6%',
+        duration: 3,
+    })
+    message.error('登录失败，请检查您的用户名或密码后重新尝试！');
+};
 class Login extends React.Component {
     constructor(props) {
         super(props)
@@ -11,35 +25,17 @@ class Login extends React.Component {
         }
     }
 
-    onClose = (e) => {
-        this.setState({
-            warn: false
-        })
-    }
     loginCheck = () => {
         let username = document.querySelector("input[name='username']")
         let password = document.querySelector("input[name='password']")
         if (username.value.length === 0 || password.value.length === 0) {
-            this.setState({
-                warn: true
-            })
+            error()
+        } else {
+            success()
         }
-
     }
 
     render() {
-        let warn = null
-        if (this.state.warn === true) {
-            warn = (
-                <Alert
-                    message="登录失败"
-                    description="用户名或密码错误！"
-                    type="error"
-                    closable
-                    onClose={this.onClose}
-                />
-            )
-        }
         return (
             <div className={'content loginPage'}>
                 <Breadcrumb>
@@ -47,7 +43,6 @@ class Login extends React.Component {
                     <Breadcrumb.Item>登录</Breadcrumb.Item>
                 </Breadcrumb>
                 <form className={'loginBox'}>
-                    {warn}
                     <label><Icon type="user" style={{fontSize: '23px'}}/> <Input required={true} size={'large'}
                                                                                  name={'username'}
                                                                                  placeholder="请输入用户名"/></label><br/>
