@@ -8,6 +8,17 @@
       margin: 15px;
       margin-bottom: 5px;
     }
+    input[name=problem] {
+      width: 135px;
+      height: 40px;
+      text-align: center;
+      font-weight: bolder;
+      margin-right: 5px;
+    }
+    input[name=answer] {
+      width: 65px;
+      text-align: center;
+    }
     button {
       margin: 10px 0px;
     }

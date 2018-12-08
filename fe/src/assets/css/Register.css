@@ -4,6 +4,15 @@
     width: 300px;
     margin: 15px;
     margin-bottom: 5px; }
+  .registerPage .registerBox input[name=problem] {
+    width: 135px;
+    height: 40px;
+    text-align: center;
+    font-weight: bolder;
+    margin-right: 5px; }
+  .registerPage .registerBox input[name=answer] {
+    width: 65px;
+    text-align: center; }
   .registerPage .registerBox button {
     margin: 10px 0px; }
   .registerPage .registerBox .ant-alert {

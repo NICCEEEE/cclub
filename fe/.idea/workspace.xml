@@ -17,8 +17,8 @@
       <file leaf-file-name="App.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/App.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="411">
-              <caret line="19" column="26" lean-forward="true" selection-start-line="19" selection-start-column="26" selection-end-line="19" selection-end-column="26" />
+            <state relative-caret-position="413">
+              <caret line="18" column="8" selection-start-line="18" selection-start-column="8" selection-end-line="18" selection-end-column="8" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -29,32 +29,41 @@
       <file leaf-file-name="Register.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/Register.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="511">
-              <caret line="90" column="17" lean-forward="true" selection-start-line="90" selection-start-column="17" selection-end-line="90" selection-end-column="17" />
+            <state relative-caret-position="408">
+              <caret line="273" column="55" lean-forward="true" selection-start-line="273" selection-start-column="55" selection-end-line="273" selection-end-column="55" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
+                <element signature="e#212#318#0" />
+                <element signature="e#314#419#0" />
+                <element signature="e#982#3791#0" />
+                <element signature="e#1547#1715#0" />
+                <element signature="e#3672#7175#0" />
+                <element signature="e#8222#8238#0" />
+                <element signature="n#style#0;n#Icon#0;n#label#0;n#form#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#label#0;n#form#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#Input#0;n#label#0;n#form#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#Icon#0;n#label#1;n#form#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#label#1;n#form#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#Input#0;n#label#1;n#form#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#Icon#0;n#label#2;n#form#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#label#2;n#form#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#Input#0;n#label#2;n#form#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#Icon#0;n#label#3;n#form#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#label#3;n#form#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#Input#0;n#label#3;n#form#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#Icon#0;n#label#4;n#form#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#label#4;n#form#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#1;n#label#4;n#form#0;n#!!top" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="routeConf.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/routeConf.js">
+      <file leaf-file-name="Register.scss" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/assets/css/Register.scss">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="81">
-              <caret line="3" selection-start-line="3" selection-end-line="3" />
-              <folding>
-                <element signature="e#0#36#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="App.scss" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/App.scss">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="17" selection-start-column="17" selection-end-column="17" />
+            <state relative-caret-position="359">
+              <caret line="15" column="23" selection-start-line="15" selection-start-column="23" selection-end-line="15" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -95,10 +104,10 @@
         <option value="$PROJECT_DIR$/src/App.js" />
         <option value="$PROJECT_DIR$/src/App.scss" />
         <option value="$PROJECT_DIR$/src/assets/css/Login.scss" />
-        <option value="$PROJECT_DIR$/src/assets/css/Register.scss" />
         <option value="$PROJECT_DIR$/src/components/Login.js" />
-        <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/public/index.html" />
+        <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/src/assets/css/Register.scss" />
         <option value="$PROJECT_DIR$/src/components/Register.js" />
       </list>
     </option>
@@ -156,6 +165,27 @@
               <item name="fe" type="b2602c69:ProjectViewProjectNode" />
               <item name="fe" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="assets" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="fe" type="b2602c69:ProjectViewProjectNode" />
+              <item name="fe" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="assets" type="462c0819:PsiDirectoryNode" />
+              <item name="css" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="fe" type="b2602c69:ProjectViewProjectNode" />
+              <item name="fe" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="assets" type="462c0819:PsiDirectoryNode" />
+              <item name="css" type="462c0819:PsiDirectoryNode" />
+              <item name="Register.scss" type="620a8d5e:NestingTreeNode" />
+            </path>
+            <path>
+              <item name="fe" type="b2602c69:ProjectViewProjectNode" />
+              <item name="fe" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="components" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -205,12 +235,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1544081115125</updated>
-      <workItem from="1544081116727" duration="33206000" />
+      <workItem from="1544081116727" duration="53420000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="33206000" />
+    <option name="totallyTimeSpent" value="53420000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1200" extended-state="0" />
@@ -348,13 +378,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/assets/css/Register.scss">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="4" column="22" lean-forward="true" selection-start-line="4" selection-start-column="22" selection-end-line="4" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/assets/css/Login.scss">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="189">
@@ -386,20 +409,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/routeConf.js">
+    <entry file="file://$PROJECT_DIR$/src/assets/css/Register.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="81">
-          <caret line="3" selection-start-line="3" selection-end-line="3" />
-          <folding>
-            <element signature="e#0#36#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="27" column="12" lean-forward="true" selection-start-line="27" selection-start-column="12" selection-end-line="27" selection-end-column="12" />
+        <state relative-caret-position="189">
+          <caret line="7" column="19" lean-forward="true" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
         </state>
       </provider>
     </entry>
@@ -410,22 +423,67 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/routeConf.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="5" column="5" lean-forward="true" selection-start-line="5" selection-start-column="5" selection-end-line="5" selection-end-column="5" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="444">
+          <caret line="23" column="32" selection-start-line="23" selection-start-column="32" selection-end-line="23" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/App.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="411">
-          <caret line="19" column="26" lean-forward="true" selection-start-line="19" selection-start-column="26" selection-end-line="19" selection-end-column="26" />
+        <state relative-caret-position="413">
+          <caret line="18" column="8" selection-start-line="18" selection-start-column="8" selection-end-line="18" selection-end-column="8" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/css/Register.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="359">
+          <caret line="15" column="23" selection-start-line="15" selection-start-column="23" selection-end-line="15" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Register.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="511">
-          <caret line="90" column="17" lean-forward="true" selection-start-line="90" selection-start-column="17" selection-end-line="90" selection-end-column="17" />
+        <state relative-caret-position="408">
+          <caret line="273" column="55" lean-forward="true" selection-start-line="273" selection-start-column="55" selection-end-line="273" selection-end-column="55" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
+            <element signature="e#212#318#0" />
+            <element signature="e#314#419#0" />
+            <element signature="e#982#3791#0" />
+            <element signature="e#1547#1715#0" />
+            <element signature="e#3672#7175#0" />
+            <element signature="e#8222#8238#0" />
+            <element signature="n#style#0;n#Icon#0;n#label#0;n#form#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#label#0;n#form#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#Input#0;n#label#0;n#form#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#Icon#0;n#label#1;n#form#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#label#1;n#form#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#Input#0;n#label#1;n#form#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#Icon#0;n#label#2;n#form#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#label#2;n#form#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#Input#0;n#label#2;n#form#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#Icon#0;n#label#3;n#form#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#label#3;n#form#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#Input#0;n#label#3;n#form#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#Icon#0;n#label#4;n#form#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#label#4;n#form#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#1;n#label#4;n#form#0;n#!!top" expanded="true" />
           </folding>
         </state>
       </provider>

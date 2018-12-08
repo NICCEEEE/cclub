@@ -1,10 +1,16 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
+from datetime import timedelta
 from flask import Flask
 from routes.club import main as club_routes
+from routes.api import main as api_routes
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.register_blueprint(club_routes)
+app.register_blueprint(api_routes, url_prefix='/api')
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
+
 
 # 运行代码
 if __name__ == '__main__':
@@ -15,4 +21,5 @@ if __name__ == '__main__':
         host='0.0.0.0',
         port=2000,
     )
+    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = timedelta(seconds=1)
     app.run(**config)

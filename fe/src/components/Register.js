@@ -1,8 +1,12 @@
 import React from 'react'
-import {Breadcrumb, Icon, Input, Button, message} from 'antd';
+import {Breadcrumb, Icon, Input, Button, message, Tooltip} from 'antd';
 import {Link} from 'react-router-dom'
 import '../assets/css/Register.css'
+import axios from 'axios'
+import qs from 'qs'
+import {Motion, spring} from 'react-motion';
 
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 const success = () => {
     message.config({
         top: '6%',
@@ -10,13 +14,14 @@ const success = () => {
     })
     message.success('注册成功！准备跳转。');
 };
-const error = () => {
+const error = (words) => {
     message.config({
         top: '6%',
         duration: 3,
     })
-    message.error('注册失败，请重新尝试！');
+    words ? message.error(words) : message.error('注册失败，请重新尝试！')
 };
+
 class Register extends React.Component {
     constructor(props) {
         super(props)
@@ -25,34 +30,73 @@ class Register extends React.Component {
             pwdState: null,
             confirmState: null,
             emailState: null,
-            style: {
-                error: {
-                    background: 'rgb(255, 238, 240)'
-                },
-                success: {
-                    background: 'rgb(230, 255, 237)'
-                }
-            }
+            answerState: null,
+            problem: {
+                problem: '',
+                cid: -1,
+            },
+            degree: 0,
         }
     }
 
-    registerCheck = () => {
+    registerCheck = (e) => {
+        e.preventDefault()
         let user = document.querySelector("input[name='new_username']")
         let pwd = document.querySelector("input[name='new_password']")
         let confirm_pwd = document.querySelector("input[name='confirm_pwd']")
         let email = document.querySelector("input[name='new_email']")
-        if (user.value.length < 6) {
-            this.setState({
-                warn: true
-            })
+        let codeword = document.querySelector("input[name='answer']")
+        const validUser = /^[A-Za-z0-9]{6,12}$/
+        const validPwd = /^[A-Za-z0-9]{6,15}$/
+        const validEmail = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/
+        const validAnswer = /^[-]?[0-9]+$/
+        const warn = () => {
+            error()
             user.value = ''
             pwd.value = ''
             confirm_pwd.value = ''
             email.value = ''
-            error()
-        } else {
-            success()
+            codeword.value = ''
+            this.setState({
+                userState: {background: 'rgb(255, 238, 240)'},
+                pwdState: {background: 'rgb(255, 238, 240)'},
+                confirmState: {background: 'rgb(255, 238, 240)'},
+                emailState: {background: 'rgb(255, 238, 240)'},
+                answerState: {background: 'rgb(255, 238, 240)'},
+            })
+            this.getCodeword()
         }
+        if (validUser.test(user.value)) {
+            if (validPwd.test(pwd.value)) {
+                if (confirm_pwd.value === pwd.value) {
+                    if (validEmail.test(email.value)) {
+                        if (validAnswer.test(codeword.value)) {
+                            let data = {
+                                new_username: user.value,
+                                new_password: pwd.value,
+                                confirm_pwd: confirm_pwd.value,
+                                new_email: email.value,
+                                answer: codeword.value,
+                                cid: this.state.problem.cid,
+                            }
+                            axios.post('http://0.0.0.0:2000/register', qs.stringify(data))
+                                .then((response) => {
+                                    if (response.data === 'True') {
+                                        success()
+                                        this.props.history.push('/login')
+                                    } else {
+                                        warn()
+                                    }
+                                })
+                                .catch((error) => {
+                                    console.log(error);
+                                })
+                        }
+                    }
+                }
+            }
+        }
+        warn()
     }
     debounce = (fn, delay) => {
         let timer
@@ -69,9 +113,22 @@ class Register extends React.Component {
             case 'new_username':
                 pattern = /^[A-Za-z0-9]{6,12}$/
                 if (pattern.test(value)) {
-                    this.setState({
-                        userState: {background: 'rgb(230, 255, 237)'}
-                    })
+                    axios.get(`http://0.0.0.0:2000/api/username/${value}`)
+                        .then((response) => {
+                            if (response.data === 'username exist') {
+                                error('用户名不合法或已存在，请重新输入')
+                                this.setState({
+                                    userState: {background: 'rgb(255, 238, 240)'}
+                                })
+                            } else {
+                                this.setState({
+                                    userState: {background: 'rgb(230, 255, 237)'}
+                                })
+                            }
+                        })
+                        .catch((error) => {
+                            console.log(error)
+                        })
                 } else {
                     this.setState({
                         userState: {background: 'rgb(255, 238, 240)'}
@@ -102,18 +159,75 @@ class Register extends React.Component {
                     })
                 }
                 break
+            case 'answer':
+                pattern = /^[-]?[0-9]+$/
+                if (pattern.test(value)) {
+                    axios.get(`http://0.0.0.0:2000/api/codeword/solution?cid=${this.state.problem.cid}&answer=${value}`)
+                        .then((response) => {
+                            if (response.data === 'False') {
+                                this.setState({
+                                    answerState: {background: 'rgb(255, 238, 240)'}
+                                })
+                            } else {
+                                this.setState({
+                                    answerState: {background: 'rgb(230, 255, 237)'}
+                                })
+                            }
+                        })
+                        .catch((error) => {
+                            console.log(error)
+                        })
+                } else {
+                    this.setState({
+                        answerState: {background: 'rgb(255, 238, 240)'}
+                    })
+                }
+                break
             default:
                 pattern = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/
                 if (pattern.test(value)) {
-                    this.setState({
-                        emailState: {background: 'rgb(230, 255, 237)'}
-                    })
+                    axios.get(`http://0.0.0.0:2000/api/email/${value}`)
+                        .then((response) => {
+                            if (response.data === 'email exist') {
+                                error('邮箱不合法或已被注册，请重新输入')
+                                this.setState({
+                                    emailState: {background: 'rgb(255, 238, 240)'}
+                                })
+                            } else {
+                                this.setState({
+                                    emailState: {background: 'rgb(230, 255, 237)'}
+                                })
+                            }
+                        })
+                        .catch((error) => {
+                            console.log(error)
+                        })
                 } else {
                     this.setState({
                         emailState: {background: 'rgb(255, 238, 240)'}
                     })
                 }
         }
+    }
+    getCodeword = () => {
+        axios.get('http://0.0.0.0:2000/api/codeword')
+            .then((response) => {
+                let data = response.data
+                this.setState({
+                    problem: data
+                })
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+    loading = () => {
+        this.setState((state) => ({degree: state.degree === 0 ? 360 : state.degree + 360}))
+        this.getCodeword()
+    }
+
+    componentDidMount() {
+        this.getCodeword()
     }
 
     render() {
@@ -150,6 +264,25 @@ class Register extends React.Component {
                                onChange={this.debounce(this.change, 300).bind(this)}
                                style={this.state.emailState}
                                placeholder="请输入电子邮箱"/><br/><span>请输入您的电子邮箱，我们将保证绝不公开！</span></label><br/>
+                    <label><Icon type="calculator" style={{fontSize: '20px'}}/> <span
+                        style={{fontSize: '20px'}}>验证码:</span>
+                        <Input name={'problem'} disabled={true}
+                               placeholder={this.state.problem.problem.concat(" = ?")}/>
+                        <Motion defaultStyle={{degree: 0}} style={{degree: spring(this.state.degree)}}>
+                            {({degree}) => <Tooltip placement="bottom" title={'点击换一题'}><Icon onClick={this.loading}
+                                                                                             style={{
+                                                                                                 fontSize: '20px',
+                                                                                                 cursor: 'pointer',
+                                                                                                 transform: `rotate(${degree}deg`
+                                                                                             }}
+                                                                                             type="reload"/></Tooltip>}
+                        </Motion>
+                        <span style={{fontSize: '20px', marginLeft: '15px'}}>答案:</span><Input required={true}
+                                                                                              size={'large'}
+                                                                                              name={'answer'}
+                                                                                              onChange={this.debounce(this.change, 300).bind(this)}
+                                                                                              style={this.state.answerState}
+                                                                                              placeholder="答案"/></label><br/>
                     <Button onClick={this.registerCheck} block={true} htmlType={'submit'}
                             type="primary">注册</Button><br/>
                 </form>
