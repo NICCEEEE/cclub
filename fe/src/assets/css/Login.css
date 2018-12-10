@@ -1,8 +1,17 @@
 .loginPage .loginBox {
-  text-align: center; }
+  text-align: right; }
   .loginPage .loginBox input {
     width: 300px;
     margin: 15px; }
+  .loginPage .loginBox input[name=problem] {
+    width: 135px;
+    height: 40px;
+    text-align: center;
+    font-weight: bolder;
+    margin-right: 5px; }
+  .loginPage .loginBox input[name=answer] {
+    width: 65px;
+    text-align: center; }
   .loginPage .loginBox button {
     margin: 10px 0px; }
 

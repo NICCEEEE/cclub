@@ -13,8 +13,11 @@ class Footer extends React.Component {
                     <div className="color-5"></div>
                 </div>
                 <div className={'copyright'}>
-                    <span style={{marginRight: '10px'}}>Powered by <a href={'https://www.vultr.com/'}>Vultr</a>.</span>
-                    <span style={{marginLeft: '10px'}}> Copyright © 2018 Cclub For <a href={'http://cwuc.cc'}>CWUC.CC</a>. All rights reserved.</span>
+                    <span>Idea comes from <a href={'https://community.nodebb.org/'}>NodeBB</a> and <a
+                        href={'https://community.nodebb-cn.org/'}>NodeBB.CN</a>.</span>
+                    <span style={{marginRight: '10px', marginLeft: '10px'}}>Powered by <a
+                        href={'https://www.vultr.com/'}>Vultr</a>.</span>
+                    <span> Copyright © 2018 <a href={'http://cwuc.cc'}>CWUC.CC</a>. All rights reserved.</span>
                 </div>
             </footer>
         )

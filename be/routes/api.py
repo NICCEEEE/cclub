@@ -58,3 +58,17 @@ def check_codeword():
         if eval(problem) == int(answer):
             return 'True'
     return 'False'
+
+
+# 获得用户信息
+@main.route('/user', methods=['GET'])
+def check_login():
+    username = session.get('username', None)
+    if username is None:
+        return 'fail'
+    user = User.find_one(username=username)
+    print('获取用户', session)
+    if user.get('username') is not None:
+        return user.get('username')
+    else:
+        return 'fail'

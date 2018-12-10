@@ -111,7 +111,7 @@ class Model(object):
 
 # 生成验证码库
 codeword = {}
-for i in range(0, 100):
+for i in range(0, 300):
     n1 = randint(1, 10)
     n2 = randint(1, 10)
     n3 = randint(1, 10)
@@ -121,3 +121,4 @@ for i in range(0, 100):
     salt = '89sdfn^%^#sdmlks' + str(i)
     key = hashlib.md5(salt.encode('ascii')).hexdigest()
     codeword[key] = problem
+

@@ -7,10 +7,11 @@ from routes.api import main as api_routes
 from flask_cors import CORS
 
 app = Flask(__name__)
+app.secret_key = 'c23300e515774a38857c6dddad31766a29819fa53ae46a73ecde79e409e6706adc02f64323ce68972bdb1df' \
+                 'd2db17eeeef8e557b227a41a9216e854aed453e64'
 app.register_blueprint(club_routes)
 app.register_blueprint(api_routes, url_prefix='/api')
-cors = CORS(app, resources={r"/*": {"origins": "*"}})
-
+cors = CORS(app, origins='http://localhost:3000', supports_credentials=True)
 
 # 运行代码
 if __name__ == '__main__':

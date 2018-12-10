@@ -65,3 +65,21 @@ class User(Model):
         )
         User.insert_one(**userinfo)
         return True
+
+    @staticmethod
+    def valid_login(user):
+        username = user.get('username')
+        password = user.get('password')
+        answer = user.get('answer')
+        cid = user.get('cid')
+        userinfo = User.find_one(username=username)
+        valid_answer = '^[-]?[0-9]+$'
+        if userinfo is not None:
+            if User.hashed_password(password) == userinfo.get('password'):
+                if answer is None or re.fullmatch(valid_answer, answer) is None:
+                    return None
+                else:
+                    if eval(codeword[cid]) != int(answer):
+                        return None
+        print('登录成功\nusername: ', username)
+        return user

@@ -1,26 +1,13 @@
 import React from 'react'
-import {Breadcrumb, Icon, Input, Button, message, Tooltip} from 'antd';
+import {Breadcrumb, Icon, Input, Button, Tooltip} from 'antd';
 import {Link} from 'react-router-dom'
 import '../assets/css/Register.css'
 import axios from 'axios'
 import qs from 'qs'
 import {Motion, spring} from 'react-motion';
+import {error, success, changeTitle, debounce, getCodeword, changeCodeword} from "../utilities"
 
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-const success = () => {
-    message.config({
-        top: '6%',
-        duration: 3,
-    })
-    message.success('注册成功！准备跳转。');
-};
-const error = (words) => {
-    message.config({
-        top: '6%',
-        duration: 3,
-    })
-    words ? message.error(words) : message.error('注册失败，请重新尝试！')
-};
 
 class Register extends React.Component {
     constructor(props) {
@@ -50,8 +37,8 @@ class Register extends React.Component {
         const validPwd = /^[A-Za-z0-9]{6,15}$/
         const validEmail = /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]+[-.])+[A-Za-z\d]{2,4}$/
         const validAnswer = /^[-]?[0-9]+$/
-        const warn = () => {
-            error()
+        const warn = (words) => {
+            error(words)
             user.value = ''
             pwd.value = ''
             confirm_pwd.value = ''
@@ -64,7 +51,7 @@ class Register extends React.Component {
                 emailState: {background: 'rgb(255, 238, 240)'},
                 answerState: {background: 'rgb(255, 238, 240)'},
             })
-            this.getCodeword()
+            getCodeword.bind(this)()
         }
         if (validUser.test(user.value)) {
             if (validPwd.test(pwd.value)) {
@@ -82,27 +69,29 @@ class Register extends React.Component {
                             axios.post('http://0.0.0.0:2000/register', qs.stringify(data))
                                 .then((response) => {
                                     if (response.data === 'True') {
-                                        success()
+                                        success('注册成功！准备跳转。')
                                         this.props.history.push('/login')
                                     } else {
-                                        warn()
+                                        warn('注册失败，请重新尝试！')
                                     }
                                 })
                                 .catch((error) => {
                                     console.log(error);
                                 })
+                        } else {
+                            warn('注册失败，请重新尝试！')
                         }
+                    } else {
+                        warn('注册失败，请重新尝试！')
                     }
+                } else {
+                    warn('注册失败，请重新尝试！')
                 }
+            } else {
+                warn('注册失败，请重新尝试！')
             }
-        }
-        warn()
-    }
-    debounce = (fn, delay) => {
-        let timer
-        return function (event) {
-            clearTimeout(timer)
-            timer = setTimeout(fn.bind(this, event.target), delay)
+        } else {
+            warn('注册失败，请重新尝试！')
         }
     }
     change = (target) => {
@@ -209,25 +198,10 @@ class Register extends React.Component {
                 }
         }
     }
-    getCodeword = () => {
-        axios.get('http://0.0.0.0:2000/api/codeword')
-            .then((response) => {
-                let data = response.data
-                this.setState({
-                    problem: data
-                })
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-    }
-    loading = () => {
-        this.setState((state) => ({degree: state.degree === 0 ? 360 : state.degree + 360}))
-        this.getCodeword()
-    }
 
     componentDidMount() {
-        this.getCodeword()
+        changeTitle('注册新用户')
+        getCodeword.bind(this)()
     }
 
     render() {
@@ -243,25 +217,25 @@ class Register extends React.Component {
                                name={'new_username'}
                                placeholder="请输入用户名"
                                style={this.state.userState}
-                               onChange={this.debounce(this.change, 300).bind(this)}/><br/><span>用户名由数字或字母组成，长度6~12位。</span></label><br/>
+                               onChange={debounce(this.change, 300).bind(this)}/><br/><span>用户名由数字或字母组成，长度6~12位。</span></label><br/>
                     <label><Icon type="unlock" style={{fontSize: '20px'}}/> <span style={{fontSize: '20px'}}>密码:</span>
                         <Input required={true} size={'large'}
                                type={'password'}
                                name={'new_password'}
                                style={this.state.pwdState}
-                               onChange={this.debounce(this.change, 300).bind(this)}
+                               onChange={debounce(this.change, 300).bind(this)}
                                placeholder="请输入密码"/><br/><span>密码由数字或字母组成，长度6~15位。</span></label><br/>
                     <label><Icon type="lock" style={{fontSize: '20px'}}/> <span style={{fontSize: '20px'}}>再次确认:</span>
                         <Input required={true} size={'large'}
                                type={'password'}
                                name={'confirm_pwd'}
                                style={this.state.confirmState}
-                               onChange={this.debounce(this.change, 300).bind(this)}
+                               onChange={debounce(this.change, 300).bind(this)}
                                placeholder="请再次输入密码"/><br/><span>请再次确认您输入的密码。</span></label><br/>
                     <label><Icon type="mail" style={{fontSize: '20px'}}/> <span style={{fontSize: '20px'}}>邮箱:</span>
                         <Input required={true} size={'large'}
                                name={'new_email'}
-                               onChange={this.debounce(this.change, 300).bind(this)}
+                               onChange={debounce(this.change, 300).bind(this)}
                                style={this.state.emailState}
                                placeholder="请输入电子邮箱"/><br/><span>请输入您的电子邮箱，我们将保证绝不公开！</span></label><br/>
                     <label><Icon type="calculator" style={{fontSize: '20px'}}/> <span
@@ -269,18 +243,19 @@ class Register extends React.Component {
                         <Input name={'problem'} disabled={true}
                                placeholder={this.state.problem.problem.concat(" = ?")}/>
                         <Motion defaultStyle={{degree: 0}} style={{degree: spring(this.state.degree)}}>
-                            {({degree}) => <Tooltip placement="bottom" title={'点击换一题'}><Icon onClick={this.loading}
-                                                                                             style={{
-                                                                                                 fontSize: '20px',
-                                                                                                 cursor: 'pointer',
-                                                                                                 transform: `rotate(${degree}deg`
-                                                                                             }}
-                                                                                             type="reload"/></Tooltip>}
+                            {({degree}) => <Tooltip placement="bottom" title={'点击换一题'}><Icon
+                                onClick={changeCodeword.bind(this)}
+                                style={{
+                                    fontSize: '20px',
+                                    cursor: 'pointer',
+                                    transform: `rotate(${degree}deg`
+                                }}
+                                type="reload"/></Tooltip>}
                         </Motion>
                         <span style={{fontSize: '20px', marginLeft: '15px'}}>答案:</span><Input required={true}
                                                                                               size={'large'}
                                                                                               name={'answer'}
-                                                                                              onChange={this.debounce(this.change, 300).bind(this)}
+                                                                                              onChange={debounce(this.change, 300).bind(this)}
                                                                                               style={this.state.answerState}
                                                                                               placeholder="答案"/></label><br/>
                     <Button onClick={this.registerCheck} block={true} htmlType={'submit'}
