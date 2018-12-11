@@ -12,6 +12,7 @@ from flask import (
     jsonify
 )
 from models.user import User
+from models.topic import Topic
 from models import codeword
 from random import randint
 main = Blueprint('api', __name__)
@@ -60,15 +61,21 @@ def check_codeword():
     return 'False'
 
 
-# 获得用户信息
+# 检查登录状态
 @main.route('/user', methods=['GET'])
 def check_login():
     username = session.get('username', None)
     if username is None:
         return 'fail'
     user = User.find_one(username=username)
-    print('获取用户', session)
     if user.get('username') is not None:
         return user.get('username')
     else:
         return 'fail'
+
+
+# 获取所有帖子
+@main.route('/topic', methods=['GET'])
+def get_all_topic():
+    result = Topic.get_all()
+    return jsonify(result)

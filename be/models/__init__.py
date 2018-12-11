@@ -101,11 +101,37 @@ class Model(object):
 
     # 查找所有满足条件的数据
     @classmethod
-    def find_all(cls, **kwargs):
+    def find_all(cls, obj_id=False, **kwargs):
         # 通过类来获取表名
         collection = cls.__name__.lower()
-        result = club_db[collection].find(kwargs)
-        print('查找到的多条数据，分别为：', result) if list(result) else print('数据查找不存在：', kwargs)
+        if obj_id is True:
+            result = club_db[collection].find(kwargs)
+        else:
+            # 此处表示不提取_id字段 格式为 字段名：1/0   1表示提取 0表示不提取， _id默认为1
+            result = club_db[collection].find(kwargs, {'_id': 0})
+        if result is None:
+            print('数据查找不存在：', kwargs)
+            return None
+        else:
+            print('查找到的多条数据，分别为：', result)
+            result = list(result)
+        return result
+
+    # 获取目标集合中的所有数据
+    @classmethod
+    def get_all(cls, obj_id=False):
+        collection = cls.__name__.lower()
+        if obj_id is True:
+            result = club_db[collection].find()
+        else:
+            # 此处表示不提取_id字段 格式为 字段名：1/0   1表示提取 0表示不提取， _id默认为1，前面的{}表示提取所有的数据
+            result = club_db[collection].find({}, {'_id': 0})
+        if result is None:
+            print(collection, '表无数据')
+            return None
+        else:
+            result = list(result)
+            print('获取', collection, '表的所有数据共', len(result), '条')
         return result
 
 

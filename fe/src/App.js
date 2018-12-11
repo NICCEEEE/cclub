@@ -23,7 +23,7 @@ class App extends Component {
         return (
             <Router>
                 <div className="App">
-                    <Header loginStatus={this.state.loginStatus}/>
+                    <Header/>
                     <Switch>
                         {
                             routes.map((route, index) => {

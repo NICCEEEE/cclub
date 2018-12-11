@@ -1,0 +1,59 @@
+.topicBox {
+  display: flex;
+  width: 100%;
+  height: 90px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  border-radius: 35px; }
+  .topicBox .topicBox-1 {
+    flex-basis: 40%;
+    height: 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around; }
+    .topicBox .topicBox-1 .topicTitle {
+      margin-bottom: 0px;
+      height: 70px;
+      overflow: hidden; }
+      .topicBox .topicBox-1 .topicTitle a {
+        color: #337ab7;
+        text-decoration: none;
+        font-weight: bolder;
+        font-size: 20px; }
+      .topicBox .topicBox-1 .topicTitle a:hover {
+        color: darkblue; }
+    .topicBox .topicBox-1 .topicBottom {
+      margin-bottom: 0px;
+      height: 20px;
+      overflow: hidden; }
+  .topicBox .topicBox-2 {
+    display: flex;
+    flex-basis: 25%;
+    justify-content: space-around;
+    text-align: center; }
+    .topicBox .topicBox-2 .count {
+      font-size: 20px;
+      font-weight: bolder; }
+    .topicBox .topicBox-2 .countTitle {
+      color: gray; }
+  .topicBox .topicBox-3 {
+    display: flex;
+    box-sizing: border-box;
+    border-left: #0092FF 3px solid;
+    flex-basis: 25%;
+    flex-direction: column;
+    padding-left: 10px;
+    height: 70px; }
+    .topicBox .topicBox-3 .lastCommentTime {
+      text-decoration: underline; }
+    .topicBox .topicBox-3 p {
+      margin-bottom: 0px; }
+    .topicBox .topicBox-3 .commentPreview {
+      font-weight: bolder; }
+
+.topicBox:hover {
+  background-color: aliceblue;
+  transition: background-color .4s; }
+
+/*# sourceMappingURL=Topic.css.map */
