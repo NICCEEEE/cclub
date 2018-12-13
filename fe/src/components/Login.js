@@ -6,6 +6,8 @@ import {error, success, changeTitle, getCodeword, changeCodeword} from "../utili
 import {Motion, spring} from 'react-motion';
 import axios from 'axios'
 import qs from 'qs'
+import ReactMarkdown from 'react-markdown'
+
 
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 axios.defaults.withCredentials  = true;
@@ -62,11 +64,10 @@ class Login extends React.Component {
                             if (response.data === 'False') {
                                 warn('登录失败，请确认您填写的信息后重新尝试！')
                             } else {
-                                success('登录成功，欢迎回来 :)')
-                                console.log(response)
-                                this.setState({
+                                success('登录成功，欢迎回来，即将跳转。:)')
+                                setTimeout(() => this.setState({
                                     loginSuccess: 'success'
-                                })
+                                }), 1500)
                             }
                         })
                         .catch((error) => {

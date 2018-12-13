@@ -1,13 +1,13 @@
-.homePage .board {
-  flex-basis: 100%;
-  margin-bottom: 20px;
-  margin-top: 15px;
-  padding-bottom: 20px;
-  border-bottom: 1px lightgray solid; }
-  .homePage .board div {
-    height: 35px;
-    line-height: 35px;
-    font-weight: bolder;
-    font-size: large; }
+.homePage .ant-tabs {
+  flex-basis: 100%; }
+  .homePage .ant-tabs .ant-tabs-tabpane {
+    display: flex;
+    flex-direction: column;
+    align-items: center; }
+    .homePage .ant-tabs .ant-tabs-tabpane .ant-pagination {
+      margin-bottom: 20px; }
+
+.ant-modal-confirm-btns .ant-btn {
+  margin-right: 10px; }
 
 /*# sourceMappingURL=Home.css.map */

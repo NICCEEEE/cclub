@@ -1,0 +1,62 @@
+.ant-drawer-content-wrapper {
+  transition: all .4s; }
+
+.ant-drawer-content .ant-drawer-body {
+  display: flex;
+  flex-wrap: wrap; }
+  .ant-drawer-content .ant-drawer-body .toolBox {
+    list-style: none;
+    flex-basis: 100%;
+    display: flex;
+    padding: 0px;
+    margin: 10px 0px;
+    height: 30px;
+    line-height: 30px; }
+    .ant-drawer-content .ant-drawer-body .toolBox li {
+      font-size: 20px;
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      line-height: 30px; }
+    .ant-drawer-content .ant-drawer-body .toolBox li:hover {
+      background-color: whitesmoke; }
+    .ant-drawer-content .ant-drawer-body .toolBox .switch button {
+      -webkit-transform: translateY(-6%);
+      -moz-transform: translateY(-6%);
+      -ms-transform: translateY(-6%);
+      -o-transform: translateY(-6%);
+      transform: translateY(-6%); }
+    .ant-drawer-content .ant-drawer-body .toolBox .switch:hover {
+      background: none; }
+    .ant-drawer-content .ant-drawer-body .toolBox li + li {
+      margin-left: 15px; }
+  .ant-drawer-content .ant-drawer-body .titleBox {
+    display: flex;
+    justify-content: space-between;
+    flex-basis: 100%; }
+    .ant-drawer-content .ant-drawer-body .titleBox .ant-input-group-wrapper {
+      width: 85%; }
+    .ant-drawer-content .ant-drawer-body .titleBox .ant-input-group-addon {
+      font-size: 20px; }
+  .ant-drawer-content .ant-drawer-body .writingBox {
+    flex-basis: 100%;
+    display: flex;
+    justify-content: space-between; }
+    .ant-drawer-content .ant-drawer-body .writingBox .inputBox, .ant-drawer-content .ant-drawer-body .writingBox .previewBox {
+      flex-basis: 49.3%;
+      transition: all .5s; }
+      .ant-drawer-content .ant-drawer-body .writingBox .inputBox textarea, .ant-drawer-content .ant-drawer-body .writingBox .previewBox textarea {
+        font-size: 20px;
+        padding: 10px;
+        line-height: 1.5;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        box-shadow: 1px 1px 1px #999;
+        resize: none; }
+    .ant-drawer-content .ant-drawer-body .writingBox .inputBox.noPreview {
+      flex-basis: 100%;
+      transition: all .5s; }
+    .ant-drawer-content .ant-drawer-body .writingBox .previewBox.noPreview {
+      display: none; }
+
+/*# sourceMappingURL=Markdown.css.map */

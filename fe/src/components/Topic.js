@@ -21,6 +21,19 @@ class Topic extends React.Component {
     }
 
     render() {
+        let board = this.props.detail.board
+        let icon
+        let color
+        if (board === '灌水交流') {
+            color = '#8ACF00'
+            icon = <Icon type="message" theme="twoTone" twoToneColor={color}/>
+        } else if (board === '技术讨论') {
+            color = "#f92672"
+            icon = <Icon type="rocket" theme="twoTone" twoToneColor={color}/>
+        } else {
+            color = "#0092FF"
+            icon = <Icon type="setting" theme="twoTone" twoToneColor={color}/>
+        }
         return (
             <div className={'topicBox'}>
                 <Tooltip placement="left" title={this.props.detail.author}>
@@ -31,7 +44,7 @@ class Topic extends React.Component {
                     <p className={'topicTitle'}><a>{this.props.detail.title}</a></p>
                     <p className={'topicBottom'}>
                         <span className={'topicBoard'}>
-                            <Icon type="message" theme="twoTone"/><a>&nbsp;{this.props.detail.board}</a>
+                            {icon}<a onClick={() => this.props.Home.handleBoardTab(this.props.tab)}>&nbsp;{board}</a>
                         </span>&nbsp;•&nbsp;
                         <span className={'topicTime'}>{this.props.detail.ct}</span>&nbsp;•&nbsp;
                         <span className={'topicAuthor'}><a>{this.props.detail.author}</a></span>
@@ -39,16 +52,19 @@ class Topic extends React.Component {
                 </div>
                 <div className={'topicBox-2'}>
                     <div className={'vote'}>
-                        <span className={'count'}>{this.props.detail.vote}</span><br/><span className={'countTitle'}>点赞</span>
+                        <span className={'count'} style={{color: color}}>{this.props.detail.vote}</span><br/><span
+                        className={'countTitle'}>点赞</span>
                     </div>
                     <div className={'comments'}>
-                        <span className={'count'}>{this.props.detail.comments}</span><br/><span className={'countTitle'}>回复</span>
+                        <span className={'count'} style={{color: color}}>{this.props.detail.comments}</span><br/><span
+                        className={'countTitle'}>回复</span>
                     </div>
                     <div className={'views'}>
-                        <span className={'count'}>{this.props.detail.views}</span><br/><span className={'countTitle'}>浏览</span>
+                        <span className={'count'} style={{color: color}}>{this.props.detail.views}</span><br/><span
+                        className={'countTitle'}>浏览</span>
                     </div>
                 </div>
-                <div className={'topicBox-3'}>
+                <div className={'topicBox-3'} style={{borderLeft: color.concat(' 3px solid')}}>
                     <p>
                         <Tooltip placement="top" title={this.props.detail.last_comment_author}>
                             <Avatar className={'lastCommentAuthor'} size="small" style={{backgroundColor: '#87d068'}}
