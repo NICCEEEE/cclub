@@ -5,7 +5,7 @@ import {Pagination, Spin, Tabs, Button, Modal} from 'antd';
 import {Redirect} from 'react-router-dom';
 import '../assets/css/Home.css'
 import axios from 'axios'
-import Markdown from "./Markdown"
+import TopicBox from "./TopicBox"
 
 
 const confirm = Modal.confirm;
@@ -112,11 +112,7 @@ class Home extends React.Component {
             okText: '去登录',
             okButtonProps: {href: 'http://localhost:3000/login'},
             onOk() {
-                console.log('OK');
                 return <Redirect to={'/login'}/>
-            },
-            onCancel() {
-                console.log('Cancel');
             },
         })
     }
@@ -225,7 +221,7 @@ class Home extends React.Component {
                                     total={this.state.bug.length} onChange={this.onChangeBug}/>
                     </TabPane>
                 </Tabs>
-                <Markdown Home={this}/>
+                <TopicBox Home={this}/>
             </div>
         )
     }

@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 .ant-drawer-content-wrapper {
-  transition: all .4s;
+  transition: all .2s;
 }
 .ant-drawer-content {
   .ant-drawer-body {
@@ -57,20 +57,53 @@
       display: flex;
       justify-content: space-between;
       .inputBox, .previewBox {
-        flex-basis: 49.3%;
+        width: 49.3%;
         transition: all .5s;
-        textarea {
+        textarea, .markdownPreview{
           font-size: 20px;
           padding: 10px;
           line-height: 1.5;
           border-radius: 5px;
           border: 1px solid #ccc;
           box-shadow: 1px 1px 1px #999;
-          resize: none
+          resize: none;
+          font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+        }
+        .markdownPreview {
+          height: inherit;
+          overflow: auto;
+          background-color: azure;
+          table{
+            border-width: 2px;
+            border-style: solid;
+            border-color: lightgray;
+            caption-side: top;
+            border-collapse: collapse;
+          }
+
+          th{
+            background-color: rgb(233, 234, 236);
+          }
+          th {
+            padding: 7px;
+            text-align: center;
+            margin: 10px;
+          }
+          td {
+            border-width: thin;
+            border-style: solid;
+            border-color: lightgray;
+            padding: 7px;
+            text-align: center;
+            margin: 10px;
+          }
+          tr:nth-child(even) {
+            background-color: rgb(246, 246, 246);
+          }
         }
       }
       .inputBox.noPreview {
-        flex-basis: 100%;
+        width: 100%;
         transition: all .5s;
       }
       .previewBox.noPreview {

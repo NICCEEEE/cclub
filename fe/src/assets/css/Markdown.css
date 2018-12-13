@@ -1,5 +1,5 @@
 .ant-drawer-content-wrapper {
-  transition: all .4s; }
+  transition: all .2s; }
 
 .ant-drawer-content .ant-drawer-body {
   display: flex;
@@ -43,18 +43,44 @@
     display: flex;
     justify-content: space-between; }
     .ant-drawer-content .ant-drawer-body .writingBox .inputBox, .ant-drawer-content .ant-drawer-body .writingBox .previewBox {
-      flex-basis: 49.3%;
+      width: 49.3%;
       transition: all .5s; }
-      .ant-drawer-content .ant-drawer-body .writingBox .inputBox textarea, .ant-drawer-content .ant-drawer-body .writingBox .previewBox textarea {
+      .ant-drawer-content .ant-drawer-body .writingBox .inputBox textarea, .ant-drawer-content .ant-drawer-body .writingBox .inputBox .markdownPreview, .ant-drawer-content .ant-drawer-body .writingBox .previewBox textarea, .ant-drawer-content .ant-drawer-body .writingBox .previewBox .markdownPreview {
         font-size: 20px;
         padding: 10px;
         line-height: 1.5;
         border-radius: 5px;
         border: 1px solid #ccc;
         box-shadow: 1px 1px 1px #999;
-        resize: none; }
+        resize: none;
+        font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace; }
+      .ant-drawer-content .ant-drawer-body .writingBox .inputBox .markdownPreview, .ant-drawer-content .ant-drawer-body .writingBox .previewBox .markdownPreview {
+        height: inherit;
+        overflow: auto;
+        background-color: azure; }
+        .ant-drawer-content .ant-drawer-body .writingBox .inputBox .markdownPreview table, .ant-drawer-content .ant-drawer-body .writingBox .previewBox .markdownPreview table {
+          border-width: 2px;
+          border-style: solid;
+          border-color: lightgray;
+          caption-side: top;
+          border-collapse: collapse; }
+        .ant-drawer-content .ant-drawer-body .writingBox .inputBox .markdownPreview th, .ant-drawer-content .ant-drawer-body .writingBox .previewBox .markdownPreview th {
+          background-color: #e9eaec; }
+        .ant-drawer-content .ant-drawer-body .writingBox .inputBox .markdownPreview th, .ant-drawer-content .ant-drawer-body .writingBox .previewBox .markdownPreview th {
+          padding: 7px;
+          text-align: center;
+          margin: 10px; }
+        .ant-drawer-content .ant-drawer-body .writingBox .inputBox .markdownPreview td, .ant-drawer-content .ant-drawer-body .writingBox .previewBox .markdownPreview td {
+          border-width: thin;
+          border-style: solid;
+          border-color: lightgray;
+          padding: 7px;
+          text-align: center;
+          margin: 10px; }
+        .ant-drawer-content .ant-drawer-body .writingBox .inputBox .markdownPreview tr:nth-child(even), .ant-drawer-content .ant-drawer-body .writingBox .previewBox .markdownPreview tr:nth-child(even) {
+          background-color: #f6f6f6; }
     .ant-drawer-content .ant-drawer-body .writingBox .inputBox.noPreview {
-      flex-basis: 100%;
+      width: 100%;
       transition: all .5s; }
     .ant-drawer-content .ant-drawer-body .writingBox .previewBox.noPreview {
       display: none; }

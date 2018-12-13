@@ -4,7 +4,6 @@ import Header from "./components/Header"
 import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 import Footer from "./components/Footer"
 import routes from './routeConf'
-import Markdown from "./components/Markdown"
 
 class App extends Component {
     constructor(props) {
