@@ -58,10 +58,19 @@ class User(Model):
         else:
             if eval(codeword[cid]) != int(answer):
                 return False
+        # 添加用户id
+        ids = [int(i.get('uid', -1)) for i in User.get_all()]
+        if len(ids) < 1:
+            uid = 10000
+        else:
+            max_id = max(ids)
+            uid = max_id + 1 if max_id > 0 else 10000
         userinfo = dict(
             username=username,
             password=User.hashed_password(password),
             email=email,
+            uid=uid,
+            authority=111
         )
         User.insert_one(**userinfo)
         return True
@@ -76,11 +85,9 @@ class User(Model):
         valid_answer = '^[-]?[0-9]+$'
         if userinfo is not None:
             if User.hashed_password(password) == userinfo.get('password'):
-                if answer is None or re.fullmatch(valid_answer, answer) is None:
-                    return None
-                else:
-                    if eval(codeword[cid]) != int(answer):
-                        return None
-        print('登录成功\nusername: ', username)
-        return user
+                if answer is not None and re.fullmatch(valid_answer, answer):
+                    if eval(codeword[cid]) == int(answer):
+                        print('登录成功\nusername: ', username)
+                        return user
+        return None
 

@@ -78,4 +78,5 @@ def check_login():
 @main.route('/topic', methods=['GET'])
 def get_all_topic():
     result = Topic.get_all()
+    result.reverse()
     return jsonify(result)

@@ -1,9 +1,13 @@
 import React from 'react'
 import '../assets/css/Markdown.css'
-import {Drawer, Input, Icon, Switch, Tooltip, Button, Menu, Dropdown} from 'antd';
-import {error, debounce} from '../utilities'
+import {Drawer, Input, Icon, Switch, Tooltip, Button, Menu, Dropdown, Popconfirm} from 'antd';
+import {error, debounce, success} from '../utilities'
 import Markdown from 'react-markdown'
 import CodeBlock from '../code-block'
+import axios from 'axios'
+import qs from 'qs'
+
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 class TopicBox extends React.Component {
     constructor(props) {
@@ -18,24 +22,28 @@ class TopicBox extends React.Component {
     }
 
     handleMenuClick = (e) => {
-        console.log(e.item.props.children);
         this.setState({
             selectedBoard: e.item.props.children
         })
     }
+    closeConfirm = () => {
+        return true
+    }
     onClose = () => {
-        this.props.Home.setState({
-            drawerVisible: false,
-        })
-        this.setState({
-            selectedBoard: null,
-            preview: true,
-            fullScreen: false,
-            markdown: '',
-        })
+        let res = this.closeConfirm()
+        if (res === true) {
+            this.props.Home.setState({
+                drawerVisible: false,
+            })
+            this.setState({
+                selectedBoard: null,
+                preview: true,
+                fullScreen: false,
+                markdown: '',
+            })
+        }
     };
     switchBox = (checked) => {
-        console.log(`switch to ${checked}`);
         this.setState({
             preview: !this.state.preview
         })
@@ -56,7 +64,7 @@ class TopicBox extends React.Component {
         let range = textBox.setSelectionRange
         rangeData.start = textBox.selectionStart;
         rangeData.end = textBox.selectionEnd;
-        rangeData.text = (rangeData.start != rangeData.end) ? textBox.value.substring(rangeData.start, rangeData.end) : "";
+        rangeData.text = (rangeData.start !== rangeData.end) ? textBox.value.substring(rangeData.start, rangeData.end) : "";
         return rangeData
     }
     fontBold = () => {
@@ -210,6 +218,18 @@ class TopicBox extends React.Component {
         }
         this.renderMarkdown()
     }
+    addCode = () => {
+        let rangeData = this.getTextRange()
+        let textBox = document.querySelector("textarea[name='inputTopic']")
+        let value = textBox.value
+        let t1 = value.slice(0, rangeData.start)
+        let t2 = value.slice(rangeData.start, rangeData.end)
+        let t3 = value.slice(rangeData.end, rangeData.length)
+        value = t1 + t2 + '\n```语种\n代码段\n```\n' + t3
+        textBox.value = value
+        textBox.setSelectionRange(rangeData.start + t2.length + 4, rangeData.start + t2.length + 6)
+        this.renderMarkdown()
+    }
     addTable = () => {
         let rangeData = this.getTextRange()
         let textBox = document.querySelector("textarea[name='inputTopic']")
@@ -256,14 +276,28 @@ class TopicBox extends React.Component {
             let topicData = {
                 title: title.value,
                 board: board,
-                content: content.value
+                content: content.value,
+                ct:new Date().getTime() / 1000,
             }
             console.log(topicData)
-            title.value = ''
-            content.value = ''
-            this.setState({
-                selectedBoard: null
-            })
+            axios.post('http://0.0.0.0:2000/addtopic', qs.stringify(topicData))
+                .then((response) => {
+                    if (response.data === 'success') {
+                        title.value = ''
+                        content.value = ''
+                        this.setState({
+                            selectedBoard: null
+                        })
+                        success('发布成功 :)')
+                        setTimeout(() => document.location.reload(), 800)
+                    } else {
+                        error('糟糕，出现未知异常，请稍候尝试！')
+                    }
+                })
+                .catch((err) => {
+                    error('糟糕，出现未知异常，请稍候尝试！')
+                    console.log(err)
+                })
         }
     }
     renderMarkdown = () => {
@@ -275,7 +309,7 @@ class TopicBox extends React.Component {
     syncScroll = (e) => {
         let previewBox = document.querySelector('.markdownPreview')
         let top = e.target.scrollTop
-        previewBox.scrollTo(0, top)
+        previewBox.scrollTo(0, top * 0.85)
     }
 
     render() {
@@ -283,7 +317,7 @@ class TopicBox extends React.Component {
             <Menu onClick={this.handleMenuClick}>
                 <Menu.Item key="1">灌水交流</Menu.Item>
                 <Menu.Item key="2">技术讨论</Menu.Item>
-                <Menu.Item key="3">建议反馈</Menu.Item>
+                <Menu.Item key="3">建议&反馈</Menu.Item>
             </Menu>
         );
         let height = window.innerHeight
@@ -307,10 +341,10 @@ class TopicBox extends React.Component {
                                 {this.state.selectedBoard ? this.state.selectedBoard : '选择板块'}<Icon type="down"/>
                             </Button>
                         </Dropdown>
-                        <Button size={'large'} type="primary" onClick={this.publish}>发表</Button>
-                        <Tooltip placement="topRight" title={'关闭后您的输入将被清空！'}>
-                            <Button size={'large'} type="danger" onClick={this.onClose}>关闭</Button>
-                        </Tooltip>
+                        <Button size={'large'} type="primary" onClick={this.publish}>发布</Button>
+                        <Popconfirm placement="topRight" title={'关闭后您的输入将被清空,您确定要关闭吗？'} onConfirm={this.onClose} okText="确定" cancelText="取消">
+                            <Button size={'large'} type="danger">关闭</Button>
+                        </Popconfirm>
                     </div>
                     <ul className={'toolBox'}>
                         <li onClick={this.fontBold} title={'加粗'}><Icon type="bold"/></li>
@@ -321,6 +355,7 @@ class TopicBox extends React.Component {
                         <li onClick={this.addUnderline} title={'添加分割线'}><Icon type="dash"/></li>
                         <li onClick={this.addHead} title={'添加小标题'}><Icon type="edit"/></li>
                         <li onClick={this.addLink} title={'添加链接'}><Icon type="link"/></li>
+                        <li onClick={this.addCode} title={'添加代码段'}><Icon type="code" /></li>
                         <li onClick={this.addTable} title={'添加表格'}><Icon type="table"/></li>
                         <li onClick={this.addPicture} title={'插入网络图片'}><Icon type="picture"/></li>
                         {
@@ -345,12 +380,10 @@ class TopicBox extends React.Component {
                         </div>
                         <div style={{height: this.state.fullScreen ? (height - 169) * 0.97 : (height - 169) * 0.95}}
                              className={this.state.preview ? 'previewBox' : 'noPreview previewBox'}>
-                            {/*<Input.TextArea style={{backgroundColor: 'snow', height: 'inherit'}}*/}
-                            {/*readOnly={true}/>*/}
                             <Markdown className={'markdownPreview'}
                                       source={this.state.markdown}
-                                      skipHtml={false}
-                                      escapeHtml={false}
+                                      skipHtml={true}
+                                      escapeHtml={true}
                                       renderers={{code: CodeBlock}}/>,
                         </div>
                     </div>

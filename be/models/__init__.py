@@ -24,6 +24,7 @@ class Model(object):
             print('插入单条数据成功, 该数据的 _id为：', result.inserted_id)
         else:
             print('插入失败：', kwargs)
+        return result
 
     # 插入多条数据
     @classmethod
@@ -147,4 +148,5 @@ for i in range(0, 300):
     salt = '89sdfn^%^#sdmlks' + str(i)
     key = hashlib.md5(salt.encode('ascii')).hexdigest()
     codeword[key] = problem
+
 

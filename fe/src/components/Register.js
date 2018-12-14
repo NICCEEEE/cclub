@@ -69,14 +69,15 @@ class Register extends React.Component {
                             axios.post('http://0.0.0.0:2000/register', qs.stringify(data))
                                 .then((response) => {
                                     if (response.data === 'True') {
-                                        success('注册成功！准备跳转。')
-                                        this.props.history.push('/login')
+                                        success('注册成功！即将跳转。')
+                                        setTimeout(() => this.props.history.push('/login'), 1000)
                                     } else {
                                         warn('注册失败，请重新尝试！')
                                     }
                                 })
-                                .catch((error) => {
-                                    console.log(error);
+                                .catch((err) => {
+                                    error('糟糕，出现未知异常，请稍候尝试！')
+                                    console.log(err);
                                 })
                         } else {
                             warn('注册失败，请重新尝试！')
@@ -115,8 +116,9 @@ class Register extends React.Component {
                                 })
                             }
                         })
-                        .catch((error) => {
-                            console.log(error)
+                        .catch((err) => {
+                            error('糟糕，出现未知异常，请稍候尝试！')
+                            console.log(err)
                         })
                 } else {
                     this.setState({
@@ -163,7 +165,8 @@ class Register extends React.Component {
                                 })
                             }
                         })
-                        .catch((error) => {
+                        .catch((err) => {
+                            error('糟糕，出现未知异常，请稍候尝试！')
                             console.log(error)
                         })
                 } else {
@@ -188,7 +191,8 @@ class Register extends React.Component {
                                 })
                             }
                         })
-                        .catch((error) => {
+                        .catch((err) => {
+                            error('糟糕，出现未知异常，请稍候尝试！')
                             console.log(error)
                         })
                 } else {

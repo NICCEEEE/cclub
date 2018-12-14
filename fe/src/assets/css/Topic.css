@@ -43,7 +43,9 @@
     flex-basis: 25%;
     flex-direction: column;
     padding-left: 10px;
-    height: 70px; }
+    height: 70px;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px; }
     .topicBox .topicBox-3 .lastCommentTime {
       text-decoration: underline; }
     .topicBox .topicBox-3 p {

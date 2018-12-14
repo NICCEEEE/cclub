@@ -1,5 +1,5 @@
 import React from 'react'
-import {changeTitle} from '../utilities'
+import {changeTitle, error} from '../utilities'
 import Topic from "./Topic"
 import {Pagination, Spin, Tabs, Button, Modal} from 'antd';
 import {Redirect} from 'react-router-dom';
@@ -70,7 +70,6 @@ class Home extends React.Component {
 
     onChangeAll = (pageNumber) => {
         pageNumber = pageNumber - 1
-        console.log(pageNumber)
         this.setState({
             boardAll: this.state.topics.slice(pageNumber * 15, pageNumber * 15 + 15)
         })
@@ -134,13 +133,14 @@ class Home extends React.Component {
                     })
                 }
             })
-            .catch((error) => {
-                console.log(error)
+            .catch((err) => {
+                error('糟糕，出现未知异常，请稍候尝试！')
+                console.log(err)
             })
     }
 
     render() {
-        const operations = <Button onClick={this.createTopic} type="primary" size={'large'}>发表新帖</Button>;
+        const operations = <Button onClick={this.createTopic} type="primary" size={'large'}>发布新帖</Button>;
         const TabPane = Tabs.TabPane;
         let loading = null
         if (this.state.topics.length < 1) {
@@ -154,7 +154,7 @@ class Home extends React.Component {
                       onTabClick={key => this.handleBoardTab(key)} tabBarExtraContent={operations} size={'large'}>
                     <TabPane tab="全部" key="1">
                         {loading}
-                        <div>
+                        <div style={{width: 'inherit'}}>
                             {
                                 this.state.boardAll.map((value, index) => {
                                     let tabKey = '1'
@@ -172,7 +172,7 @@ class Home extends React.Component {
                         <Pagination defaultPageSize={15} hideOnSinglePage showQuickJumper defaultCurrent={1}
                                     total={this.state.topics.length} onChange={this.onChangeAll}/>
                     </TabPane>
-                    <TabPane tab="精华" key="2">
+                    <TabPane tab="精华区" key="2">
                         {loading}
                         <div>
                             {

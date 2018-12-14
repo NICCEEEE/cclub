@@ -13,7 +13,8 @@ from flask import (
 )
 from werkzeug.utils import secure_filename
 from models.user import User
-import datetime
+from models.topic import Topic
+import time
 import os
 
 main = Blueprint('club', __name__)
@@ -58,4 +59,42 @@ def login():
         session['username'] = user.get('username')
         return 'True'
     return 'False'
+
+
+@main.route('/addtopic', methods=['POST'])
+def addtopic():
+    user = current_user()
+    if user is None:
+        return render_template('index.html')
+    username = user.get('username')
+    topic_info = request.form
+    # 添加帖子id
+    ids = [int(i.get('tid', -1)) for i in Topic.get_all()]
+    if len(ids) < 1:
+        tid = 20000
+    else:
+        max_id = max(ids)
+        tid = max_id + 1 if max_id > 0 else 20000
+    topic_data = dict(
+        ct=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(float(topic_info.get('ct')))),
+        author=username,
+        title=topic_info.get('title'),
+        content=topic_info.get('content'),
+        board=topic_info.get('board'),
+        vote=0,
+        comments=0,
+        views=0,
+        essence=False,
+        last_comment_author=None,
+        last_comment_time=None,
+        last_comment_content=None,
+        uid=user.get('uid', -1),
+        tid=tid
+    )
+    res = Topic.insert_one(**topic_data)
+    if res is not None:
+        return 'success'
+    else:
+        return 'fail'
+
 

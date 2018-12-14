@@ -3,6 +3,7 @@ import {Button, Input} from 'antd';
 import '../assets/css/Header.css';
 import {Link, withRouter} from 'react-router-dom';
 import axios from 'axios'
+import {error} from "../utilities"
 
 const Search = Input.Search;
 axios.defaults.withCredentials = true;
@@ -27,8 +28,9 @@ class Header extends React.Component {
                     loginStatus: response.data
                 })
             })
-            .catch((error) => {
-                console.log(error)
+            .catch((err) => {
+                error('糟糕，出现未知异常，请稍候尝试！')
+                console.log(err)
             })
     }
 
@@ -37,11 +39,6 @@ class Header extends React.Component {
         if (this.state.loginStatus === 'fail') {
             head = (
                 <div className={'buttonGroup'}>
-                    <Search
-                        placeholder="百度一下，你就知道"
-                        onSearch={value => this.search(value)}
-                        enterButton
-                    />
                     <Link to={'/register'}>
                         <Button type="primary">注册</Button>
                     </Link>
@@ -53,21 +50,27 @@ class Header extends React.Component {
         } else {
             head = (
                 <div className={'buttonGroup'}>
-                    <Search
-                        placeholder="百度一下，你就知道"
-                        onSearch={value => this.search(value)}
-                        enterButton
-                    />
                     <Button>{this.state.loginStatus}</Button>
                 </div>
             )
         }
         return (
             <header>
-                <Link to={'/'}>
-                    <img src={require('../assets/images/logo.svg')} alt={'logo'}/>
-                </Link>
-                {head}
+                <div className={'headContent'}>
+                    <div className={'headLeft'}>
+                        <Link to={'/'}>
+                            <img src={require('../assets/images/logo.svg')} alt={'logo'}/>
+                        </Link>
+                        <div className={'buttonGroup'}>
+                            <Search
+                                placeholder="百度一下，你就知道"
+                                onSearch={value => this.search(value)}
+                                enterButton
+                            />
+                        </div>
+                    </div>
+                    {head}
+                </div>
             </header>
         )
     }

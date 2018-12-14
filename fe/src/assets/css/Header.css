@@ -1,25 +1,29 @@
 header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   height: 60px;
-  align-items: center;
   border-bottom: 1px solid white;
   box-shadow: 0px 2px 3px #d5d5d5; }
+  header .headContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-basis: 80%; }
 @keyframes logoRotate {
   from {
     transform: rotate(0deg); }
   to {
     transform: rotate(360deg); } }
-  header img {
-    width: 70px;
-    height: 50px;
-    margin-left: 10px;
-    animation: logoRotate infinite 10s linear; }
-  header .ant-input-search {
-    width: 300px; }
-  header button {
-    margin-left: 5px; }
-  header .buttonGroup {
-    width: 450px; }
+    header .headContent .headLeft {
+      display: flex;
+      align-items: center; }
+      header .headContent .headLeft img {
+        width: 70px;
+        height: 50px;
+        animation: logoRotate infinite 10s linear; }
+      header .headContent .headLeft .ant-input-search {
+        width: 300px; }
+    header .headContent button {
+      margin-left: 5px; }
 
 /*# sourceMappingURL=Header.css.map */
