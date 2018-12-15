@@ -211,7 +211,7 @@ class Register extends React.Component {
     render() {
         return (
             <div className={'content registerPage'}>
-                <Breadcrumb>
+                <Breadcrumb style={{marginTop: '15px'}}>
                     <Breadcrumb.Item><Link to={'/'}>Home</Link></Breadcrumb.Item>
                     <Breadcrumb.Item>注册</Breadcrumb.Item>
                 </Breadcrumb>

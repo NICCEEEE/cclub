@@ -42,7 +42,7 @@ class User(Model):
             return False
         else:
             # 名称合法则在数据库中查找是否已存在
-            if User.find_one(username=username):
+            if User.find_one({}, username=username):
                 return False
         if password is None or re.fullmatch(valid_pwd, password) is None:
             return False
@@ -51,7 +51,7 @@ class User(Model):
         if email is None or re.fullmatch(valid_email, email) is None:
             return False
         else:
-            if User.find_one(email=email):
+            if User.find_one({}, email=email):
                 return False
         if answer is None or re.fullmatch(valid_answer, answer) is None:
             return False
@@ -59,7 +59,7 @@ class User(Model):
             if eval(codeword[cid]) != int(answer):
                 return False
         # 添加用户id
-        ids = [int(i.get('uid', -1)) for i in User.get_all()]
+        ids = [int(i.get('uid', -1)) for i in User.get_all({})]
         if len(ids) < 1:
             uid = 10000
         else:
@@ -81,7 +81,7 @@ class User(Model):
         password = user.get('password')
         answer = user.get('answer')
         cid = user.get('cid')
-        userinfo = User.find_one(username=username)
+        userinfo = User.find_one({}, username=username)
         valid_answer = '^[-]?[0-9]+$'
         if userinfo is not None:
             if User.hashed_password(password) == userinfo.get('password'):

@@ -32,6 +32,8 @@
     flex-basis: 25%;
     justify-content: space-around;
     text-align: center; }
+    .topicBox .topicBox-2 .views, .topicBox .topicBox-2 .comments, .topicBox .topicBox-2 .vote {
+      width: 70px; }
     .topicBox .topicBox-2 .count {
       font-size: 20px;
       font-weight: bolder; }

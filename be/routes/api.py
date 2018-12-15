@@ -21,7 +21,7 @@ main = Blueprint('api', __name__)
 # 查找注册用户名是否已存在
 @main.route('/username/<username>', methods=['GET'])
 def find_username(username):
-    res = User.find_one(username=username)
+    res = User.find_one({}, username=username)
     if res is not None:
         return 'username exist'
     return 'True'
@@ -30,7 +30,7 @@ def find_username(username):
 # 查找注册邮箱是否已存在
 @main.route('/email/<email>', methods=['GET'])
 def find_email(email):
-    res = User.find_one(email=email)
+    res = User.find_one({}, email=email)
     if res is not None:
         return 'email exist'
     return 'True'
@@ -67,7 +67,7 @@ def check_login():
     username = session.get('username', None)
     if username is None:
         return 'fail'
-    user = User.find_one(username=username)
+    user = User.find_one({}, username=username)
     if user.get('username') is not None:
         return user.get('username')
     else:
@@ -77,6 +77,20 @@ def check_login():
 # 获取所有帖子
 @main.route('/topic', methods=['GET'])
 def get_all_topic():
-    result = Topic.get_all()
+    result = Topic.get_all({})
     result.reverse()
     return jsonify(result)
+
+
+@main.route('/upVote/<int:tid>', methods=['GET'])
+def is_upvote(tid):
+    username = session.get('username', None)
+    user = User.find_one({}, username=username)
+    if user is None:
+        return 'false'
+    else:
+        topic = Topic.find_one({}, tid=tid)
+        for u in topic['voteUser']:
+            if u.get('username') == user.get('username') and u.get('uid') == user.get('uid'):
+                return 'true'
+        return 'false'

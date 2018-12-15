@@ -41,6 +41,9 @@ $height: 70px;
     flex-basis: 25%;
     justify-content: space-around;
     text-align: center;
+    .views, .comments, .vote {
+      width: 70px;
+    }
     .count {
       font-size: 20px;
       font-weight: bolder;

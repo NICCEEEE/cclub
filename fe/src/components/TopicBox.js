@@ -32,7 +32,7 @@ class TopicBox extends React.Component {
     onClose = () => {
         let res = this.closeConfirm()
         if (res === true) {
-            this.props.Home.setState({
+            this.props.Parent.setState({
                 drawerVisible: false,
             })
             this.setState({
@@ -277,7 +277,7 @@ class TopicBox extends React.Component {
                 title: title.value,
                 board: board,
                 content: content.value,
-                ct:new Date().getTime() / 1000,
+                ct: new Date().getTime() / 1000,
             }
             console.log(topicData)
             axios.post('http://0.0.0.0:2000/addtopic', qs.stringify(topicData))
@@ -322,29 +322,55 @@ class TopicBox extends React.Component {
         );
         let height = window.innerHeight
         height = this.state.fullScreen ? height * 0.9 : height * 0.5
+        let env
+        let DrawerTitle
+        let inputTitle
+        if (this.props.Parent.state.parent === 'Home') {
+            env = 'Home'
+            DrawerTitle = "新建主题帖（支持Markdown语法）"
+            inputTitle = <Input name={'topicTitle'} addonBefore="您的标题:" size="large"
+                                placeholder="标题字数不能少于8个字符且不能超过40个字符"/>
+        } else if (this.props.Parent.state.parent === 'TopicContent') {
+            env = 'TopicContent'
+            DrawerTitle = "回复主题帖（支持Markdown语法）"
+            inputTitle = `正在回复 "${this.props.Parent.state.content.title}..."`
+        }
         return (
             <div className={'createTopic'}>
                 <Drawer
-                    title="新建主题帖（支持Markdown语法）"
+                    title={DrawerTitle}
                     maskClosable={false}
                     destroyOnClose={true}
                     placement={this.state.placement}
                     closable={false}
-                    visible={this.props.Home.state.drawerVisible}
+                    visible={this.props.Parent.state.drawerVisible}
                     height={height}
                 >
                     <div className={'titleBox'}>
-                        <Input name={'topicTitle'} addonBefore="您的标题:" size="large"
-                               placeholder="标题字数不能少于8个字符且不能超过40个字符"/>
-                        <Dropdown overlay={menu}>
-                            <Button size={'large'}>
-                                {this.state.selectedBoard ? this.state.selectedBoard : '选择板块'}<Icon type="down"/>
-                            </Button>
-                        </Dropdown>
-                        <Button size={'large'} type="primary" onClick={this.publish}>发布</Button>
-                        <Popconfirm placement="topRight" title={'关闭后您的输入将被清空,您确定要关闭吗？'} onConfirm={this.onClose} okText="确定" cancelText="取消">
-                            <Button size={'large'} type="danger">关闭</Button>
-                        </Popconfirm>
+                        <div className={'box-left'} style={env === 'TopicContent' ? {flexBasis: '90%', fontSize: '25px'} : null}>
+                            {inputTitle}
+                            {/*<Input name={'topicTitle'} addonBefore="您的标题:" size="large"*/}
+                            {/*placeholder="标题字数不能少于8个字符且不能超过40个字符"/>*/}
+                        </div>
+                        <div className={'button-group'} style={env === 'TopicContent' ? {flexBasis: '10%'} : null}>
+                            {
+                                env === 'Home' ? <Dropdown overlay={menu}>
+                                    <Button size={'large'}>
+                                        {this.state.selectedBoard ? this.state.selectedBoard : '选择板块'}<Icon type="down"/>
+                                    </Button>
+                                </Dropdown> : null
+                            }
+                            {/*<Dropdown overlay={menu}>*/}
+                            {/*<Button size={'large'}>*/}
+                            {/*{this.state.selectedBoard ? this.state.selectedBoard : '选择板块'}<Icon type="down"/>*/}
+                            {/*</Button>*/}
+                            {/*</Dropdown>*/}
+                            <Button size={'large'} type="primary" onClick={this.publish}>{env === 'Home' ? '发布' : '回复'}</Button>
+                            <Popconfirm placement="topRight" title={'关闭后您的输入将被清空,您确定要关闭吗？'} onConfirm={this.onClose}
+                                        okText="确定" cancelText="取消">
+                                <Button size={'large'} type="danger">关闭</Button>
+                            </Popconfirm>
+                        </div>
                     </div>
                     <ul className={'toolBox'}>
                         <li onClick={this.fontBold} title={'加粗'}><Icon type="bold"/></li>
@@ -355,7 +381,7 @@ class TopicBox extends React.Component {
                         <li onClick={this.addUnderline} title={'添加分割线'}><Icon type="dash"/></li>
                         <li onClick={this.addHead} title={'添加小标题'}><Icon type="edit"/></li>
                         <li onClick={this.addLink} title={'添加链接'}><Icon type="link"/></li>
-                        <li onClick={this.addCode} title={'添加代码段'}><Icon type="code" /></li>
+                        <li onClick={this.addCode} title={'添加代码段'}><Icon type="code"/></li>
                         <li onClick={this.addTable} title={'添加表格'}><Icon type="table"/></li>
                         <li onClick={this.addPicture} title={'插入网络图片'}><Icon type="picture"/></li>
                         {

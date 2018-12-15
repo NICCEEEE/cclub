@@ -1,0 +1,173 @@
+@charset "UTF-8";
+
+.content.TopicPage {
+  justify-content: flex-start;
+  .content-title {
+    font-size: 30px;
+    font-weight: bolder;
+    color: black;
+    flex-basis: 75%;
+    margin: 40px 0px;
+  }
+  .author-block {
+    flex-basis: 75%;
+    display: flex;
+    flex-wrap: wrap;
+    .content-detail {
+      margin-left: 15px;
+      flex: 1;
+      .topicInfo {
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        .info-left {
+          font-weight: bold;
+          a {
+            font-weight: bolder;
+            font-size: 17px;
+          }
+          span {
+            text-decoration: underline;
+          }
+        }
+        .info-right {
+          display: flex;
+          .comments, .views, .vote {
+            text-align: center;
+            margin: 0px 5px;
+            width: 60px
+          }
+          .count {
+            font-size: 20px;
+            font-weight: bolder;
+            color: rgb(206, 120, 33);
+          }
+          .countTitle {
+            color: gray;
+            font-weight: bolder;
+          }
+        }
+      }
+      .content-article {
+        font-size: 17px;
+        table{
+          border-width: 2px;
+          border-style: solid;
+          border-color: lightgray;
+          caption-side: top;
+          border-collapse: collapse;
+        }
+        th{
+          background-color: rgb(233, 234, 236);
+        }
+        th {
+          padding: 7px;
+          text-align: center;
+          margin: 10px;
+        }
+        td {
+          border-width: thin;
+          border-style: solid;
+          border-color: lightgray;
+          padding: 7px;
+          text-align: center;
+          margin: 10px;
+        }
+        tr:nth-child(even) {
+          background-color: rgb(246, 246, 246);
+        }
+      }
+      .bottom-info {
+        margin: 60px 0px;
+        height: 60px;
+        box-sizing: border-box;
+        border-bottom: 1px solid rgb(233, 233, 233);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .bottom-right {
+          span + span {
+            margin-left: 10px;
+          }
+        }
+      }
+    }
+  }
+  .comment-block {
+    flex-basis: 75%;
+    display: flex;
+    flex-wrap: wrap;
+    border-top: 1px solid lightgray;
+    padding-top: 20px;
+    .comment-detail {
+      margin-left: 15px;
+      flex: 1;
+      .comment-top {
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        font-weight: bold;
+        .comment-top-right {
+          border: 1px solid white;
+          border-radius: 10px;
+          background-color: rgb(240, 240, 240);
+          box-sizing: border-box;
+          padding: 3px 5px;
+          color: darkgrey;
+        }
+        a {
+          font-weight: bolder;
+          font-size: 17px;
+        }
+        span {
+          text-decoration: underline;
+        }
+      }
+      .comment-article {
+        font-size: 17px;
+        table{
+          border-width: 2px;
+          border-style: solid;
+          border-color: lightgray;
+          caption-side: top;
+          border-collapse: collapse;
+        }
+        th{
+          background-color: rgb(233, 234, 236);
+        }
+        th {
+          padding: 7px;
+          text-align: center;
+          margin: 10px;
+        }
+        td {
+          border-width: thin;
+          border-style: solid;
+          border-color: lightgray;
+          padding: 7px;
+          text-align: center;
+          margin: 10px;
+        }
+        tr:nth-child(even) {
+          background-color: rgb(246, 246, 246);
+        }
+      }
+      .comment-bottom {
+        font-size: 25px;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 35px;
+        margin-bottom: 15px;
+        .comment-like, .comment-dislike {
+          width: 100px;
+          span {
+            margin: 0 10px;
+          }
+        }
+        .comment-like {
+          text-align: right;
+        }
+      }
+    }
+  }
+}

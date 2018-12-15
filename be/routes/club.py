@@ -25,7 +25,7 @@ def current_user():
     # 然后 User.find_by 来用 id 找用户
     # 找不到就返回 None
     username = session.get('username', None)
-    user = User.find_one(username=username)
+    user = User.find_one({}, username=username)
     return user
 
 
@@ -69,7 +69,7 @@ def addtopic():
     username = user.get('username')
     topic_info = request.form
     # 添加帖子id
-    ids = [int(i.get('tid', -1)) for i in Topic.get_all()]
+    ids = [int(i.get('tid', -1)) for i in Topic.get_all({})]
     if len(ids) < 1:
         tid = 20000
     else:
@@ -82,6 +82,7 @@ def addtopic():
         content=topic_info.get('content'),
         board=topic_info.get('board'),
         vote=0,
+        voteUser=[],
         comments=0,
         views=0,
         essence=False,
@@ -98,3 +99,32 @@ def addtopic():
         return 'fail'
 
 
+@main.route('/topic/<int:tid>')
+def get_topic(tid):
+    topic = Topic.find_one({}, tid=tid)
+    print('%%%%%%%', topic)
+    if topic is None:
+        return render_template('index.html')
+    else:
+        Topic.update_one({"tid": tid}, {'views': topic.get('views') + 1})
+        topic['views'] += 1
+        return jsonify(topic)
+
+
+@main.route('/upvote/<int:tid>')
+def up_vote(tid):
+    user = current_user()
+    if user is None:
+        return 'fail'
+    else:
+        topic = Topic.find_one({}, tid=tid)
+        if topic is None:
+            return 'fail'
+        topic['voteUser'].append({
+            'username': user.get('username'),
+            'uid': user.get('uid')
+        })
+        topic['vote'] += 1
+        Topic.update_one({'tid': tid}, {'voteUser': topic['voteUser'], 'vote': topic['vote']})
+        print('$$$$$$$', tid)
+        return jsonify(user)

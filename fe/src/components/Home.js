@@ -26,6 +26,7 @@ class Home extends React.Component {
             boardBug: [],
             tabKey: '1',
             drawerVisible: false,
+            parent: 'Home',
         }
     }
 
@@ -174,7 +175,7 @@ class Home extends React.Component {
                     </TabPane>
                     <TabPane tab="精华区" key="2">
                         {loading}
-                        <div>
+                        <div style={{width: 'inherit'}}>
                             {
                                 this.state.boardEssence.map((value, index) => {
                                     return <Topic tab={'2'} Home={this} key={index} detail={value}/>
@@ -186,7 +187,7 @@ class Home extends React.Component {
                     </TabPane>
                     <TabPane tab="灌水交流" key="3">
                         {loading}
-                        <div>
+                        <div style={{width: 'inherit'}}>
                             {
                                 this.state.boardTalk.map((value, index) => {
                                     return <Topic tab={'3'} Home={this} key={index} detail={value}/>
@@ -198,7 +199,7 @@ class Home extends React.Component {
                     </TabPane>
                     <TabPane tab="技术讨论" key="4">
                         {loading}
-                        <div>
+                        <div style={{width: 'inherit'}}>
                             {
                                 this.state.boardTech.map((value, index) => {
                                     return <Topic tab={'4'} Home={this} key={index} detail={value}/>
@@ -210,7 +211,7 @@ class Home extends React.Component {
                     </TabPane>
                     <TabPane tab="建议&反馈" key="5">
                         {loading}
-                        <div>
+                        <div style={{width: 'inherit'}}>
                             {
                                 this.state.boardBug.map((value, index) => {
                                     return <Topic tab={'5'} Home={this} key={index} detail={value}/>
@@ -221,7 +222,7 @@ class Home extends React.Component {
                                     total={this.state.bug.length} onChange={this.onChangeBug}/>
                     </TabPane>
                 </Tabs>
-                <TopicBox Home={this}/>
+                <TopicBox Parent={this}/>
             </div>
         )
     }

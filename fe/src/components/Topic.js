@@ -1,6 +1,8 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 import {Avatar, Icon, Tooltip} from 'antd';
 import '../assets/css/Topic.css'
+
 class Topic extends React.Component {
     constructor(props) {
         super(props)
@@ -29,10 +31,15 @@ class Topic extends React.Component {
             <div className={'topicBox'}>
                 <Tooltip placement="left" title={this.props.detail.author}>
                     <Avatar size={70} className={'userHead'}
-                            style={{color: '#f56a00', backgroundColor: '#fde3cf'}}>U</Avatar>
+                            style={{color: color, backgroundColor: bgc}}>N</Avatar>
                 </Tooltip>
                 <div className={'topicBox-1'}>
-                    <p className={'topicTitle'}><a style={{wordBreak: 'break-word'}}>{this.props.detail.title}</a></p>
+                    <p className={'topicTitle'}><Link style={{wordBreak: 'break-word'}}
+                                                      to={{
+                                                          pathname: `/topic/${this.props.detail.tid}`,
+                                                          state: this.props.detail.tid
+                                                      }}>{this.props.detail.title}</Link>
+                    </p>
                     <p className={'topicBottom'}>
                         <span className={'topicBoard'}>
                             {icon}<a onClick={() => this.props.Home.handleBoardTab(this.props.tab)}>&nbsp;{board}</a>

@@ -4,6 +4,12 @@
 .ant-drawer-content .ant-drawer-body {
   display: flex;
   flex-wrap: wrap; }
+  .ant-drawer-content .ant-drawer-body .box-left {
+    flex-basis: 83%; }
+  .ant-drawer-content .ant-drawer-body .button-group {
+    flex-basis: 17%;
+    display: flex;
+    justify-content: space-around; }
   .ant-drawer-content .ant-drawer-body .toolBox {
     list-style: none;
     flex-basis: 100%;
@@ -35,7 +41,7 @@
     justify-content: space-between;
     flex-basis: 100%; }
     .ant-drawer-content .ant-drawer-body .titleBox .ant-input-group-wrapper {
-      width: 85%; }
+      width: 100%; }
     .ant-drawer-content .ant-drawer-body .titleBox .ant-input-group-addon {
       font-size: 20px; }
   .ant-drawer-content .ant-drawer-body .writingBox {
