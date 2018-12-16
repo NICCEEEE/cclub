@@ -65,7 +65,7 @@ def login():
 def addtopic():
     user = current_user()
     if user is None:
-        return render_template('index.html')
+        return 'fail'
     username = user.get('username')
     topic_info = request.form
     # 添加帖子id
@@ -76,13 +76,14 @@ def addtopic():
         max_id = max(ids)
         tid = max_id + 1 if max_id > 0 else 20000
     topic_data = dict(
-        ct=time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(float(topic_info.get('ct')))),
+        ct=topic_info.get('ct', time.time()),
         author=username,
         title=topic_info.get('title'),
         content=topic_info.get('content'),
         board=topic_info.get('board'),
         vote=0,
         voteUser=[],
+        comment=[],
         comments=0,
         views=0,
         essence=False,
@@ -102,7 +103,6 @@ def addtopic():
 @main.route('/topic/<int:tid>')
 def get_topic(tid):
     topic = Topic.find_one({}, tid=tid)
-    print('%%%%%%%', topic)
     if topic is None:
         return render_template('index.html')
     else:
@@ -120,11 +120,110 @@ def up_vote(tid):
         topic = Topic.find_one({}, tid=tid)
         if topic is None:
             return 'fail'
+        for u in topic['voteUser']:
+            if u.get('username') == user.get('username') and u.get('uid') == user.get('uid'):
+                return 'exist'
         topic['voteUser'].append({
             'username': user.get('username'),
             'uid': user.get('uid')
         })
         topic['vote'] += 1
         Topic.update_one({'tid': tid}, {'voteUser': topic['voteUser'], 'vote': topic['vote']})
-        print('$$$$$$$', tid)
         return jsonify(user)
+
+
+@main.route('/addComment/<int:tid>', methods=['POST'])
+def add_comment(tid):
+    user = current_user()
+    if user is None:
+        return 'fail'
+    topic = Topic.find_one({}, tid=tid)
+    if topic is None:
+        return 'fail'
+    comment_info = request.form
+    topic_comment = topic['comment']
+    topic_comments = topic['comments'] + 1
+    last_comment_author = user.get('username')
+    last_comment_time = comment_info.get('ct', time.time())
+    last_comment_content = comment_info.get('content')
+    comment = dict(
+        username=user.get('username'),
+        uid=user.get('uid'),
+        content=comment_info.get('content'),
+        like=0,
+        likes=[],
+        dislike=0,
+        dislikes=[],
+        ct=comment_info.get('ct', time.time()),
+        floor=len(topic_comment) + 1,
+        cid=int(str(tid * 10) + str(topic_comments))
+    )
+    topic_comment.append(comment)
+    res = Topic.update_one(
+        {'tid': tid},
+        {
+            'comment': topic_comment,
+            'comments': topic_comments,
+            'last_comment_author': last_comment_author,
+            'last_comment_time': last_comment_time,
+            'last_comment_content': last_comment_content
+        }
+    )
+    if res is None:
+        return 'fail'
+    else:
+        return 'success'
+
+
+@main.route('/likeCom/<int:cid>')
+def like_comment(cid):
+    user = current_user()
+    if user is None:
+        return 'not login'
+    tid = int(str(cid)[:5])
+    topic = Topic.find_one({}, tid=tid)
+    if topic is None:
+        return 'fail'
+    topic_comment = topic.get('comment')
+    for c in topic_comment:
+        if c.get('cid') == cid:
+            for u in c.get('likes'):
+                if u.get('uid') == user.get('uid') and u.get('username') == user.get('username'):
+                    return 'exist'
+            c['like'] += 1
+            c['likes'].append(
+                {
+                    'username': user.get('username'),
+                    'uid': user.get('uid')
+                }
+            )
+            Topic.update_one({'tid': tid}, {'comment': topic_comment})
+            return 'success'
+    return 'fail'
+
+
+@main.route('/dislikeCom/<int:cid>')
+def dislike_comment(cid):
+    user = current_user()
+    if user is None:
+        return 'not login'
+    tid = int(str(cid)[:5])
+    topic = Topic.find_one({}, tid=tid)
+    if topic is None:
+        return 'fail'
+    topic_comment = topic.get('comment')
+    for c in topic_comment:
+        if c.get('cid') == cid:
+            for u in c.get('dislikes'):
+                if u.get('uid') == user.get('uid') and u.get('username') == user.get('username'):
+                    return 'exist'
+            c['dislike'] += 1
+            c['dislikes'].append(
+                {
+                    'username': user.get('username'),
+                    'uid': user.get('uid')
+                }
+            )
+            Topic.update_one({'tid': tid}, {'comment': topic_comment})
+            return 'success'
+    return 'fail'

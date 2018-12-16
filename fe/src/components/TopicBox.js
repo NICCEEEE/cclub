@@ -18,6 +18,7 @@ class TopicBox extends React.Component {
             preview: true,
             fullScreen: false,
             markdown: '',
+            env: 'Home',
         }
     }
 
@@ -263,41 +264,66 @@ class TopicBox extends React.Component {
         this.renderMarkdown()
     }
     publish = () => {
-        let title = document.querySelector("input[name='topicTitle']")
-        let board = this.state.selectedBoard
         let content = document.querySelector("textarea[name='inputTopic']")
-        if (title.value.length < 8 || title.length > 40) {
-            error('标题字数不符')
-        } else if (board === null) {
-            error('尚未选择发布板块')
-        } else if (content.value.length < 1) {
-            error('帖子内容不能为空')
-        } else {
-            let topicData = {
-                title: title.value,
-                board: board,
-                content: content.value,
-                ct: new Date().getTime() / 1000,
-            }
-            console.log(topicData)
-            axios.post('http://0.0.0.0:2000/addtopic', qs.stringify(topicData))
-                .then((response) => {
-                    if (response.data === 'success') {
-                        title.value = ''
-                        content.value = ''
-                        this.setState({
-                            selectedBoard: null
-                        })
-                        success('发布成功 :)')
-                        setTimeout(() => document.location.reload(), 800)
-                    } else {
+        if (this.state.env === 'Home') {
+            let title = document.querySelector("input[name='topicTitle']")
+            let board = this.state.selectedBoard
+            if (title.value.length < 8 || title.length > 40) {
+                error('标题字数不符')
+            } else if (board === null) {
+                error('尚未选择发布板块')
+            } else if (content.value.length < 1) {
+                error('帖子内容不能为空')
+            } else {
+                let topicData = {
+                    title: title.value,
+                    board: board,
+                    content: content.value,
+                    ct: new Date().getTime() / 1000,
+                }
+                axios.post('http://0.0.0.0:2000/addtopic', qs.stringify(topicData))
+                    .then((response) => {
+                        if (response.data === 'success') {
+                            title.value = ''
+                            content.value = ''
+                            this.setState({
+                                selectedBoard: null
+                            })
+                            success('发布成功 :)')
+                            setTimeout(() => document.location.reload(), 800)
+                        } else {
+                            error('糟糕，出现未知异常，请稍候尝试！')
+                        }
+                    })
+                    .catch((err) => {
                         error('糟糕，出现未知异常，请稍候尝试！')
-                    }
-                })
-                .catch((err) => {
-                    error('糟糕，出现未知异常，请稍候尝试！')
-                    console.log(err)
-                })
+                        console.log(err)
+                    })
+            }
+        } else if (this.state.env === 'TopicContent') {
+            if (content.value.length < 1) {
+                error('回复内容不能为空')
+            } else {
+                let commentData = {
+                    content: content.value,
+                    ct: new Date().getTime() / 1000,
+                }
+                let tid = this.props.Parent.props.location.state ? this.props.Parent.props.location.state : this.props.Parent.props.location.pathname.split('/').reverse()[0]
+                axios.post(`http://0.0.0.0:2000/addComment/${tid}`, qs.stringify(commentData))
+                    .then((response) => {
+                        if (response.data === 'success') {
+                            content.value = ''
+                            success('回复成功 :)')
+                            setTimeout(() => document.location.reload(), 800)
+                        } else {
+                            error('糟糕，出现未知异常，请稍候尝试！')
+                        }
+                    })
+                    .catch((err) => {
+                        error('糟糕，出现未知异常，请稍候尝试！')
+                        console.log(err)
+                    })
+            }
         }
     }
     renderMarkdown = () => {
@@ -310,6 +336,14 @@ class TopicBox extends React.Component {
         let previewBox = document.querySelector('.markdownPreview')
         let top = e.target.scrollTop
         previewBox.scrollTo(0, top * 0.85)
+    }
+
+    componentDidMount() {
+        if (this.props.Parent.state.parent === 'Home') {
+            this.setState({env: 'Home'})
+        } else if (this.props.Parent.state.parent === 'TopicContent') {
+            this.setState({env: 'TopicContent'})
+        }
     }
 
     render() {
@@ -349,8 +383,6 @@ class TopicBox extends React.Component {
                     <div className={'titleBox'}>
                         <div className={'box-left'} style={env === 'TopicContent' ? {flexBasis: '90%', fontSize: '25px'} : null}>
                             {inputTitle}
-                            {/*<Input name={'topicTitle'} addonBefore="您的标题:" size="large"*/}
-                            {/*placeholder="标题字数不能少于8个字符且不能超过40个字符"/>*/}
                         </div>
                         <div className={'button-group'} style={env === 'TopicContent' ? {flexBasis: '10%'} : null}>
                             {
@@ -360,11 +392,6 @@ class TopicBox extends React.Component {
                                     </Button>
                                 </Dropdown> : null
                             }
-                            {/*<Dropdown overlay={menu}>*/}
-                            {/*<Button size={'large'}>*/}
-                            {/*{this.state.selectedBoard ? this.state.selectedBoard : '选择板块'}<Icon type="down"/>*/}
-                            {/*</Button>*/}
-                            {/*</Dropdown>*/}
                             <Button size={'large'} type="primary" onClick={this.publish}>{env === 'Home' ? '发布' : '回复'}</Button>
                             <Popconfirm placement="topRight" title={'关闭后您的输入将被清空,您确定要关闭吗？'} onConfirm={this.onClose}
                                         okText="确定" cancelText="取消">

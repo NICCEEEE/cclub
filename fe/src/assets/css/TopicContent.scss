@@ -81,6 +81,7 @@
         margin: 60px 0px;
         height: 60px;
         box-sizing: border-box;
+        border-top: 1px solid rgb(233, 233, 233);
         border-bottom: 1px solid rgb(233, 233, 233);
         display: flex;
         justify-content: space-between;
@@ -118,9 +119,6 @@
         a {
           font-weight: bolder;
           font-size: 17px;
-        }
-        span {
-          text-decoration: underline;
         }
       }
       .comment-article {

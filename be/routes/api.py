@@ -90,7 +90,23 @@ def is_upvote(tid):
         return 'false'
     else:
         topic = Topic.find_one({}, tid=tid)
+        if topic is None:
+            return 'false'
         for u in topic['voteUser']:
             if u.get('username') == user.get('username') and u.get('uid') == user.get('uid'):
                 return 'true'
         return 'false'
+
+
+@main.route('/likeStatus/<int:tid>', methods=['GET'])
+def like_status(tid):
+    username = session.get('username', None)
+    user = User.find_one({}, username=username)
+    if user is None:
+        return 'false'
+    else:
+        topic = Topic.find_one({}, tid=tid)
+        if topic is None:
+            return 'false'
+        for c in topic['comment']:
+

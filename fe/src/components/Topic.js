@@ -2,6 +2,7 @@ import React from 'react'
 import {Link} from 'react-router-dom'
 import {Avatar, Icon, Tooltip} from 'antd';
 import '../assets/css/Topic.css'
+import moment from 'moment/min/moment-with-locales';
 
 class Topic extends React.Component {
     constructor(props) {
@@ -44,7 +45,9 @@ class Topic extends React.Component {
                         <span className={'topicBoard'}>
                             {icon}<a onClick={() => this.props.Home.handleBoardTab(this.props.tab)}>&nbsp;{board}</a>
                         </span>&nbsp;•&nbsp;
-                        <span className={'topicTime'}>{this.props.detail.ct}</span>&nbsp;•&nbsp;
+                        <Tooltip placement="top" title={moment(this.props.detail.ct * 1000).format('YYYY年M月D日Ah点mm分')}>
+                            <span>{moment(this.props.detail.ct * 1000).fromNow()}</span>
+                        </Tooltip>&nbsp;•&nbsp;
                         <span className={'topicAuthor'}><a>{this.props.detail.author}</a></span>
                     </p>
                 </div>
@@ -70,7 +73,9 @@ class Topic extends React.Component {
                                         style={{backgroundColor: '#87d068'}}
                                         icon="user"/>
                             </Tooltip>
-                            <span className={'lastCommentTime'} style={{paddingLeft: '5px'}}>大约5小时之前</span>
+                            <Tooltip placement="top" title={moment(this.props.detail.last_comment_time * 1000).format('YYYY年M月D日Ah点mm分')}>
+                                <span className={'lastCommentTime'} style={{paddingLeft: '5px'}}>{moment(this.props.detail.last_comment_time * 1000).fromNow()}</span>
+                            </Tooltip>
                         </p>) : null
                     }
                     <p className={'commentPreview'} style={{overflow: 'hidden'}}>

@@ -1,6 +1,6 @@
 import React from 'react'
 import '../assets/css/TopicContent.css'
-import {Breadcrumb, Icon, Avatar, Tag, Button, Tooltip, Menu, Dropdown, Spin, Modal, notification, Comment} from 'antd';
+import {Breadcrumb, Icon, Avatar, Tag, Button, Tooltip, Menu, Dropdown, Spin, Modal, notification} from 'antd';
 import {Link} from 'react-router-dom'
 import Markdown from 'react-markdown'
 import CodeBlock from '../code-block'
@@ -8,7 +8,7 @@ import axios from 'axios'
 import TopicBox from "./TopicBox"
 import {error} from "../utilities"
 import {Redirect} from 'react-router-dom'
-import moment from 'moment';
+import moment from 'moment/min/moment-with-locales';
 
 axios.defaults.withCredentials = true;
 const confirm = Modal.confirm;
@@ -27,9 +27,15 @@ class TopicContent extends React.Component {
             drawerVisible: false,
             parent: 'TopicContent',
             isVote: 'rgb(200, 200, 200)',
+            order: null,
         }
     }
 
+    handleMenuClick = (e) => {
+        this.setState({
+            order: e.item.props.children
+        })
+    }
     showConfirm = (word) => {
         let w = word ? word : '回复'
         confirm({
@@ -93,29 +99,98 @@ class TopicContent extends React.Component {
                 this.setState({
                     content: response.data
                 })
+                document.title = this.state.content.board.concat(' | CCLUB')
             })
             .catch((error) => {
                 console.log(error)
             })
         this.isVoteUp()
     }
-
+    getLikeStatus = () => {
+        let tid = this.props.location.state ? this.props.location.state : this.props.location.pathname.split('/').reverse()[0]
+        axios.get(`http://0.0.0.0:2000/api/likeStatus/${tid}`)
+    }
+    dislikeCom = (value) => {
+        axios.get(`http://0.0.0.0:2000/dislikeCom/${value.value.cid}`)
+            .then((response) => {
+                if (response.data === 'not login') {
+                    this.showConfirm('点赞')
+                } else if (response.data === 'fail') {
+                    error('糟糕，出现未知异常，请稍候尝试！')
+                } else if (response.data === 'exist') {
+                    const openNotificationWithIcon = (type) => {
+                        notification[type]({
+                            message: '您已经反对过啦~',
+                            description: '您已经反对过啦，再到处看看吧：）',
+                        });
+                    };
+                    openNotificationWithIcon('warning')
+                } else {
+                    let icon = document.querySelectorAll(`#id-comment-${value.value.cid} .comment-dislike path`)[1]
+                    icon.style.fill = 'crimson'
+                    icon.style.transition = 'all .5s'
+                    let likeCount = document.querySelector(`#id-comment-${value.value.cid} .dislikeCount`)
+                    likeCount.innerHTML = parseInt(likeCount.innerHTML) + 1
+                    console.log('反对成功')
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
+    likeCom = (value) => {
+        axios.get(`http://0.0.0.0:2000/likeCom/${value.value.cid}`)
+            .then((response) => {
+                if (response.data === 'not login') {
+                    this.showConfirm('点赞')
+                } else if (response.data === 'fail') {
+                    error('糟糕，出现未知异常，请稍候尝试！')
+                } else if (response.data === 'exist') {
+                    const openNotificationWithIcon = (type) => {
+                        notification[type]({
+                            message: '您已经赞过啦~',
+                            description: '您已经赞过啦，非常感谢您的支持，再到处看看吧：）',
+                        });
+                    };
+                    openNotificationWithIcon('warning')
+                } else {
+                    let icon = document.querySelectorAll(`#id-comment-${value.value.cid} .comment-like path`)[1]
+                    icon.style.fill = 'forestgreen'
+                    icon.style.transition = 'all .5s'
+                    let likeCount = document.querySelector(`#id-comment-${value.value.cid} .likeCount`)
+                    likeCount.innerHTML = parseInt(likeCount.innerHTML) + 1
+                    console.log('支持成功')
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    }
     upVote = () => {
         let tid = this.props.location.state ? this.props.location.state : this.props.location.pathname.split('/').reverse()[0]
         axios.get(`http://0.0.0.0:2000/upvote/${tid}`)
             .then((response) => {
                 if (response.data === 'fail') {
                     this.showConfirm('点赞')
+                } else if (response.data === 'exist') {
+                    const openNotificationWithIcon = (type) => {
+                        notification[type]({
+                            message: '您已经赞过啦~',
+                            description: '您已经赞过该评论啦，非常感谢您的支持，再到处看看吧：）',
+                        });
+                    };
+                    openNotificationWithIcon('warning')
                 } else {
                     let icon = document.querySelectorAll('.anticon-like path')[1]
                     icon.style.fill = '#fd971f'
                     icon.style.transition = 'all .5s'
+                    let count = document.querySelector('.info-right .vote .count')
+                    count.innerHTML = parseInt(count.innerHTML) + 1
                 }
             })
             .catch((err) => {
                 console.log(err)
             })
-        console.log('click')
     }
 
     render() {
@@ -128,6 +203,9 @@ class TopicContent extends React.Component {
         if (this.state.content === null) {
             return <Spin size="large"/>
         } else {
+            let copyComment = this.state.content.comment.concat()
+            copyComment.reverse()
+            let order = this.state.order === '倒序' ? copyComment : this.state.content.comment
             return (
                 <div className={'content TopicPage'}>
                     <Breadcrumb style={{marginTop: '15px', flexBasis: '75%'}}>
@@ -145,7 +223,10 @@ class TopicContent extends React.Component {
                             <div className={'topicInfo'}>
                                 <div className={'info-left'}>
                                     <Tag color="cyan">楼主</Tag><a>{this.state.content.author}</a>&nbsp;•&nbsp;
-                                    <span>{this.state.content.ct}</span>&nbsp;•&nbsp;发布于&nbsp;<Tag
+                                    <Tooltip placement="top"
+                                             title={moment(this.state.content.ct * 1000).format('YYYY年M月D日Ah点mm分')}>
+                                        <span>{moment(this.state.content.ct * 1000).fromNow()}</span>
+                                    </Tooltip>&nbsp;•&nbsp;发布于&nbsp;<Tag
                                     color="geekblue">{this.state.content.board}</Tag>
                                 </div>
                                 <div className={'info-right'}>
@@ -173,7 +254,7 @@ class TopicContent extends React.Component {
                                     <Button onClick={this.replyBox} size={'large'} type="primary">回复主题</Button>
                                     <Dropdown overlay={menu}>
                                         <Button size={'large'} style={{marginLeft: '5px'}}>
-                                            排序<Icon type="down"/>
+                                            {this.state.order ? this.state.order : '排序'}<Icon type="down"/>
                                         </Button>
                                     </Dropdown>
                                 </div>
@@ -193,19 +274,21 @@ class TopicContent extends React.Component {
                         </div>
                     </div>
                     {
-                        this.state.content.comment.map( (value, index) => {
+                        order.map((value, index) => {
                             return (
-                                <div key={index} className={'comment-block'}>
+                                <div id={`id-comment-${value.cid}`} key={index} className={'comment-block'}>
                                     <Avatar size={70} className={'userHead'}
                                             style={{color: '#8ACF00', backgroundColor: 'honeydew'}}>N</Avatar>
                                     <div className={'comment-detail'}>
                                         <div className={'comment-top'}>
                                             <div className={'comment-top-left'}>
                                                 {
-                                                    value.uid === this.state.content.uid ? <Tag color="cyan">楼主</Tag> : null
+                                                    value.uid === this.state.content.uid ?
+                                                        <Tag color="cyan">楼主</Tag> : null
                                                 }
                                                 <a>{value.username}</a>&nbsp;•&nbsp;
-                                                <Tooltip placement="top" title={new Date(value.ct * 1000).toDateString()}>
+                                                <Tooltip placement="top"
+                                                         title={moment(value.ct * 1000).format('YYYY年M月D日Ah点mm分')}>
                                                     <span>{moment(value.ct * 1000).fromNow()}</span>
                                                 </Tooltip>
                                             </div>
@@ -221,14 +304,20 @@ class TopicContent extends React.Component {
                                         <div className={'comment-bottom'}>
                                             <div className={'comment-dislike'}>
                                                 <Tooltip placement="bottom" title={'不支持'}>
-                                                    <Icon type="dislike" theme="twoTone" twoToneColor="rgb(200, 200, 200)"/>
+                                                    <Icon onClick={this.dislikeCom.bind(this, {value})} type="dislike"
+                                                          theme="twoTone"
+                                                          twoToneColor="rgb(200, 200, 200)"/>
                                                 </Tooltip>
-                                                <span className={'dislikeCount'} style={{color: 'firebrick'}}>{value.dislike}</span>
+                                                <span className={'dislikeCount'}
+                                                      style={{color: 'firebrick'}}>{value.dislike}</span>
                                             </div>
                                             <div className={'comment-like'}>
-                                                <span className={'likeCount'} style={{color: 'limegreen'}}>{value.like}</span>
+                                                <span className={'likeCount'}
+                                                      style={{color: 'limegreen'}}>{value.like}</span>
                                                 <Tooltip placement="top" title={'支持'}>
-                                                    <Icon type="like" theme="twoTone" twoToneColor="rgb(200, 200, 200)"/>
+                                                    <Icon onClick={this.likeCom.bind(this, {value})} type="like"
+                                                          theme="twoTone"
+                                                          twoToneColor="rgb(200, 200, 200)"/>
                                                 </Tooltip>
                                             </div>
                                         </div>
@@ -245,23 +334,3 @@ class TopicContent extends React.Component {
 }
 
 export default TopicContent
-// ﻿"comment" : [
-//     {
-//         "username" : "gua123",
-//         "uid" : 10000,
-//         "content" : "记录，创作，整理，阅读文稿的同时，我们不仅希望它是一个有力的工具，更希望您的思想和知识通过这个平台，连同优质的阅读体验，将他们分享给有相同志趣的人，进而鼓励更多的人来到这里记录分享他们的思想和知识，尝试点击",
-//         "like" : 0,
-//         "dislike" : 0,
-//         "ct" : 1544885783.04244,
-//         "floor" : 1
-//     },
-//     {
-//         "username" : "gua123",
-//         "uid" : 10001,
-//         "content" : "更希望您的思想和知识通过这个平台，连同优质的阅读体验，将他们分享给有相同志趣的人，进而鼓励更多的人来到这里记录分享他们的思想和知识，尝试点击",
-//         "like" : 0,
-//         "dislike" : 0,
-//         "ct" : 1544885883.04244,
-//         "floor" : 2
-//     }
-// ]
