@@ -108,5 +108,34 @@ def like_status(tid):
         topic = Topic.find_one({}, tid=tid)
         if topic is None:
             return 'false'
+        like = []
+        dislike = []
+        # 遍历该帖所有评论
         for c in topic['comment']:
-
+            # 判断是否有人支持
+            if len(c['likes']) < 1:
+                like.append(False)
+            else:
+                # 遍历每一个评论的支持列表
+                for l in c['likes']:
+                    # 判断该评论的支持列表是否存在当前浏览的用户
+                    if l.get('uid') == user.get('uid') and l.get('username') == user.get('username'):
+                        like.append(True)
+                    else:
+                        like.append(False)
+            # 判断是否有人反对
+            if len(c['dislikes']) < 1:
+                dislike.append(False)
+            else:
+                # 遍历每一个评论的反对列表
+                for d in c['dislikes']:
+                    # 判断该评论的反对列表是否存在当前浏览的用户
+                    if d.get('uid') == user.get('uid') and d.get('username') == user.get('username'):
+                        dislike.append(True)
+                    else:
+                        dislike.append(False)
+        status = {
+            'like': like,
+            'dislike': dislike
+        }
+        return jsonify(status)

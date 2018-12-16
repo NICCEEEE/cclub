@@ -28,6 +28,7 @@ class TopicContent extends React.Component {
             parent: 'TopicContent',
             isVote: 'rgb(200, 200, 200)',
             order: null,
+            likeStatus: null,
         }
     }
 
@@ -92,23 +93,20 @@ class TopicContent extends React.Component {
             })
     }
 
-    componentDidMount() {
-        let tid = this.props.location.state ? this.props.location.state : this.props.location.pathname.split('/').reverse()[0]
-        axios.get(`http://0.0.0.0:2000/topic/${tid}`)
-            .then((response) => {
-                this.setState({
-                    content: response.data
-                })
-                document.title = this.state.content.board.concat(' | CCLUB')
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-        this.isVoteUp()
-    }
     getLikeStatus = () => {
         let tid = this.props.location.state ? this.props.location.state : this.props.location.pathname.split('/').reverse()[0]
         axios.get(`http://0.0.0.0:2000/api/likeStatus/${tid}`)
+            .then((response) => {
+                if (response.data !== false) {
+                    this.setState({
+                        likeStatus: response.data
+                    })
+                    console.log(this.state.likeStatus)
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
     dislikeCom = (value) => {
         axios.get(`http://0.0.0.0:2000/dislikeCom/${value.value.cid}`)
@@ -126,9 +124,22 @@ class TopicContent extends React.Component {
                     };
                     openNotificationWithIcon('warning')
                 } else {
-                    let icon = document.querySelectorAll(`#id-comment-${value.value.cid} .comment-dislike path`)[1]
-                    icon.style.fill = 'crimson'
-                    icon.style.transition = 'all .5s'
+                    // 清除支持状态
+                    if (this.state.likeStatus.like[value.value.floor - 1] === true) {
+                        let status = this.state.likeStatus
+                        status.like[value.value.floor - 1] = false
+                        this.setState({
+                            likeStatus: status
+                        })
+                        let likeCount = document.querySelector(`#id-comment-${value.value.cid} .likeCount`)
+                        likeCount.innerHTML = parseInt(likeCount.innerHTML) - 1
+                    }
+                    // 增加反对状态
+                    let status = this.state.likeStatus
+                    status.dislike[value.value.floor - 1] = true
+                    this.setState({
+                        likeStatus: status
+                    })
                     let likeCount = document.querySelector(`#id-comment-${value.value.cid} .dislikeCount`)
                     likeCount.innerHTML = parseInt(likeCount.innerHTML) + 1
                     console.log('反对成功')
@@ -154,9 +165,22 @@ class TopicContent extends React.Component {
                     };
                     openNotificationWithIcon('warning')
                 } else {
-                    let icon = document.querySelectorAll(`#id-comment-${value.value.cid} .comment-like path`)[1]
-                    icon.style.fill = 'forestgreen'
-                    icon.style.transition = 'all .5s'
+                    // 清除反对状态
+                    if (this.state.likeStatus.dislike[value.value.floor - 1] === true) {
+                        let status = this.state.likeStatus
+                        status.dislike[value.value.floor - 1] = false
+                        this.setState({
+                            likeStatus: status
+                        })
+                        let likeCount = document.querySelector(`#id-comment-${value.value.cid} .dislikeCount`)
+                        likeCount.innerHTML = parseInt(likeCount.innerHTML) - 1
+                    }
+                    // 增加支持状态
+                    let status = this.state.likeStatus
+                    status.like[value.value.floor - 1] = true
+                    this.setState({
+                        likeStatus: status
+                    })
                     let likeCount = document.querySelector(`#id-comment-${value.value.cid} .likeCount`)
                     likeCount.innerHTML = parseInt(likeCount.innerHTML) + 1
                     console.log('支持成功')
@@ -193,6 +217,22 @@ class TopicContent extends React.Component {
             })
     }
 
+    componentDidMount() {
+        let tid = this.props.location.state ? this.props.location.state : this.props.location.pathname.split('/').reverse()[0]
+        axios.get(`http://0.0.0.0:2000/topic/${tid}`)
+            .then((response) => {
+                this.setState({
+                    content: response.data
+                })
+                document.title = this.state.content.board.concat(' | CCLUB')
+            })
+            .catch((error) => {
+                console.log(error)
+            })
+        this.isVoteUp()
+        this.getLikeStatus()
+    }
+
     render() {
         const menu = (
             <Menu onClick={this.handleMenuClick}>
@@ -200,7 +240,7 @@ class TopicContent extends React.Component {
                 <Menu.Item key="2">倒序</Menu.Item>
             </Menu>
         )
-        if (this.state.content === null) {
+        if (this.state.content === null || this.state.likeStatus === null) {
             return <Spin size="large"/>
         } else {
             let copyComment = this.state.content.comment.concat()
@@ -306,7 +346,7 @@ class TopicContent extends React.Component {
                                                 <Tooltip placement="bottom" title={'不支持'}>
                                                     <Icon onClick={this.dislikeCom.bind(this, {value})} type="dislike"
                                                           theme="twoTone"
-                                                          twoToneColor="rgb(200, 200, 200)"/>
+                                                          twoToneColor={this.state.likeStatus.dislike[value.floor - 1] ? "crimson" : "rgb(200, 200, 200)"}/>
                                                 </Tooltip>
                                                 <span className={'dislikeCount'}
                                                       style={{color: 'firebrick'}}>{value.dislike}</span>
@@ -317,7 +357,7 @@ class TopicContent extends React.Component {
                                                 <Tooltip placement="top" title={'支持'}>
                                                     <Icon onClick={this.likeCom.bind(this, {value})} type="like"
                                                           theme="twoTone"
-                                                          twoToneColor="rgb(200, 200, 200)"/>
+                                                          twoToneColor={this.state.likeStatus.like[value.floor - 1] ? "lightseagreen" : "rgb(200, 200, 200)"}/>
                                                 </Tooltip>
                                             </div>
                                         </div>

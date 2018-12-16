@@ -49,18 +49,18 @@
       <file leaf-file-name="TopicContent.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/TopicContent.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1008">
-              <caret line="92" column="5" lean-forward="true" selection-start-line="92" selection-start-column="5" selection-end-line="92" selection-end-column="5" />
+            <state relative-caret-position="865">
+              <caret line="190" column="14" lean-forward="true" selection-start-line="190" selection-start-column="14" selection-end-line="190" selection-end-column="14" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
                 <element signature="e#596#701#0" />
-                <element signature="e#1029#1045#0" />
-                <element signature="e#1002#1364#0" />
-                <element signature="e#1867#2277#0" />
-                <element signature="e#2299#2788#0" />
-                <element signature="e#3490#3513#0" />
-                <element signature="e#3577#4531#0" />
-                <element signature="e#3272#4447#0" />
+                <element signature="e#1056#1139#0" />
+                <element signature="e#1168#1530#0" />
+                <element signature="e#1552#2011#0" />
+                <element signature="e#2033#2443#0" />
+                <element signature="e#2465#2954#0" />
+                <element signature="e#2982#3527#0" />
+                <element signature="e#6142#7320#0" />
               </folding>
             </state>
           </provider>
@@ -69,8 +69,8 @@
       <file leaf-file-name="TopicContent.scss" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/assets/css/TopicContent.scss">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="408">
-              <caret line="90" column="30" lean-forward="true" selection-start-line="90" selection-start-column="30" selection-end-line="90" selection-end-column="30" />
+            <state relative-caret-position="-1035">
+              <caret line="90" column="30" selection-start-line="90" selection-start-column="30" selection-end-line="90" selection-end-column="30" />
               <folding>
                 <element signature="e#424#608#0" />
                 <element signature="e#622#685#0" />
@@ -196,8 +196,8 @@
         <option value="$PROJECT_DIR$/src/components/Home.js" />
         <option value="$PROJECT_DIR$/node_modules/moment/min/moment-with-locales.js" />
         <option value="$PROJECT_DIR$/src/components/Topic.js" />
-        <option value="$PROJECT_DIR$/src/assets/css/TopicContent.scss" />
         <option value="$PROJECT_DIR$/src/components/TopicBox.js" />
+        <option value="$PROJECT_DIR$/src/assets/css/TopicContent.scss" />
         <option value="$PROJECT_DIR$/src/components/TopicContent.js" />
       </list>
     </option>
@@ -315,12 +315,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1544081115125</updated>
-      <workItem from="1544081116727" duration="213456000" />
+      <workItem from="1544081116727" duration="219269000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="213456000" />
+    <option name="totallyTimeSpent" value="219269000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1200" extended-state="0" />
@@ -615,25 +615,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/assets/css/TopicContent.scss">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="90" column="30" lean-forward="true" selection-start-line="90" selection-start-column="30" selection-end-line="90" selection-end-column="30" />
-          <folding>
-            <element signature="e#424#608#0" />
-            <element signature="e#622#685#0" />
-            <element signature="e#699#796#0" />
-            <element signature="e#810#1009#0" />
-            <element signature="e#1039#1102#0" />
-            <element signature="e#2254#2426#0" />
-            <element signature="e#2437#2496#0" />
-            <element signature="e#2508#2597#0" />
-            <element signature="e#2609#2794#0" />
-            <element signature="e#2822#2881#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Topic.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1400">
@@ -690,20 +671,39 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/css/TopicContent.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1035">
+          <caret line="90" column="30" selection-start-line="90" selection-start-column="30" selection-end-line="90" selection-end-column="30" />
+          <folding>
+            <element signature="e#424#608#0" />
+            <element signature="e#622#685#0" />
+            <element signature="e#699#796#0" />
+            <element signature="e#810#1009#0" />
+            <element signature="e#1039#1102#0" />
+            <element signature="e#2254#2426#0" />
+            <element signature="e#2437#2496#0" />
+            <element signature="e#2508#2597#0" />
+            <element signature="e#2609#2794#0" />
+            <element signature="e#2822#2881#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/TopicContent.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1008">
-          <caret line="92" column="5" lean-forward="true" selection-start-line="92" selection-start-column="5" selection-end-line="92" selection-end-column="5" />
+        <state relative-caret-position="865">
+          <caret line="190" column="14" lean-forward="true" selection-start-line="190" selection-start-column="14" selection-end-line="190" selection-end-column="14" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
             <element signature="e#596#701#0" />
-            <element signature="e#1029#1045#0" />
-            <element signature="e#1002#1364#0" />
-            <element signature="e#1867#2277#0" />
-            <element signature="e#2299#2788#0" />
-            <element signature="e#3490#3513#0" />
-            <element signature="e#3577#4531#0" />
-            <element signature="e#3272#4447#0" />
+            <element signature="e#1056#1139#0" />
+            <element signature="e#1168#1530#0" />
+            <element signature="e#1552#2011#0" />
+            <element signature="e#2033#2443#0" />
+            <element signature="e#2465#2954#0" />
+            <element signature="e#2982#3527#0" />
+            <element signature="e#6142#7320#0" />
           </folding>
         </state>
       </provider>

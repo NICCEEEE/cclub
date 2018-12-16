@@ -185,11 +185,24 @@ def like_comment(cid):
     if topic is None:
         return 'fail'
     topic_comment = topic.get('comment')
+    # 遍历所有评论
     for c in topic_comment:
+        # 定位目标评论
         if c.get('cid') == cid:
+            # 判断当前用户是否点了反对
+            for u in c.get('dislikes'):
+                if u.get('uid') == user.get('uid') and u.get('username') == user.get('username'):
+                    # 判断为真，清除当前用户的反对，同时反对数减一
+                    c['dislike'] -= 1
+                    del c['dislikes'][c['dislikes'].index(u)]
+                    Topic.update_one({'tid': tid}, {'comment': topic_comment})
+                    break
+            # 判断当前用户是否点了支持
             for u in c.get('likes'):
                 if u.get('uid') == user.get('uid') and u.get('username') == user.get('username'):
+                    # 判断为真，则返回已点支持
                     return 'exist'
+            # 否则支持数加一，同时增加当前用户的支持信息
             c['like'] += 1
             c['likes'].append(
                 {
@@ -212,11 +225,24 @@ def dislike_comment(cid):
     if topic is None:
         return 'fail'
     topic_comment = topic.get('comment')
+    # 遍历所有评论
     for c in topic_comment:
+        # 定位目标评论
         if c.get('cid') == cid:
+            # 判断当前用户是否点了支持
+            for u in c.get('likes'):
+                if u.get('uid') == user.get('uid') and u.get('username') == user.get('username'):
+                    # 判断为真，清除当前用户的反对，同时反对数减一
+                    c['like'] -= 1
+                    del c['likes'][c['likes'].index(u)]
+                    Topic.update_one({'tid': tid}, {'comment': topic_comment})
+                    break
+            # 判断当前用户是否点了反对
             for u in c.get('dislikes'):
                 if u.get('uid') == user.get('uid') and u.get('username') == user.get('username'):
+                    # 判断为真，则返回已点反对
                     return 'exist'
+            # 否则支持数加一，同时增加当前用户的支持信息
             c['dislike'] += 1
             c['dislikes'].append(
                 {
