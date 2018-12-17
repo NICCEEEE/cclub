@@ -5,9 +5,15 @@
   flex-wrap: wrap;
   flex-direction: column;
   justify-content: space-between;
+  .App-head {
+    position: fixed;
+    width: 100%;
+    background-color: white;
+    z-index: 1;
+  }
   .content {
+    margin-top: 100px;
     width: 80%;
-    margin-top: 15px;
     margin-left: 10%;
     display: flex;
     flex-wrap: wrap;

@@ -64,11 +64,13 @@
         margin: 60px 0px;
         height: 60px;
         box-sizing: border-box;
-        border-top: 1px solid #e9e9e9;
-        border-bottom: 1px solid #e9e9e9;
+        border-top: 1px solid lightblue;
+        border-bottom: 1px solid lightblue;
         display: flex;
         justify-content: space-between;
         align-items: center; }
+        .content.TopicPage .author-block .content-detail .bottom-info .bottom-left button + button {
+          margin-left: 5px; }
         .content.TopicPage .author-block .content-detail .bottom-info .bottom-right span + span {
           margin-left: 10px; }
   .content.TopicPage .comment-block {
@@ -130,5 +132,15 @@
             margin: 0 10px; }
         .content.TopicPage .comment-block .comment-detail .comment-bottom .comment-like {
           text-align: right; }
+  .content.TopicPage .topic-bottom {
+    flex-basis: 75%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid lightblue;
+    padding: 10px 0px;
+    border-bottom: 1px solid lightblue; }
+    .content.TopicPage .topic-bottom button + button {
+      margin-left: 5px; }
 
 /*# sourceMappingURL=TopicContent.css.map */

@@ -64,7 +64,7 @@ class Home extends React.Component {
                     boardEssence: this.state.essence.slice(0, 15),
                     boardTalk: this.state.talk.slice(0, 15),
                     boardTech: this.state.tech.slice(0, 15),
-                    boardBug: this.state.bug.slice(0, 15)
+                    boardBug: this.state.bug.slice(0, 15),
                 })
             })
     }
@@ -141,7 +141,7 @@ class Home extends React.Component {
     }
 
     render() {
-        const operations = <Button onClick={this.createTopic} type="primary" size={'large'}>发布新帖</Button>;
+        const operations = <Button icon={'form'} onClick={this.createTopic} type="primary" size={'large'}>发布新帖</Button>;
         const TabPane = Tabs.TabPane;
         let loading = null
         if (this.state.topics.length < 1) {

@@ -253,3 +253,4 @@ def dislike_comment(cid):
             Topic.update_one({'tid': tid}, {'comment': topic_comment})
             return 'success'
     return 'fail'
+

@@ -1,6 +1,19 @@
 import React from 'react'
 import '../assets/css/TopicContent.css'
-import {Breadcrumb, Icon, Avatar, Tag, Button, Tooltip, Menu, Dropdown, Spin, Modal, notification} from 'antd';
+import {
+    Breadcrumb,
+    Icon,
+    Avatar,
+    Tag,
+    Button,
+    Tooltip,
+    Menu,
+    Dropdown,
+    Spin,
+    Modal,
+    notification,
+    Pagination
+} from 'antd';
 import {Link} from 'react-router-dom'
 import Markdown from 'react-markdown'
 import CodeBlock from '../code-block'
@@ -9,6 +22,7 @@ import TopicBox from "./TopicBox"
 import {error} from "../utilities"
 import {Redirect} from 'react-router-dom'
 import moment from 'moment/min/moment-with-locales';
+import {changeTitle} from "../utilities"
 
 axios.defaults.withCredentials = true;
 const confirm = Modal.confirm;
@@ -29,6 +43,9 @@ class TopicContent extends React.Component {
             isVote: 'rgb(200, 200, 200)',
             order: null,
             likeStatus: null,
+            commentsToSee: [],
+            reOrdered: null,
+            page: 1,
         }
     }
 
@@ -36,6 +53,15 @@ class TopicContent extends React.Component {
         this.setState({
             order: e.item.props.children
         })
+        if (e.item.props.children === '倒序') {
+            this.setState({
+                commentsToSee: this.state.reOrdered.slice((this.state.page - 1) * 15, (this.state.page - 1) * 15 + 15)
+            })
+        } else {
+            this.setState({
+                commentsToSee: this.state.content.comment.slice((this.state.page - 1) * 15, (this.state.page - 1) * 15 + 15)
+            })
+        }
     }
     showConfirm = (word) => {
         let w = word ? word : '回复'
@@ -92,7 +118,6 @@ class TopicContent extends React.Component {
                 console.log(error)
             })
     }
-
     getLikeStatus = () => {
         let tid = this.props.location.state ? this.props.location.state : this.props.location.pathname.split('/').reverse()[0]
         axios.get(`http://0.0.0.0:2000/api/likeStatus/${tid}`)
@@ -101,7 +126,6 @@ class TopicContent extends React.Component {
                     this.setState({
                         likeStatus: response.data
                     })
-                    console.log(this.state.likeStatus)
                 }
             })
             .catch((err) => {
@@ -216,15 +240,35 @@ class TopicContent extends React.Component {
                 console.log(err)
             })
     }
+    changeComments = (pageNumber) => {
+        pageNumber = pageNumber - 1
+        if (this.state.order === null || this.state.order === '正序') {
+            this.setState({
+                page: pageNumber + 1,
+                commentsToSee: this.state.content.comment.slice(pageNumber * 15, pageNumber * 15 + 15)
+            })
+        } else {
+            this.setState({
+                page: pageNumber + 1,
+                commentsToSee: this.state.reOrdered.slice(pageNumber * 15, pageNumber * 15 + 15)
+            })
+        }
+
+        window.scrollTo(0, 0)
+    }
 
     componentDidMount() {
         let tid = this.props.location.state ? this.props.location.state : this.props.location.pathname.split('/').reverse()[0]
         axios.get(`http://0.0.0.0:2000/topic/${tid}`)
             .then((response) => {
+                let reverseCopy = response.data.comment.concat()
+                reverseCopy.reverse()
                 this.setState({
-                    content: response.data
+                    content: response.data,
+                    reOrdered: reverseCopy,
+                    commentsToSee: response.data.comment.slice(0, 15)
                 })
-                document.title = this.state.content.board.concat(' | CCLUB')
+                changeTitle(this.state.content.board)
             })
             .catch((error) => {
                 console.log(error)
@@ -241,11 +285,9 @@ class TopicContent extends React.Component {
             </Menu>
         )
         if (this.state.content === null || this.state.likeStatus === null) {
-            return <Spin size="large"/>
+            return <Spin style={{marginTop: '90px'}} size="large"/>
         } else {
-            let copyComment = this.state.content.comment.concat()
-            copyComment.reverse()
-            let order = this.state.order === '倒序' ? copyComment : this.state.content.comment
+            // let order = this.state.order === '倒序' ? this.state.reOrdered : this.state.content.comment
             return (
                 <div className={'content TopicPage'}>
                     <Breadcrumb style={{marginTop: '15px', flexBasis: '75%'}}>
@@ -291,9 +333,11 @@ class TopicContent extends React.Component {
                                       renderers={{code: CodeBlock}}/>
                             <div className={'bottom-info'}>
                                 <div className={'bottom-left'}>
-                                    <Button onClick={this.replyBox} size={'large'} type="primary">回复主题</Button>
+                                    <Button icon={'mail'} onClick={this.replyBox} size={'large'}
+                                            type="primary">回复主题</Button>
+                                    <Button icon={'eye'} size={'large'} type="default">关注该帖</Button>
                                     <Dropdown overlay={menu}>
-                                        <Button size={'large'} style={{marginLeft: '5px'}}>
+                                        <Button size={'large'}>
                                             {this.state.order ? this.state.order : '排序'}<Icon type="down"/>
                                         </Button>
                                     </Dropdown>
@@ -314,7 +358,7 @@ class TopicContent extends React.Component {
                         </div>
                     </div>
                     {
-                        order.map((value, index) => {
+                        this.state.commentsToSee.map((value, index) => {
                             return (
                                 <div id={`id-comment-${value.cid}`} key={index} className={'comment-block'}>
                                     <Avatar size={70} className={'userHead'}
@@ -365,6 +409,22 @@ class TopicContent extends React.Component {
                                 </div>
                             )
                         })
+                    }
+                    {
+                        this.state.content.comment.length > 0 ? <div className={'topic-bottom'}>
+                            <Pagination defaultPageSize={15} showQuickJumper defaultCurrent={1}
+                                        total={this.state.content.comment.length} onChange={this.changeComments}/>
+                            <div className={'topic-bottom-right'}>
+                                <Button icon={'mail'} onClick={this.replyBox} size={'large'}
+                                        type="primary">回复主题</Button>
+                                <Button icon={'eye'} size={'large'} type="default">关注该帖</Button>
+                                <Dropdown overlay={menu}>
+                                    <Button size={'large'}>
+                                        {this.state.order ? this.state.order : '排序'}<Icon type="down"/>
+                                    </Button>
+                                </Dropdown>
+                            </div>
+                        </div> : null
                     }
                     <TopicBox Parent={this}/>
                 </div>

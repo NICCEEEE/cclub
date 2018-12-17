@@ -14,84 +14,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="TopicBox.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/TopicBox.js">
+      <file leaf-file-name="MyProfile.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/MyProfile.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1584">
-              <caret line="26" column="48" lean-forward="true" selection-start-line="26" selection-start-column="27" selection-end-line="26" selection-end-column="48" />
-              <folding>
-                <element signature="e#0#25#0" expanded="true" />
-                <element signature="e#841#868#0" />
-                <element signature="e#889#1242#0" />
-                <element signature="e#1273#1356#0" />
-                <element signature="e#1382#1471#0" />
-                <element signature="e#1497#1996#0" />
-                <element signature="e#2018#2890#0" />
-                <element signature="e#2914#3782#0" />
-                <element signature="e#3807#4678#0" />
-                <element signature="e#4699#5571#0" />
-                <element signature="e#5599#6473#0" />
-                <element signature="e#6499#6928#0" />
-                <element signature="e#6949#7823#0" />
-                <element signature="e#7844#8757#0" />
-                <element signature="e#8778#9324#0" />
-                <element signature="e#9346#9967#0" />
-                <element signature="e#9991#10906#0" />
-                <element signature="e#10952#13826#0" />
-                <element signature="e#12390#12544#0" />
-                <element signature="e#12569#12724#0" />
-                <element signature="n#!!block;n#componentDidMount#0;n#TopicBox#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TopicContent.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/components/TopicContent.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="865">
-              <caret line="190" column="14" lean-forward="true" selection-start-line="190" selection-start-column="14" selection-end-line="190" selection-end-column="14" />
-              <folding>
-                <element signature="e#0#25#0" expanded="true" />
-                <element signature="e#596#701#0" />
-                <element signature="e#1056#1139#0" />
-                <element signature="e#1168#1530#0" />
-                <element signature="e#1552#2011#0" />
-                <element signature="e#2033#2443#0" />
-                <element signature="e#2465#2954#0" />
-                <element signature="e#2982#3527#0" />
-                <element signature="e#6142#7320#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TopicContent.scss" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/assets/css/TopicContent.scss">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1035">
-              <caret line="90" column="30" selection-start-line="90" selection-start-column="30" selection-end-line="90" selection-end-column="30" />
-              <folding>
-                <element signature="e#424#608#0" />
-                <element signature="e#622#685#0" />
-                <element signature="e#699#796#0" />
-                <element signature="e#810#1009#0" />
-                <element signature="e#1039#1102#0" />
-                <element signature="e#2254#2426#0" />
-                <element signature="e#2437#2496#0" />
-                <element signature="e#2508#2597#0" />
-                <element signature="e#2609#2794#0" />
-                <element signature="e#2822#2881#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Topic.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/Topic.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1400">
-              <caret line="76" column="95" lean-forward="true" selection-start-line="76" selection-start-column="95" selection-end-line="76" selection-end-column="95" />
+            <state relative-caret-position="513">
+              <caret line="19" column="48" selection-start-line="19" selection-start-column="41" selection-end-line="19" selection-end-column="48" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -99,20 +26,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Home.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/Home.js">
+      <file leaf-file-name="MyProfile.scss" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/assets/css/MyProfile.scss">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4266">
-              <caret line="193" column="34" lean-forward="true" selection-start-line="193" selection-start-column="34" selection-end-line="193" selection-end-column="34" />
-              <folding>
-                <element signature="e#0#25#0" expanded="true" />
-                <element signature="e#2247#2440#0" />
-                <element signature="e#2479#2677#0" />
-                <element signature="e#2713#2905#0" />
-                <element signature="e#2941#3133#0" />
-                <element signature="e#3168#3358#0" />
-                <element signature="e#3739#3835#0" />
-              </folding>
+            <state relative-caret-position="585">
+              <caret line="34" column="24" selection-start-line="34" selection-start-column="24" selection-end-line="34" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -122,8 +40,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="SCSS File" />
         <option value="JavaScript File" />
+        <option value="SCSS File" />
       </list>
     </option>
   </component>
@@ -172,7 +90,6 @@
         <option value="$PROJECT_DIR$/routeConf.js" />
         <option value="$PROJECT_DIR$/src/assets/css/Footer.css" />
         <option value="$PROJECT_DIR$/src/assets/css/Footer.scss" />
-        <option value="$PROJECT_DIR$/src/App.scss" />
         <option value="$PROJECT_DIR$/public/index.html" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/assets/css/Register.scss" />
@@ -185,20 +102,23 @@
         <option value="$PROJECT_DIR$/src/code-block.js" />
         <option value="$PROJECT_DIR$/node_modules/highlight.js/styles/github.css" />
         <option value="$PROJECT_DIR$/src/tableParse.js" />
-        <option value="$PROJECT_DIR$/src/components/Header.js" />
         <option value="$PROJECT_DIR$/src/assets/css/Header.scss" />
-        <option value="$PROJECT_DIR$/src/routeConf.js" />
         <option value="$PROJECT_DIR$/src/components/Login.js" />
         <option value="$PROJECT_DIR$/src/components/Register.js" />
-        <option value="$PROJECT_DIR$/src/App.js" />
         <option value="$PROJECT_DIR$/src/assets/css/Topic.scss" />
         <option value="$PROJECT_DIR$/src/assets/css/Markdown.scss" />
-        <option value="$PROJECT_DIR$/src/components/Home.js" />
         <option value="$PROJECT_DIR$/node_modules/moment/min/moment-with-locales.js" />
         <option value="$PROJECT_DIR$/src/components/Topic.js" />
         <option value="$PROJECT_DIR$/src/components/TopicBox.js" />
+        <option value="$PROJECT_DIR$/src/App.js" />
+        <option value="$PROJECT_DIR$/src/App.scss" />
+        <option value="$PROJECT_DIR$/src/components/Home.js" />
         <option value="$PROJECT_DIR$/src/assets/css/TopicContent.scss" />
         <option value="$PROJECT_DIR$/src/components/TopicContent.js" />
+        <option value="$PROJECT_DIR$/src/routeConf.js" />
+        <option value="$PROJECT_DIR$/src/components/Header.js" />
+        <option value="$PROJECT_DIR$/src/components/MyProfile.js" />
+        <option value="$PROJECT_DIR$/src/assets/css/MyProfile.scss" />
       </list>
     </option>
   </component>
@@ -315,12 +235,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1544081115125</updated>
-      <workItem from="1544081116727" duration="219269000" />
+      <workItem from="1544081116727" duration="235049000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="219269000" />
+    <option name="totallyTimeSpent" value="235049000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1200" extended-state="0" />
@@ -438,13 +358,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/App.scss">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="17" selection-start-column="17" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/utitils.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -513,46 +426,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Login.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="423">
-          <caret line="97" column="56" selection-start-line="97" selection-start-column="56" selection-end-line="97" selection-end-column="56" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Header.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="8" column="18" lean-forward="true" selection-start-line="8" selection-end-line="9" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/routeConf.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="18" column="6" lean-forward="true" selection-start-line="18" selection-start-column="6" selection-end-line="18" selection-end-column="6" />
-          <folding>
-            <element signature="e#0#36#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/App.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="5" column="30" lean-forward="true" selection-start-line="5" selection-start-column="30" selection-end-line="5" selection-end-column="30" />
-          <folding>
-            <element signature="n#!!block;n#constructor#0;n#App#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/assets/css/Home.scss">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="432">
@@ -615,36 +488,39 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Topic.js">
+    <entry file="file://$PROJECT_DIR$/src/App.scss">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1400">
-          <caret line="76" column="95" lean-forward="true" selection-start-line="76" selection-start-column="95" selection-end-line="76" selection-end-column="95" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="243">
+          <caret line="9" column="16" lean-forward="true" selection-start-line="9" selection-start-column="16" selection-end-line="9" selection-end-column="16" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Home.js">
+    <entry file="file://$PROJECT_DIR$/src/components/TopicContent.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4266">
-          <caret line="193" column="34" lean-forward="true" selection-start-line="193" selection-start-column="34" selection-end-line="193" selection-end-column="34" />
+        <state relative-caret-position="232">
+          <caret line="49" column="5" lean-forward="true" selection-start-line="49" selection-start-column="5" selection-end-line="49" selection-end-column="5" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
-            <element signature="e#2247#2440#0" />
-            <element signature="e#2479#2677#0" />
-            <element signature="e#2713#2905#0" />
-            <element signature="e#2941#3133#0" />
-            <element signature="e#3168#3358#0" />
-            <element signature="e#3739#3835#0" />
+            <element signature="e#596#701#0" />
+            <element signature="e#1192#1738#0" />
+            <element signature="e#1168#1530#0" />
+            <element signature="e#1552#2011#0" />
+            <element signature="e#2033#2443#0" />
+            <element signature="e#2465#2954#0" />
+            <element signature="e#2982#3527#0" />
+            <element signature="e#3556#4825#0" />
+            <element signature="e#5461#7331#0" />
+            <element signature="e#6142#7320#0" />
+            <element signature="e#8560#8576#0" />
+            <element signature="n#!!block;n#componentDidMount#0;n#TopicContent#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/TopicBox.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1584">
-          <caret line="26" column="48" lean-forward="true" selection-start-line="26" selection-start-column="27" selection-end-line="26" selection-end-column="48" />
+        <state relative-caret-position="427">
+          <caret line="344" column="45" selection-start-line="344" selection-start-column="45" selection-end-line="344" selection-end-column="45" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
             <element signature="e#841#868#0" />
@@ -666,15 +542,14 @@
             <element signature="e#10952#13826#0" />
             <element signature="e#12390#12544#0" />
             <element signature="e#12569#12724#0" />
-            <element signature="n#!!block;n#componentDidMount#0;n#TopicBox#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/assets/css/TopicContent.scss">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1035">
-          <caret line="90" column="30" selection-start-line="90" selection-start-column="30" selection-end-line="90" selection-end-column="30" />
+        <state relative-caret-position="558">
+          <caret line="181" column="22" lean-forward="true" selection-start-line="181" selection-start-column="22" selection-end-line="181" selection-end-column="22" />
           <folding>
             <element signature="e#424#608#0" />
             <element signature="e#622#685#0" />
@@ -690,21 +565,81 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/TopicContent.js">
+    <entry file="file://$PROJECT_DIR$/src/components/Topic.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="865">
-          <caret line="190" column="14" lean-forward="true" selection-start-line="190" selection-start-column="14" selection-end-line="190" selection-end-column="14" />
+        <state relative-caret-position="900">
+          <caret line="44" column="55" lean-forward="true" selection-start-line="44" selection-start-column="55" selection-end-line="44" selection-end-column="55" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
-            <element signature="e#596#701#0" />
-            <element signature="e#1056#1139#0" />
-            <element signature="e#1168#1530#0" />
-            <element signature="e#1552#2011#0" />
-            <element signature="e#2033#2443#0" />
-            <element signature="e#2465#2954#0" />
-            <element signature="e#2982#3527#0" />
-            <element signature="e#6142#7320#0" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/routeConf.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="499">
+          <caret line="25" column="19" lean-forward="true" selection-start-line="25" selection-start-column="19" selection-end-line="25" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/App.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1128">
+          <caret line="47" column="22" lean-forward="true" selection-start-line="47" selection-start-column="22" selection-end-line="47" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+            <element signature="n#!!block;n#constructor#0;n#App#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Home.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="883">
+          <caret line="173" column="82" selection-start-line="173" selection-start-column="82" selection-end-line="173" selection-end-column="82" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Login.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="504">
+          <caret line="100" column="29" lean-forward="true" selection-start-line="97" selection-start-column="16" selection-end-line="100" selection-end-column="29" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Header.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-601">
+          <caret line="29" column="35" lean-forward="true" selection-start-line="29" selection-start-column="35" selection-end-line="29" selection-end-column="35" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/MyProfile.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="513">
+          <caret line="19" column="48" selection-start-line="19" selection-start-column="41" selection-end-line="19" selection-end-column="48" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/css/MyProfile.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="585">
+          <caret line="34" column="24" selection-start-line="34" selection-start-column="24" selection-end-line="34" selection-end-column="24" />
         </state>
       </provider>
     </entry>

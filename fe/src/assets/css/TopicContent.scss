@@ -81,11 +81,16 @@
         margin: 60px 0px;
         height: 60px;
         box-sizing: border-box;
-        border-top: 1px solid rgb(233, 233, 233);
-        border-bottom: 1px solid rgb(233, 233, 233);
+        border-top: 1px solid lightblue;
+        border-bottom: 1px solid lightblue;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        .bottom-left {
+          button + button {
+            margin-left: 5px;
+          }
+        }
         .bottom-right {
           span + span {
             margin-left: 10px;
@@ -166,6 +171,18 @@
           text-align: right;
         }
       }
+    }
+  }
+  .topic-bottom {
+    flex-basis: 75%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid lightblue;
+    padding: 10px 0px;
+    border-bottom: 1px solid lightblue;
+    button + button {
+      margin-left: 5px;
     }
   }
 }

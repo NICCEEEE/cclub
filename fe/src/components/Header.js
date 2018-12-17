@@ -13,6 +13,8 @@ class Header extends React.Component {
         super(props)
         this.state = {
             loginStatus: 'fail',
+            username: null,
+            uid: null
         }
     }
 
@@ -24,9 +26,17 @@ class Header extends React.Component {
     componentWillMount() {
         axios.get('http://0.0.0.0:2000/api/user')
             .then((response) => {
-                this.setState({
-                    loginStatus: response.data
-                })
+                if (response.data === 'fail') {
+                    this.setState({
+                        loginStatus: response.data
+                    })
+                } else {
+                    this.setState({
+                        loginStatus: response.data.username,
+                        username: response.data.username,
+                        uid: response.data.uid
+                    })
+                }
             })
             .catch((err) => {
                 error('糟糕，出现未知异常，请稍候尝试！')
@@ -50,7 +60,7 @@ class Header extends React.Component {
         } else {
             head = (
                 <div className={'buttonGroup'}>
-                    <Button>{this.state.loginStatus}</Button>
+                    <Link to={{pathname: '/myprofile', state: {username: this.state.username, uid: this.state.uid}}}><Button>{this.state.loginStatus}</Button></Link>
                 </div>
             )
         }

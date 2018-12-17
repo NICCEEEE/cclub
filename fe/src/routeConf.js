@@ -2,6 +2,7 @@ import Home from "./components/Home"
 import Register from "./components/Register"
 import Login from "./components/Login"
 import TopicContent from "./components/TopicContent"
+import MyProfile from "./components/MyProfile"
 
 let routes = [
     {
@@ -20,6 +21,10 @@ let routes = [
     {
         path: "/topic/:tid",
         component: TopicContent,
+    },
+    {
+        path: "/myprofile",
+        component: MyProfile,
     }
 ]
 

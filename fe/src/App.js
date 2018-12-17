@@ -24,7 +24,9 @@ class App extends Component {
         return (
             <Router>
                 <div className="App">
-                    <Header/>
+                    <div className={'App-head'}>
+                        <Header/>
+                    </div>
                     <Switch>
                         {
                             routes.map((route, index) => {
