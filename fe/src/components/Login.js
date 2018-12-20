@@ -66,7 +66,7 @@ class Login extends React.Component {
                                 success('登录成功，欢迎回来，即将跳转。:)')
                                 setTimeout(() => this.setState({
                                     loginSuccess: 'success'
-                                }), 1200)
+                                }), 800)
                             }
                         })
                         .catch((error) => {

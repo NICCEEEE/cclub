@@ -1,8 +1,12 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 from models import Model, codeword
+from flask import jsonify
+from .notify import Notify
 import re
 import hashlib
+import time
+from random import randint
 
 
 class User(Model):
@@ -70,9 +74,25 @@ class User(Model):
             password=User.hashed_password(password),
             email=email,
             uid=uid,
-            authority=111
+            authority=111,
+            topices=0,
+            replies=0,
+            views=0,
+            give_votes=0,
+            receive_votes=0,
+            ct=time.time(),
+            active_time=time.time(),
+            publish_topices=[],
+            avatar=None,
+            nickname=username
         )
         User.insert_one(**userinfo)
+        notify = dict(
+            title='欢迎来到CCLUB ：）',
+            receive_id=uid,
+            detail='CCLUB 是基于NodeBB的理念，模仿NodeBB和NodeBB-CN创建的论坛，由于是出于练习创建的论坛，还有许多不足，敬请见谅！'
+        )
+        Notify.send_system(**notify)
         return True
 
     @staticmethod
@@ -88,6 +108,83 @@ class User(Model):
                 if answer is not None and re.fullmatch(valid_answer, answer):
                     if eval(codeword[cid]) == int(answer):
                         print('登录成功\nusername: ', username)
+                        User.update_one({'username': username}, {'active_time': time.time()})
                         return user
         return None
 
+    @classmethod
+    def get_user_summary(cls, user_info):
+        res = User.find_one({'authority': 0,
+                             'password': 0,
+                             'email': 0,
+                             'birthday': 0,
+                             'website': 0,
+                             'job': 0,
+                             'location': 0,
+                             'github': 0,
+                             'steam': 0,
+                             'twitter': 0,
+                             'username': 0,
+                             }, uid=int(user_info.get('uid')))
+        return res
+
+    @classmethod
+    def get_my_summary(cls, user):
+        res = User.find_one({'authority': 0, 'password': 0}, username=user.get('username'),
+                            uid=int(user.get('uid')))
+        if res is None:
+            return 'false'
+        else:
+            User.update_one({'uid': int(user.get('uid'))}, {'active_time': time.time()})
+            return jsonify(res)
+
+    @classmethod
+    def save_profile(cls, user, info):
+        new_info = {
+            'website': info['website'],
+            'job': info['job'],
+            'location': info['location'],
+            'birthday': info['birthday'],
+            'github': info['github'],
+            'steam': info['steam'],
+            'twitter': info['twitter'],
+            'active_time': time.time()
+        }
+        res = User.update_one({'uid': user.get('uid')}, new_info)
+        return res
+
+    @classmethod
+    def get_notify(cls, user):
+        res = Notify.get_all_notify(user.get('uid'))
+        return res
+
+    @classmethod
+    def change_pwd(cls, user, change_info):
+        current = change_info.get('current')
+        new_pwd = change_info.get('newPwd')
+        confirm = change_info.get('confirm')
+        valid_pwd = '^[A-Za-z0-9]{6,15}$'
+        if User.hashed_password(current) != user.get('password'):
+            return False
+        if re.fullmatch(valid_pwd, new_pwd) is None:
+            return False
+        if confirm != new_pwd:
+            return False
+        new_password = User.hashed_password(new_pwd)
+        res = User.update_one({'uid': user.get('uid')}, {'password': new_password})
+        if res is None:
+            return False
+        else:
+            return True
+
+    @classmethod
+    def change_nickname(cls, user, change_info):
+        new_nickname = change_info.get('nickname')
+        valid_name = '^[\d\w\u4e00 -\u9fa5_]{2,12}$'
+        if re.fullmatch(valid_name, new_nickname) is None:
+            return False
+        res = User.update_one({'uid': user.get('uid')}, {'nickname': new_nickname})
+        if res is None:
+            return False
+        else:
+            return new_nickname

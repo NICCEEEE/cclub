@@ -10,13 +10,16 @@
       width: inherit;
       height: inherit;
     }
-    .ant-btn-circle {
+    .ant-btn {
       position: absolute;
       top: 91%;
       left: 76%;
       width: 50px;
       height: 50px;
-      font-size: 25px;
+      line-height: 50px;
+      i.anticon-appstore {
+        font-size: 20px;
+      }
     }
     .ant-avatar {
       position: absolute;
@@ -28,11 +31,204 @@
     }
   }
   .profile {
-    .username {
+    .account-name {
       flex-basis: 100%;
       text-align: center;
       font-size: 40px;
       font-weight: bold;
+    }
+  }
+  .account-status {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0px;
+    flex-basis: 100%;
+    div {
+      width: 110px;
+      text-align: center;
+      .count {
+        font-size: 40px;
+        font-weight: normal;
+      }
+    }
+    div + div {
+      margin-left: 10px;
+    }
+  }
+  .account-info {
+    margin: 10px 0px;
+    border-bottom: 1px solid lightgray;
+    flex-basis: 100%;
+    text-align: center;
+    padding-bottom: 30px;
+  }
+  .account-topics {
+    flex-basis: 100%;
+    margin-top: 20px;
+    .topic-info {
+      box-sizing: border-box;
+      width: inherit;
+      height: 80px;
+      margin: 20px;
+      line-height: 80px;
+      background-color: rgb(251, 248, 227);
+      border: 1px solid rgb(250, 235, 204);
+      border-radius: 20px;
+      padding: 0px 20px;
+    }
+    .ant-timeline.recent-topic {
+      margin-top: 25px;
+      margin-bottom: 25px;
+      padding-top: 40px;
+      padding-left: 25px;
+      background-color: ghostwhite;
+      border-radius: 30px;
+      li {
+        font-size: 15px;
+      }
+    }
+  }
+  .edit-container {
+    flex-basis: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 40px;
+    div {
+      flex-basis: 100%;
+      text-align: center;
+      label {
+        display: inline-block;
+        width: 150px;
+        height: 50px;
+        line-height: 50px;
+        font-size: 20px;
+        text-align: right;
+        img {
+          width: 25px;
+          height: 25px;
+        }
+      }
+      input {
+        width: 300px;
+        text-align: center;
+      }
+      label:last-child {
+        text-align: left;
+      }
+    }
+  }
+  .notify-tabs {
+    display: flex;
+    flex-basis: 100%;
+    margin-top: 40px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      button + button {
+        margin-left: 10px;
+      }
+      flex-basis: 100%;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid lightgray;
+    }
+    .none-notify {
+      flex-basis: 100%;
+      box-sizing: border-box;
+      height: 80px;
+      line-height: 80px;
+      background-color: rgb(216, 236, 247);
+      border: 1px solid rgb(187, 232, 241);
+      font-size: 20px;
+      color: rgb(49, 112, 143);
+      border-radius: 20px;
+      padding: 0px 20px;
+    }
+    .notify-detail {
+      flex-basis: 100%;
+      font-size: 20px;
+      .panel-head {
+        display: flex;
+        justify-content: space-between;
+        .status {
+          color: red;
+          border: 1px solid red;
+          padding: 2px;
+          border-radius: 5px;
+          margin-right: 20px;
+        }
+      }
+    }
+  }
+  .message-tabs {
+    flex-basis: 100%;
+    margin: 40px 0px;
+    .ant-tabs-tab {
+      width: 150px;
+      text-align: center;
+    }
+  }
+  .setting-tabs {
+    flex-basis: 50%;
+    margin: 40px 0px;
+    height: 300px;
+    .ant-tabs-tab {
+      width: 150px;
+      text-align: center;
+    }
+    .upload-tab {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      .ant-upload.ant-upload-select.ant-upload-select-picture-card {
+        width: 126px;
+        height: 128px;
+      }
+      .title {
+        font-size: 25px;
+        font-weight: bold;
+        align-self: flex-start;
+      }
+      .avatar-uploader {
+        margin-top: 50px;
+        margin-left: 80px;
+      }
+      ul {
+        margin-top: 20px;
+      }
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      .title {
+        font-size: 25px;
+        font-weight: bold;
+        align-self: flex-start;
+      }
+      label {
+        font-size: 17px;
+      }
+      input {
+        margin-bottom: 10px;
+      }
+    }
+    .update-nickname {
+      display: flex;
+      flex-direction: column;
+      .title {
+        font-size: 25px;
+        font-weight: bold;
+      }
+      label {
+        font-size: 17px;
+      }
+      input {
+        margin-bottom: 10px;
+      }
     }
   }
 }

@@ -60,7 +60,7 @@ class Header extends React.Component {
         } else {
             head = (
                 <div className={'buttonGroup'}>
-                    <Link to={{pathname: '/myprofile', state: {username: this.state.username, uid: this.state.uid}}}><Button>{this.state.loginStatus}</Button></Link>
+                    <Link to={{pathname: `/my-summary`, state: {uid: this.state.uid}}}><Button>{this.state.loginStatus}</Button></Link>
                 </div>
             )
         }

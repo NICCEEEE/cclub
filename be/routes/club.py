@@ -16,6 +16,7 @@ from models.user import User
 from models.topic import Topic
 import time
 import os
+from random import randint
 
 main = Blueprint('club', __name__)
 
@@ -66,34 +67,7 @@ def addtopic():
     user = current_user()
     if user is None:
         return 'fail'
-    username = user.get('username')
-    topic_info = request.form
-    # 添加帖子id
-    ids = [int(i.get('tid', -1)) for i in Topic.get_all({})]
-    if len(ids) < 1:
-        tid = 20000
-    else:
-        max_id = max(ids)
-        tid = max_id + 1 if max_id > 0 else 20000
-    topic_data = dict(
-        ct=topic_info.get('ct', time.time()),
-        author=username,
-        title=topic_info.get('title'),
-        content=topic_info.get('content'),
-        board=topic_info.get('board'),
-        vote=0,
-        voteUser=[],
-        comment=[],
-        comments=0,
-        views=0,
-        essence=False,
-        last_comment_author=None,
-        last_comment_time=None,
-        last_comment_content=None,
-        uid=user.get('uid', -1),
-        tid=tid
-    )
-    res = Topic.insert_one(**topic_data)
+    res = Topic.add_topic(user, request.form)
     if res is not None:
         return 'success'
     else:
@@ -102,6 +76,9 @@ def addtopic():
 
 @main.route('/topic/<int:tid>')
 def get_topic(tid):
+    user = current_user()
+    if user is not None:
+        User.update_one({'uid': user.get('uid')}, {'active_time': time.time(), 'views': user.get('views') + 1})
     topic = Topic.find_one({}, tid=tid)
     if topic is None:
         return render_template('index.html')
@@ -117,19 +94,8 @@ def up_vote(tid):
     if user is None:
         return 'fail'
     else:
-        topic = Topic.find_one({}, tid=tid)
-        if topic is None:
-            return 'fail'
-        for u in topic['voteUser']:
-            if u.get('username') == user.get('username') and u.get('uid') == user.get('uid'):
-                return 'exist'
-        topic['voteUser'].append({
-            'username': user.get('username'),
-            'uid': user.get('uid')
-        })
-        topic['vote'] += 1
-        Topic.update_one({'tid': tid}, {'voteUser': topic['voteUser'], 'vote': topic['vote']})
-        return jsonify(user)
+        res = Topic.up_vote(user, tid)
+        return res
 
 
 @main.route('/addComment/<int:tid>', methods=['POST'])
@@ -137,38 +103,7 @@ def add_comment(tid):
     user = current_user()
     if user is None:
         return 'fail'
-    topic = Topic.find_one({}, tid=tid)
-    if topic is None:
-        return 'fail'
-    comment_info = request.form
-    topic_comment = topic['comment']
-    topic_comments = topic['comments'] + 1
-    last_comment_author = user.get('username')
-    last_comment_time = comment_info.get('ct', time.time())
-    last_comment_content = comment_info.get('content')
-    comment = dict(
-        username=user.get('username'),
-        uid=user.get('uid'),
-        content=comment_info.get('content'),
-        like=0,
-        likes=[],
-        dislike=0,
-        dislikes=[],
-        ct=comment_info.get('ct', time.time()),
-        floor=len(topic_comment) + 1,
-        cid=int(str(tid * 10) + str(topic_comments))
-    )
-    topic_comment.append(comment)
-    res = Topic.update_one(
-        {'tid': tid},
-        {
-            'comment': topic_comment,
-            'comments': topic_comments,
-            'last_comment_author': last_comment_author,
-            'last_comment_time': last_comment_time,
-            'last_comment_content': last_comment_content
-        }
-    )
+    res = Topic.add_comment(user, tid, request.form)
     if res is None:
         return 'fail'
     else:
@@ -210,6 +145,10 @@ def like_comment(cid):
                     'uid': user.get('uid')
                 }
             )
+            User.update_one({'uid': user.get('uid')},
+                            {'active_time': time.time(), 'give_votes': user.get('give_votes') + 1})
+            author = User.find_one({}, uid=topic.get('uid'))
+            User.update_one({'uid': author.get('uid')}, {'receive_votes': author.get('receive_votes') + 1})
             Topic.update_one({'tid': tid}, {'comment': topic_comment})
             return 'success'
     return 'fail'
@@ -253,4 +192,114 @@ def dislike_comment(cid):
             Topic.update_one({'tid': tid}, {'comment': topic_comment})
             return 'success'
     return 'fail'
+
+
+@main.route('/my-summary')
+def get_my_summary():
+    user = current_user()
+    if user is None:
+        return 'false'
+    else:
+        res = User.get_my_summary(user)
+        return res
+
+
+@main.route('/user-summary')
+def get_user_summary():
+    user_info = request.args
+    res = User.get_user_summary(user_info)
+    if res is None:
+        return 'false'
+    else:
+        return jsonify(res)
+
+
+@main.route('/save-profile', methods=['POST'])
+def save_profile():
+    user = current_user()
+    if user is None:
+        return 'fail'
+    else:
+        res = User.save_profile(user, request.form)
+        if res is not None:
+            return 'success'
+
+
+@main.route('/notification')
+def get_my_notification():
+    user = current_user()
+    print(user.get('username'))
+    if user is None:
+        return 'fail'
+    else:
+        res = User.get_notify(user)
+        return res
+
+
+# @main.route('/upload-head', methods=['POST'])
+# def add_img():
+#     user = current_user()
+#     if user is None:
+#         return redirect(render_template('index.html'))
+#     file = request.files.get('avatar')
+#     if file is None:
+#         return redirect(render_template('index.html'))
+#     filetype = file.filename.split('.')[-1]
+#     if filetype not in ['jpg', 'jpeg', 'png']:
+#         return redirect(render_template('index.html'))
+#     filename = secure_filename(file.filename)
+#     u = User.find_one({}, uid=user.get('uid'))
+#     if u is None:
+#         return redirect(render_template('index.html'))
+#     filename = str(u.get('uid')) + filename
+#     u['avatar'] = filename
+#     User.update_one({'uid': user.get('uid')}, {'avatar': u['avatar']})
+#     file.save(os.path.join('/Users/nice/Documents/cclub/fe/src/assets/images/avatar', filename))
+#     return 'success'
+@main.route('/upload-head', methods=['POST'])
+def add_img():
+    # user = current_user()
+    # if user is None:
+    #     return redirect(render_template('index.html'))
+    user = {'uid': 10007}
+    file = request.files.get('avatar')
+    if file is None:
+        return redirect(render_template('index.html'))
+    filetype = file.filename.split('.')[-1]
+    if filetype not in ['jpg', 'jpeg', 'png']:
+        return redirect(render_template('index.html'))
+    filename = secure_filename(file.filename)
+    u = User.find_one({}, uid=user.get('uid'))
+    if u is None:
+        return redirect(render_template('index.html'))
+    filename = str(u.get('uid')) + filename
+    u['avatar'] = filename
+    # User.update_one({'uid': user.get('uid')}, {'avatar': u['avatar']})
+    # file.save(os.path.join('/Users/nice/Documents/cclub/fe/src/assets/images/avatar', filename))
+    return 'success'
+
+
+@main.route('/avatar', methods=['GET'])
+def get_avatar():
+    user = current_user()
+    if user is None:
+        return 'fail'
+    avatar = user.get('avatar')
+    if avatar is None:
+        return send_from_directory('/Users/nice/Documents/cclub/fe/src/assets/images/avatar', 'default1.png')
+    else:
+        return send_from_directory('/Users/nice/Documents/cclub/fe/src/assets/images/avatar', avatar)
+
+
+@main.route('/avatar_by_id/<int:uid>', methods=['GET'])
+def get_avatar_by_id(uid):
+    user = User.find_one({}, uid=uid)
+    if user is None:
+        return 'fail'
+    else:
+        avatar = user.get('avatar')
+        if avatar is None:
+            return send_from_directory('/Users/nice/Documents/cclub/fe/src/assets/images/avatar', 'default1.png')
+        else:
+            return send_from_directory('/Users/nice/Documents/cclub/fe/src/assets/images/avatar', avatar)
 

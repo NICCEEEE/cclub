@@ -145,7 +145,7 @@ class Home extends React.Component {
         const TabPane = Tabs.TabPane;
         let loading = null
         if (this.state.topics.length < 1) {
-            loading = <Spin size="large"/>
+            loading = <Spin style={{marginTop: '90px'}} size="large"/>
         } else {
             loading = null
         }

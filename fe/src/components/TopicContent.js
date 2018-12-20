@@ -287,7 +287,6 @@ class TopicContent extends React.Component {
         if (this.state.content === null || this.state.likeStatus === null) {
             return <Spin style={{marginTop: '90px'}} size="large"/>
         } else {
-            // let order = this.state.order === '倒序' ? this.state.reOrdered : this.state.content.comment
             return (
                 <div className={'content TopicPage'}>
                     <Breadcrumb style={{marginTop: '15px', flexBasis: '75%'}}>
@@ -299,12 +298,15 @@ class TopicContent extends React.Component {
                         <Icon type="tags" theme="filled"/>&nbsp;{this.state.content.title}
                     </div>
                     <div className={'author-block'}>
-                        <Avatar size={70} className={'userHead'}
-                                style={{color: '#8ACF00', backgroundColor: 'honeydew'}}>N</Avatar>
+                        <Avatar size={70} src={`http://0.0.0.0:2000/avatar_by_id/${this.state.content.uid}`}
+                                className={'userHead'}/>
                         <div className={'content-detail'}>
                             <div className={'topicInfo'}>
                                 <div className={'info-left'}>
-                                    <Tag color="cyan">楼主</Tag><a>{this.state.content.author}</a>&nbsp;•&nbsp;
+                                    <Tag color="cyan">楼主</Tag><Link to={{
+                                    pathname: `/user-summary-${this.state.content.author}`,
+                                    state: {username: this.state.content.author, uid: this.state.content.uid}
+                                }}>{this.state.content.author}</Link>&nbsp;•&nbsp;
                                     <Tooltip placement="top"
                                              title={moment(this.state.content.ct * 1000).format('YYYY年M月D日Ah点mm分')}>
                                         <span>{moment(this.state.content.ct * 1000).fromNow()}</span>
@@ -361,8 +363,8 @@ class TopicContent extends React.Component {
                         this.state.commentsToSee.map((value, index) => {
                             return (
                                 <div id={`id-comment-${value.cid}`} key={index} className={'comment-block'}>
-                                    <Avatar size={70} className={'userHead'}
-                                            style={{color: '#8ACF00', backgroundColor: 'honeydew'}}>N</Avatar>
+                                    <Avatar size={70} src={`http://0.0.0.0:2000/avatar_by_id/${value.uid}`}
+                                            className={'userHead'}/>
                                     <div className={'comment-detail'}>
                                         <div className={'comment-top'}>
                                             <div className={'comment-top-left'}>
@@ -370,7 +372,10 @@ class TopicContent extends React.Component {
                                                     value.uid === this.state.content.uid ?
                                                         <Tag color="cyan">楼主</Tag> : null
                                                 }
-                                                <a>{value.username}</a>&nbsp;•&nbsp;
+                                                <Link to={{
+                                                    pathname: `/user-summary-${this.state.content.author}`,
+                                                    state: {username: value.username, uid: value.uid}
+                                                }}>{value.nickname}</Link>&nbsp;•&nbsp;
                                                 <Tooltip placement="top"
                                                          title={moment(value.ct * 1000).format('YYYY年M月D日Ah点mm分')}>
                                                     <span>{moment(value.ct * 1000).fromNow()}</span>

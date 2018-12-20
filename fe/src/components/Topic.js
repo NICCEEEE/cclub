@@ -4,11 +4,16 @@ import {Avatar, Icon, Tooltip} from 'antd';
 import '../assets/css/Topic.css'
 import moment from 'moment/min/moment-with-locales';
 
+
 class Topic extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {}
+        this.state = {
+            author_head: null,
+            last_head: null,
+        }
     }
+
 
     render() {
         let board = this.props.detail.board
@@ -31,8 +36,8 @@ class Topic extends React.Component {
         return (
             <div className={'topicBox'}>
                 <Tooltip placement="left" title={this.props.detail.author}>
-                    <Avatar size={70} className={'userHead'}
-                            style={{color: color, backgroundColor: bgc}}>N</Avatar>
+                    <Avatar size={70} src={`http://0.0.0.0:2000/avatar_by_id/${this.props.detail.uid}`}
+                            icon="user" className={'userHead'}/>
                 </Tooltip>
                 <div className={'topicBox-1'}>
                     <p className={'topicTitle'}><Link style={{wordBreak: 'break-word'}}
@@ -43,12 +48,16 @@ class Topic extends React.Component {
                     </p>
                     <p className={'topicBottom'}>
                         <span className={'topicBoard'}>
-                            {icon}<a onClick={() => this.props.Home.handleBoardTab(this.props.tab)}>&nbsp;{board}</a>
+                            {icon}<span style={{cursor: 'pointer', color: 'dodgerblue', fontWeight: 'bold'}}
+                                        onClick={() => this.props.Home.handleBoardTab(this.props.tab)}>&nbsp;{board}</span>
                         </span>&nbsp;•&nbsp;
                         <Tooltip placement="top" title={moment(this.props.detail.ct * 1000).format('YYYY年M月D日Ah点mm分')}>
                             <span>{moment(this.props.detail.ct * 1000).fromNow()}</span>
                         </Tooltip>&nbsp;•&nbsp;
-                        <span className={'topicAuthor'}><a>{this.props.detail.author}</a></span>
+                        <span style={{fontWeight: 'bold'}} className={'topicAuthor'}><Link to={{
+                            pathname: `/user-summary-${this.props.detail.author}`,
+                            state: {username: this.props.detail.author, uid: this.props.detail.uid}
+                        }}>{this.props.detail.author}</Link></span>
                     </p>
                 </div>
                 <div className={'topicBox-2'}>
@@ -70,11 +79,13 @@ class Topic extends React.Component {
                         this.props.detail.last_comment_author ? (<p>
                             <Tooltip placement="top" title={this.props.detail.last_comment_author}>
                                 <Avatar className={'lastCommentAuthor'} size="small"
-                                        style={{backgroundColor: '#87d068'}}
-                                        icon="user"/>
+                                        icon="user"
+                                        src={`http://0.0.0.0:2000/avatar_by_id/${this.props.detail.last_comment_id}`}/>
                             </Tooltip>
-                            <Tooltip placement="top" title={moment(this.props.detail.last_comment_time * 1000).format('YYYY年M月D日Ah点mm分')}>
-                                <span className={'lastCommentTime'} style={{paddingLeft: '5px'}}>{moment(this.props.detail.last_comment_time * 1000).fromNow()}</span>
+                            <Tooltip placement="top"
+                                     title={moment(this.props.detail.last_comment_time * 1000).format('YYYY年M月D日Ah点mm分')}>
+                                <span className={'lastCommentTime'}
+                                      style={{paddingLeft: '5px'}}>{moment(this.props.detail.last_comment_time * 1000).fromNow()}</span>
                             </Tooltip>
                         </p>) : null
                     }
