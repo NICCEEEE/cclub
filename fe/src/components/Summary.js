@@ -1,5 +1,5 @@
 import React from 'react'
-import {Avatar, Button, Breadcrumb, Menu, Dropdown, Icon, Spin, Tooltip, Timeline} from 'antd';
+import {Breadcrumb, Spin, Tooltip, Timeline} from 'antd';
 import {Link, withRouter} from 'react-router-dom'
 import moment from 'moment/min/moment-with-locales';
 import {changeTitle, error} from "../utilities"
@@ -45,6 +45,7 @@ class Summary extends React.Component {
                     recent_topices.push(this.state.summary.publish_topices[t])
                 }
             }
+            recent_topices.reverse()
             return (
                 <div className={'content profile'}>
                     <Breadcrumb style={{marginTop: '5px'}}>
@@ -52,7 +53,8 @@ class Summary extends React.Component {
                         <Breadcrumb.Item>用户主页</Breadcrumb.Item>
                     </Breadcrumb>
                     <span className={'account-name'}>{this.state.summary.username}</span>
-                    <strong style={{margin: '15px 0px', fontSize: '15px'}} className={'account-nickname'}>@{this.state.summary.nickname}</strong>
+                    <strong style={{margin: '15px 0px', fontSize: '20px'}}
+                            className={'account-nickname'}>@{this.state.summary.nickname}</strong>
                     <div className={'account-status'}>
                         <div className={'topic-count'}>
                             <span className={'count'}>{this.state.summary.topices}</span><br/><span
@@ -100,11 +102,12 @@ class Summary extends React.Component {
                                     {
                                         recent_topices.map((value, index) => {
                                             return (
-                                                <Timeline.Item key={index}>
+                                                <Timeline.Item key={index} color={['blue', 'green', 'red'][index % 3]}>
                                                     <Link to={{pathname: `/topic/${value.tid}`, state: value.tid}}>
                                                         <Tooltip placement="top"
-                                                                 title={moment(this.state.summary.ct * 1000).format('YYYY年M月D日Ah点mm分')}>
-                                                            <span>{moment(value.ct * 1000).fromNow()}</span><br/>
+                                                                 title={moment(value.ct * 1000).format('YYYY年M月D日Ah点mm分')}>
+                                                            <span
+                                                                style={{color: 'black'}}>{moment(value.ct * 1000).fromNow()}</span><br/>
                                                         </Tooltip>
                                                         {value.title}
                                                     </Link>

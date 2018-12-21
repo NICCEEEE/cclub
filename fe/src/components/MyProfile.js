@@ -1,10 +1,7 @@
 import React from 'react'
 import '../assets/css/MyProfile.css'
-import {Avatar, Button, Breadcrumb, Menu, Dropdown, Icon, Spin, Tooltip, Timeline} from 'antd';
-import {Link, Route, Redirect, Switch} from 'react-router-dom'
-import axios from 'axios'
-import moment from 'moment/min/moment-with-locales';
-import {error, changeTitle} from "../utilities"
+import {Avatar, Button, Menu, Dropdown, Icon} from 'antd';
+import {Link, Route} from 'react-router-dom'
 import Summary from "./Summary"
 import Edit from "./Edit"
 import Notify from "./Notify"

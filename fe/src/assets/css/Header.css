@@ -25,5 +25,10 @@ header {
         width: 300px; }
     header .headContent button {
       margin-left: 5px; }
+    header .headContent .userStatus {
+      display: flex;
+      align-items: center; }
+      header .headContent .userStatus span + span {
+        margin: 0px 30px; }
 
 /*# sourceMappingURL=Header.css.map */

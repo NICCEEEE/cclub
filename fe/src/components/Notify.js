@@ -1,8 +1,8 @@
 import React from 'react'
-import {Avatar, Button, Breadcrumb, Menu, Dropdown, Icon, Spin, Tooltip, Timeline, Tabs, Collapse, Radio} from 'antd';
+import {Button, Breadcrumb, Menu, Dropdown, Icon, Tooltip, Collapse} from 'antd';
 import {Link} from 'react-router-dom'
 import axios from 'axios'
-import {error} from "../utilities"
+import {error, success} from "../utilities"
 import moment from 'moment/min/moment-with-locales';
 
 const Panel = Collapse.Panel;
@@ -25,6 +25,7 @@ class Notify extends React.Component {
             vote: []
         }
     }
+
     handleMenuClick = (e) => {
         this.setState({
             selected: e.item.props.children
@@ -157,13 +158,38 @@ class Notify extends React.Component {
                             }
                         })
                         .catch((err) => {
-                            error('糟糕，出现位置异常！请稍候重试')
+                            error('糟糕，出现未知异常！请稍候重试')
                             console.log(err)
                         })
                     break
                 }
             }
         }
+    }
+
+    removeNotify = (nid) => {
+        axios.get(`http://0.0.0.0:2000/api/remove-notify/${nid}`)
+            .then((response) => {
+                if (response.data === false) {
+                    error('删除失败，请稍候重试！')
+                } else {
+                    let all = this.state.all
+                    for (let i = 0; i < all.length; i++) {
+                        if (all[i].nid === nid) {
+                            all.splice(i, 1)
+                            this.setState({
+                                all: all
+                            })
+                            break
+                        }
+                    }
+                    success('通知删除成功！')
+                }
+            })
+            .catch((err) => {
+                error('糟糕，出现未知异常，请稍候重试！')
+                console.log(err)
+            })
     }
 
     render() {
@@ -190,8 +216,13 @@ class Notify extends React.Component {
                             {
                                 this.state.system.map((value, index) => {
                                     let head = (
-                                        <div className={'panel-head'}><span><span
-                                            className={'status'}>{value.read ? '已读' : '未读'}</span>{value.title}</span>
+                                        <div className={'panel-head'}>
+                                            <span>
+                                                <span className={'status'}>
+                                                    {value.read ? '已读' : '未读'}
+                                                    </span>
+                                                {value.title}
+                                                </span>
                                             <Tooltip placement="top"
                                                      title={moment(value.ct * 1000).format('YYYY年M月D日Ah点mm分')}>
                                                 <span
@@ -202,6 +233,10 @@ class Notify extends React.Component {
                                     return (
                                         <Panel header={head} key={index} style={customPanelStyle}>
                                             <p>{value.detail}</p>
+                                            <div style={{textAlign: 'right'}}>
+                                                <Button onClick={() => this.removeNotify(value.nid)} type={'primary'}
+                                                        shape={'circle'} size={'large'} icon={'delete'}/>
+                                            </div>
                                         </Panel>
                                     )
                                 })
@@ -236,6 +271,10 @@ class Notify extends React.Component {
                                     return (
                                         <Panel header={head} key={index} style={customPanelStyle}>
                                             <p>{value.detail}</p>
+                                            <div style={{textAlign: 'right'}}>
+                                                <Button onClick={() => this.removeNotify(value.nid)} type={'primary'}
+                                                        shape={'circle'} size={'large'} icon={'delete'}/>
+                                            </div>
                                         </Panel>
                                     )
                                 })
@@ -270,6 +309,10 @@ class Notify extends React.Component {
                                     return (
                                         <Panel header={head} key={index} style={customPanelStyle}>
                                             <p>{value.detail}</p>
+                                            <div style={{textAlign: 'right'}}>
+                                                <Button onClick={() => this.removeNotify(value.nid)} type={'primary'}
+                                                        shape={'circle'} size={'large'} icon={'delete'}/>
+                                            </div>
                                         </Panel>
                                     )
                                 })
@@ -304,6 +347,10 @@ class Notify extends React.Component {
                                     return (
                                         <Panel header={head} key={index} style={customPanelStyle}>
                                             <p>{value.detail}</p>
+                                            <div style={{textAlign: 'right'}}>
+                                                <Button onClick={() => this.removeNotify(value.nid)} type={'primary'}
+                                                        shape={'circle'} size={'large'} icon={'delete'}/>
+                                            </div>
                                         </Panel>
                                     )
                                 })

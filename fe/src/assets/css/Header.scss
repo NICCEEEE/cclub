@@ -34,6 +34,13 @@ header {
     button {
       margin-left: 5px;
     }
+    .userStatus {
+      display: flex;
+      align-items: center;
+      span + span {
+        margin: 0px 30px ;
+      }
+    }
   }
 }
 

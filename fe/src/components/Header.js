@@ -1,7 +1,7 @@
 import React from 'react'
-import {Button, Input} from 'antd';
+import {Button, Input, Avatar, Tooltip, Badge, Icon} from 'antd';
 import '../assets/css/Header.css';
-import {Link, withRouter} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import axios from 'axios'
 import {error} from "../utilities"
 
@@ -13,8 +13,9 @@ class Header extends React.Component {
         super(props)
         this.state = {
             loginStatus: 'fail',
-            username: null,
-            uid: null
+            uid: null,
+            msgCount: 0,
+            notifyCount: 0
         }
     }
 
@@ -32,8 +33,7 @@ class Header extends React.Component {
                     })
                 } else {
                     this.setState({
-                        loginStatus: response.data.username,
-                        username: response.data.username,
+                        loginStatus: response.data.nickname,
                         uid: response.data.uid
                     })
                 }
@@ -41,6 +41,15 @@ class Header extends React.Component {
             .catch((err) => {
                 error('糟糕，出现未知异常，请稍候尝试！')
                 console.log(err)
+            })
+        axios.get('http://0.0.0.0:2000/api/msg-notify-count')
+            .then((response) => {
+                if (response.data !== 'fail') {
+                    this.setState({
+                        msgCount: response.data.msg,
+                        notifyCount: response.data.notify,
+                    })
+                }
             })
     }
 
@@ -59,8 +68,35 @@ class Header extends React.Component {
             )
         } else {
             head = (
-                <div className={'buttonGroup'}>
-                    <Link to={{pathname: `/my-summary`, state: {uid: this.state.uid}}}><Button>{this.state.loginStatus}</Button></Link>
+                <div className={'userStatus'}>
+                    <Badge count={this.state.notifyCount}>
+                        <Tooltip plactment={'bottom'}
+                                 title={this.state.notifyCount === 0 ? '通知' : `您有${this.state.notifyCount}条通知未读`}>
+                            <div>
+                                <Link style={{color: 'black'}} to={'/my-summary/notification'}>
+                                    <Icon type="bell" style={{fontSize: '25px'}}/>
+                                </Link>
+                            </div>
+                        </Tooltip>
+                    </Badge>
+                    <Badge count={this.state.msgCount}>
+                        <Tooltip plactment={'bottom'}
+                                 title={this.state.msgCount === 0 ? '私信' : `您有${this.state.msgCount}条通知未读`}>
+                            <div>
+                                <Link style={{color: 'black'}} to={'/my-summary/message'}>
+                                    <Icon type="mail" style={{fontSize: '25px'}}/>
+                                </Link>
+                            </div>
+                        </Tooltip>
+                    </Badge>
+                    <Tooltip placement="bottom" title={this.state.loginStatus}>
+                        <div>
+                            <Link to={{pathname: `/my-summary`, state: {uid: this.state.uid}}}>
+                                <Avatar size={50} src={`http://0.0.0.0:2000/avatar_by_id/${this.state.uid}`}
+                                        icon={'user'}/>
+                            </Link>
+                        </div>
+                    </Tooltip>
                 </div>
             )
         }
@@ -86,4 +122,4 @@ class Header extends React.Component {
     }
 }
 
-export default withRouter(Header)
+export default Header

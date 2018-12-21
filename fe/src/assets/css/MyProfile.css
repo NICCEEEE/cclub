@@ -182,5 +182,31 @@
         font-size: 17px; }
       .profile-container .setting-tabs .update-nickname input {
         margin-bottom: 10px; }
+  .profile-container .message {
+    display: flex;
+    flex-basis: 100%;
+    margin-top: 40px;
+    flex-wrap: wrap; }
+    .profile-container .message .none-notify {
+      flex-basis: 100%;
+      box-sizing: border-box;
+      height: 80px;
+      line-height: 80px;
+      background-color: #d8ecf7;
+      border: 1px solid #bbe8f1;
+      font-size: 20px;
+      color: #31708f;
+      border-radius: 20px;
+      padding: 0px 20px; }
+    .profile-container .message .panel-head {
+      display: flex;
+      justify-content: space-between;
+      font-size: 20px; }
+      .profile-container .message .panel-head .status {
+        color: red;
+        border: 1px solid red;
+        padding: 2px;
+        border-radius: 5px;
+        margin-right: 20px; }
 
 /*# sourceMappingURL=MyProfile.css.map */

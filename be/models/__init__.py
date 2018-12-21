@@ -44,10 +44,9 @@ class Model(object):
     def delete_one(cls, condition):
         # 通过类来获取表名
         collection = cls.__name__.lower()
-        delete_tag = {'$set': {'deleted': True}}
-        result = club_db[collection].update_one(condition, delete_tag)
+        result = club_db[collection].delete_one(condition)
         if result:
-            print('delete_one ==>', '查询条件为：', condition, '匹配', result.matched_count, '条数据, 成功标记删除', result.modified_count, '条数据')
+            print('delete_one ==>', '查询条件为：', condition, '匹配', result.deleted_count, '条数据, 成功删除', result.deleted_count, '条数据')
         else:
             print('delete_one ==>', '未查找到匹配数据：', condition)
         return result
@@ -57,10 +56,9 @@ class Model(object):
     def delete_all(cls, condition):
         # 通过类来获取表名
         collection = cls.__name__.lower()
-        delete_tag = {'$set': {'deleted': True}}
-        result = club_db[collection].update_many(condition, delete_tag)
+        result = club_db[collection].delete_many(condition)
         if result:
-            print('delete_all ==>', '查询条件为：', condition, '匹配', result.matched_count, '条数据, 成功标记删除', result.modified_count, '条数据')
+            print('delete_all ==>', '查询条件为：', condition, '匹配', result.deleted_count, '条数据, 成功删除', result.deleted_count, '条数据')
         else:
             print('delete_all ==>', '未查找到匹配数据：', condition)
         return result
@@ -161,4 +159,3 @@ for i in range(0, 300):
     salt = '89sdfn^%^#sdmlks' + str(i)
     key = hashlib.md5(salt.encode('ascii')).hexdigest()
     codeword[key] = problem
-

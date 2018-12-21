@@ -1,26 +1,21 @@
 import React from 'react'
 import {
-    Avatar,
     Button,
     Breadcrumb,
-    Menu,
-    Dropdown,
     Icon,
-    Spin,
-    Tooltip,
-    Timeline,
     Upload,
     message,
     Tabs,
     Input
 } from 'antd';
 import {Link} from 'react-router-dom'
-import {changeTitle, debounce, error ,success} from "../utilities"
+import {changeTitle, debounce, error, success} from "../utilities"
 import axios from 'axios'
 import qs from 'qs'
 
 const TabPane = Tabs.TabPane;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+
 function getBase64(img, callback) {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result));
@@ -64,6 +59,7 @@ class Setting extends React.Component {
                 imageUrl,
                 loading: false,
             }));
+            success('头像上传成功，刷新后即可更新！')
         }
     }
 
@@ -129,9 +125,23 @@ class Setting extends React.Component {
             case 'nickname':
                 pattern = /^[\d\w\u4e00-\u9fa5_]{2,12}$/
                 if (pattern.test(value)) {
-                    this.setState({
-                        nickState: {background: 'rgb(230, 255, 237)'}
-                    })
+                    axios.get(`http://0.0.0.0:2000/api/check-nickname?nickname=${value}`)
+                        .then((response) => {
+                            if (response.data === 'exist') {
+                                error('该昵称已存在！')
+                                this.setState({
+                                    nickState: {background: 'rgb(255, 238, 240)'}
+                                })
+                            } else {
+                                this.setState({
+                                    nickState: {background: 'rgb(230, 255, 237)'}
+                                })
+                            }
+                        })
+                        .catch((err) => {
+                            error('糟糕，出现未知异常，请稍候重试')
+                            console.log(err)
+                        })
                 } else {
                     this.setState({
                         nickState: {background: 'rgb(255, 238, 240)'}
@@ -278,7 +288,8 @@ class Setting extends React.Component {
                         <TabPane tab="昵称更改" key="3">
                             <div className={'update-nickname'}>
                                 <span className={'title'}>更改昵称</span><br/>
-                                <span style={{fontSize: '17px', marginBottom: '20px'}}>当前昵称：<strong className={'nickname'}>{this.state.nickname}</strong></span>
+                                <span style={{fontSize: '17px', marginBottom: '20px'}}>当前昵称：<strong
+                                    className={'nickname'}>{this.state.nickname}</strong></span>
                                 <label htmlFor={'nickname'}>新的昵称：</label><Input required={true}
                                                                                 style={this.state.nickState}
                                                                                 onChange={debounce(this.change, 300).bind(this)}
@@ -294,4 +305,5 @@ class Setting extends React.Component {
         )
     }
 }
+
 export default Setting

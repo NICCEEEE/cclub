@@ -15,6 +15,7 @@ from models.user import User
 from models.topic import Topic
 from models.notify import Notify
 from models.comment import Comment
+from models.message import Message
 from models import codeword
 from random import randint
 import time
@@ -117,6 +118,7 @@ def is_upvote(tid):
         return 'false'
 
 
+# 获取帖子评论点赞状态
 @main.route('/likeStatus/<int:tid>', methods=['GET'])
 def like_status(tid):
     username = session.get('username', None)
@@ -167,6 +169,7 @@ def like_status(tid):
         return jsonify(status)
 
 
+# 修改目标通知阅读状态
 @main.route('/read-notify/<int:nid>', methods=['GET'])
 def read_notify(nid):
     notify = Notify.find_one({}, nid=nid)
@@ -179,6 +182,7 @@ def read_notify(nid):
         return 'fail'
 
 
+# 修改全部通知阅读状态
 @main.route('/read-all', methods=['GET'])
 def read_all():
     username = session.get('username', None)
@@ -196,8 +200,30 @@ def read_all():
         return 'fail'
 
 
+# 删除指定通知
+@main.route('/remove-notify/<int:nid>', methods=['GET'])
+def remove_notify(nid):
+    username = session.get('username', None)
+    if username is None:
+        return 'false'
+    user = User.find_one({}, username=username)
+    if user is None:
+        return 'false'
+    notify = Notify.find_one({}, nid=nid)
+    if notify is None:
+        return 'false'
+    if user.get('uid') != notify.get('receive_id'):
+        return 'false'
+    res = Notify.delete_one({'nid': nid})
+    if res:
+        return 'true'
+    else:
+        return 'false'
+
+
+# 密码修改检查
 @main.route('/checkChange', methods=['POST'])
-def check_change():
+def check_pwd_change():
     username = session.get('username', None)
     if username is None:
         return 'fail'
@@ -213,6 +239,7 @@ def check_change():
         return 'success'
 
 
+# 修改昵称
 @main.route('/change-nickname', methods=['POST'])
 def change_nickname():
     username = session.get('username', None)
@@ -229,9 +256,12 @@ def change_nickname():
         Topic.update_all({'uid': user.get('uid')}, {'author': res})
         Topic.update_all({'last_comment_id': user.get('uid')}, {'last_comment_author': res})
         Comment.update_all({'uid': user.get('uid')}, {'nickname': res})
+        Message.update_all({'send_id': user.get('uid')}, {'send_name': res})
+        Message.update_all({'receive_id': user.get('uid')}, {'receive_name': res})
         return 'success'
 
 
+# 获取当前用户昵称
 @main.route('/get-nickname', methods=['GET'])
 def get_nickname():
     username = session.get('username', None)
@@ -244,3 +274,85 @@ def get_nickname():
     return nickname
 
 
+# 检查昵称存在与否
+@main.route('/check-nickname', methods=['GET'])
+def check_nickname():
+    nickname = request.args.get('nickname')
+    res = User.find_one({}, nickname=nickname)
+    if res is not None:
+        return 'exist'
+    else:
+        return 'valid'
+
+
+# 创建私信
+@main.route('/create-message', methods=['POST'])
+def create_message():
+    username = session.get('username', None)
+    if username is None:
+        return 'false'
+    user = User.find_one({}, username=username)
+    if user is None:
+        return 'false'
+    mes_info = request.form
+    res = Message.create_message(user, mes_info)
+    if res not in ['false', 'no user', 'unvalid']:
+        return 'success'
+    else:
+        return res
+
+
+# 获取收取私信
+@main.route('/received-msg', methods=['GET'])
+def get_my_receive_msg():
+    username = session.get('username', None)
+    if username is None:
+        return 'false'
+    user = User.find_one({}, username=username)
+    if user is None:
+        return 'false'
+    res = Message.get_received_msg(user)
+    if res is None:
+        return 'false'
+    return jsonify(res)
+
+
+# 获取发送私信
+@main.route('/sended-msg', methods=['GET'])
+def get_my_sended_msg():
+    username = session.get('username', None)
+    if username is None:
+        return 'false'
+    user = User.find_one({}, username=username)
+    if user is None:
+        return 'false'
+    res = Message.get_sended_msg(user)
+    if res is None:
+        return 'false'
+    return jsonify(res)
+
+
+# 更新私信阅读状态
+@main.route('/read-msg/<int:mid>', methods=['GET'])
+def read_msg(mid):
+    msg = Message.find_one({}, mid=mid)
+    if msg is None:
+        return 'fail'
+    res = Message.update_one({'mid': mid}, {'read': True})
+    if res is not None:
+        return 'success'
+    else:
+        return 'fail'
+
+
+@main.route('/msg-notify-count', methods=['GET'])
+def get_msg_notify_count():
+    username = session.get('username', None)
+    if username is None:
+        return 'fail'
+    user = User.find_one({}, username=username)
+    if user is None:
+        return 'fail'
+    notify = len(Notify.find_all({}, receive_id=user.get('uid'), read=False))
+    msg = len(Message.find_all({}, receive_id=user.get('uid'), read=False))
+    return jsonify({'notify': notify, 'msg': msg})

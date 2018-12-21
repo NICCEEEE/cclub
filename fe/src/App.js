@@ -9,17 +9,9 @@ import routes from './routeConf'
 class App extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            loginStatus: 'fail',
-        }
+        this.state = {}
     }
-    handleLogin = () => {
-        console.log('ready to login')
-        this.setState({
-            loginStatus: 'success'
-        })
-        console.log('login success', this.state.loginStatus)
-    }
+
     render() {
         return (
             <Router>

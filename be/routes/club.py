@@ -244,11 +244,14 @@ def get_my_notification():
 #     u = User.find_one({}, uid=user.get('uid'))
 #     if u is None:
 #         return redirect(render_template('index.html'))
+#     current_avatar = u.get('avatar')
+#     os.remove(os.path.join('/Users/nice/Documents/cclub/fe/src/assets/images/avatar', current_avatar))
 #     filename = str(u.get('uid')) + filename
 #     u['avatar'] = filename
 #     User.update_one({'uid': user.get('uid')}, {'avatar': u['avatar']})
 #     file.save(os.path.join('/Users/nice/Documents/cclub/fe/src/assets/images/avatar', filename))
 #     return 'success'
+
 @main.route('/upload-head', methods=['POST'])
 def add_img():
     # user = current_user()
@@ -265,10 +268,12 @@ def add_img():
     u = User.find_one({}, uid=user.get('uid'))
     if u is None:
         return redirect(render_template('index.html'))
+    current_avatar = u.get('avatar')
+    os.remove(os.path.join('/Users/nice/Documents/cclub/fe/src/assets/images/avatar', current_avatar))
     filename = str(u.get('uid')) + filename
     u['avatar'] = filename
-    # User.update_one({'uid': user.get('uid')}, {'avatar': u['avatar']})
-    # file.save(os.path.join('/Users/nice/Documents/cclub/fe/src/assets/images/avatar', filename))
+    User.update_one({'uid': user.get('uid')}, {'avatar': u['avatar']})
+    file.save(os.path.join('/Users/nice/Documents/cclub/fe/src/assets/images/avatar', filename))
     return 'success'
 
 

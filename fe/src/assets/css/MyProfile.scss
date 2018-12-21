@@ -231,4 +231,34 @@
       }
     }
   }
+  .message {
+    display: flex;
+    flex-basis: 100%;
+    margin-top: 40px;
+    flex-wrap: wrap;
+    .none-notify {
+      flex-basis: 100%;
+      box-sizing: border-box;
+      height: 80px;
+      line-height: 80px;
+      background-color: rgb(216, 236, 247);
+      border: 1px solid rgb(187, 232, 241);
+      font-size: 20px;
+      color: rgb(49, 112, 143);
+      border-radius: 20px;
+      padding: 0px 20px;
+    }
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      font-size: 20px;
+      .status {
+        color: red;
+        border: 1px solid red;
+        padding: 2px;
+        border-radius: 5px;
+        margin-right: 20px;
+      }
+    }
+  }
 }
