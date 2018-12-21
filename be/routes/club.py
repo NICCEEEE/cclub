@@ -14,6 +14,7 @@ from flask import (
 from werkzeug.utils import secure_filename
 from models.user import User
 from models.topic import Topic
+from models.comment import Comment
 import time
 import os
 from random import randint
@@ -51,9 +52,11 @@ def register():
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
+    # 判断访问方法
     method = request.method
     if method == 'GET':
         return render_template('index.html')
+    # 获取登录信息
     login_info = request.form
     user = User.valid_login(login_info)
     if user is not None:
@@ -84,7 +87,6 @@ def get_topic(tid):
         return render_template('index.html')
     else:
         Topic.update_one({"tid": tid}, {'views': topic.get('views') + 1})
-        topic['views'] += 1
         return jsonify(topic)
 
 
@@ -95,7 +97,10 @@ def up_vote(tid):
         return 'fail'
     else:
         res = Topic.up_vote(user, tid)
-        return res
+        if res in ['fail', 'exist']:
+            return res
+        else:
+            return 'success'
 
 
 @main.route('/addComment/<int:tid>', methods=['POST'])
@@ -103,7 +108,7 @@ def add_comment(tid):
     user = current_user()
     if user is None:
         return 'fail'
-    res = Topic.add_comment(user, tid, request.form)
+    res = Comment.add_comment(user, tid, request.form)
     if res is None:
         return 'fail'
     else:
@@ -115,43 +120,37 @@ def like_comment(cid):
     user = current_user()
     if user is None:
         return 'not login'
-    tid = int(str(cid)[:5])
-    topic = Topic.find_one({}, tid=tid)
-    if topic is None:
+    comment = Comment.find_one({}, cid=cid)
+    if comment is None:
         return 'fail'
-    topic_comment = topic.get('comment')
-    # 遍历所有评论
-    for c in topic_comment:
-        # 定位目标评论
-        if c.get('cid') == cid:
-            # 判断当前用户是否点了反对
-            for u in c.get('dislikes'):
-                if u.get('uid') == user.get('uid') and u.get('username') == user.get('username'):
-                    # 判断为真，清除当前用户的反对，同时反对数减一
-                    c['dislike'] -= 1
-                    del c['dislikes'][c['dislikes'].index(u)]
-                    Topic.update_one({'tid': tid}, {'comment': topic_comment})
-                    break
-            # 判断当前用户是否点了支持
-            for u in c.get('likes'):
-                if u.get('uid') == user.get('uid') and u.get('username') == user.get('username'):
-                    # 判断为真，则返回已点支持
-                    return 'exist'
-            # 否则支持数加一，同时增加当前用户的支持信息
-            c['like'] += 1
-            c['likes'].append(
-                {
-                    'username': user.get('username'),
-                    'uid': user.get('uid')
-                }
-            )
-            User.update_one({'uid': user.get('uid')},
-                            {'active_time': time.time(), 'give_votes': user.get('give_votes') + 1})
-            author = User.find_one({}, uid=topic.get('uid'))
-            User.update_one({'uid': author.get('uid')}, {'receive_votes': author.get('receive_votes') + 1})
-            Topic.update_one({'tid': tid}, {'comment': topic_comment})
-            return 'success'
-    return 'fail'
+    else:
+        # 判断当前用户是否点了反对
+        for u in comment.get('dislikes'):
+            if u.get('uid') == user.get('uid'):
+                # 判断为真，清除当前用户的反对，同时反对数减一
+                comment['dislike'] -= 1
+                del comment['dislikes'][comment['dislikes'].index(u)]
+                break
+        # 判断当前用户是否点了支持
+        for u in comment.get('likes'):
+            if u.get('uid') == user.get('uid'):
+                # 判断为真，则返回已点支持
+                return 'exist'
+        # 否则支持数加一，同时增加当前用户的支持信息
+        comment['like'] += 1
+        comment['likes'].append(
+            {
+                'uid': user.get('uid')
+            }
+        )
+        # 更新目标评论点赞信息
+        Comment.update_one({'cid': cid},
+                           {'dislike': comment['dislike'], 'dislikes': comment['dislikes'], 'like': comment['like'],
+                            'likes': comment['likes']})
+        # 更新点赞用户统计信息
+        User.update_one({'uid': user.get('uid')},
+                        {'active_time': time.time(), 'give_votes': user.get('give_votes') + 1})
+        return 'success'
 
 
 @main.route('/dislikeCom/<int:cid>')
@@ -159,39 +158,34 @@ def dislike_comment(cid):
     user = current_user()
     if user is None:
         return 'not login'
-    tid = int(str(cid)[:5])
-    topic = Topic.find_one({}, tid=tid)
-    if topic is None:
+    comment = Comment.find_one({}, cid=cid)
+    if comment is None:
         return 'fail'
-    topic_comment = topic.get('comment')
-    # 遍历所有评论
-    for c in topic_comment:
-        # 定位目标评论
-        if c.get('cid') == cid:
-            # 判断当前用户是否点了支持
-            for u in c.get('likes'):
-                if u.get('uid') == user.get('uid') and u.get('username') == user.get('username'):
-                    # 判断为真，清除当前用户的反对，同时反对数减一
-                    c['like'] -= 1
-                    del c['likes'][c['likes'].index(u)]
-                    Topic.update_one({'tid': tid}, {'comment': topic_comment})
-                    break
-            # 判断当前用户是否点了反对
-            for u in c.get('dislikes'):
-                if u.get('uid') == user.get('uid') and u.get('username') == user.get('username'):
-                    # 判断为真，则返回已点反对
-                    return 'exist'
-            # 否则支持数加一，同时增加当前用户的支持信息
-            c['dislike'] += 1
-            c['dislikes'].append(
-                {
-                    'username': user.get('username'),
-                    'uid': user.get('uid')
-                }
-            )
-            Topic.update_one({'tid': tid}, {'comment': topic_comment})
-            return 'success'
-    return 'fail'
+    else:
+        # 判断当前用户是否点了赞同
+        for u in comment.get('likes'):
+            if u.get('uid') == user.get('uid'):
+                # 判断为真，清除当前用户的赞同，同时赞同数减一
+                comment['like'] -= 1
+                del comment['likes'][comment['likes'].index(u)]
+                break
+        # 判断当前用户是否点了反对
+        for u in comment.get('dislikes'):
+            if u.get('uid') == user.get('uid'):
+                # 判断为真，则返回已点反对
+                return 'exist'
+        # 否则反对数加一
+        comment['dislike'] += 1
+        comment['dislikes'].append(
+            {
+                'uid': user.get('uid')
+            }
+        )
+        # 更新目标评论点赞信息
+        Comment.update_one({'cid': cid},
+                           {'dislike': comment['dislike'], 'dislikes': comment['dislikes'], 'like': comment['like'],
+                            'likes': comment['likes']})
+        return 'success'
 
 
 @main.route('/my-summary')
@@ -228,7 +222,6 @@ def save_profile():
 @main.route('/notification')
 def get_my_notification():
     user = current_user()
-    print(user.get('username'))
     if user is None:
         return 'fail'
     else:
@@ -302,4 +295,3 @@ def get_avatar_by_id(uid):
             return send_from_directory('/Users/nice/Documents/cclub/fe/src/assets/images/avatar', 'default1.png')
         else:
             return send_from_directory('/Users/nice/Documents/cclub/fe/src/assets/images/avatar', avatar)
-

@@ -56,7 +56,7 @@ let routes = [
         ]
     },
     {
-        path: "/user-summary-:username",
+        path: "/user-summary-:username-:uid",
         component: UserSummary,
     },
     {

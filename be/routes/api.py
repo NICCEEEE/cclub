@@ -14,6 +14,7 @@ from flask import (
 from models.user import User
 from models.topic import Topic
 from models.notify import Notify
+from models.comment import Comment
 from models import codeword
 from random import randint
 import time
@@ -88,6 +89,17 @@ def get_all_topic():
     return jsonify(result)
 
 
+# 获取目标评论
+@main.route('/comment/<int:tid>', methods=['GET'])
+def get_target_comments(tid):
+    username = session.get('username', None)
+    if username is not None:
+        User.update_one({'username': username}, {'active_time': time.time()})
+    result = Comment.find_all({}, tid=tid)
+    return jsonify(result)
+
+
+# 获取帖子点赞信息
 @main.route('/upVote/<int:tid>', methods=['GET'])
 def is_upvote(tid):
     username = session.get('username', None)
@@ -100,7 +112,7 @@ def is_upvote(tid):
         if topic is None:
             return 'false'
         for u in topic['voteUser']:
-            if u.get('username') == user.get('username') and u.get('uid') == user.get('uid'):
+            if u.get('uid') == user.get('uid'):
                 return 'true'
         return 'false'
 
@@ -113,13 +125,13 @@ def like_status(tid):
         return 'false'
     else:
         User.update_one({'username': username}, {'active_time': time.time()})
-        topic = Topic.find_one({}, tid=tid)
-        if topic is None:
+        comments = Comment.find_all({}, tid=tid)
+        if comments is None:
             return 'false'
         like = []
         dislike = []
         # 遍历该帖所有评论
-        for c in topic['comment']:
+        for c in comments:
             like_flag = False
             dislike_flag = False
             # 判断是否有人支持
@@ -129,7 +141,7 @@ def like_status(tid):
                 # 遍历每一个评论的支持列表
                 for l in c['likes']:
                     # 判断该评论的支持列表是否存在当前浏览的用户
-                    if l.get('uid') == user.get('uid') and l.get('username') == user.get('username'):
+                    if l.get('uid') == user.get('uid'):
                         like.append(True)
                         like_flag = True
                         break
@@ -142,7 +154,7 @@ def like_status(tid):
                 # 遍历每一个评论的反对列表
                 for d in c['dislikes']:
                     # 判断该评论的反对列表是否存在当前浏览的用户
-                    if d.get('uid') == user.get('uid') and d.get('username') == user.get('username'):
+                    if d.get('uid') == user.get('uid'):
                         dislike.append(True)
                         dislike_flag = True
                         break
@@ -215,6 +227,8 @@ def change_nickname():
         return 'fail'
     else:
         Topic.update_all({'uid': user.get('uid')}, {'author': res})
+        Topic.update_all({'last_comment_id': user.get('uid')}, {'last_comment_author': res})
+        Comment.update_all({'uid': user.get('uid')}, {'nickname': res})
         return 'success'
 
 

@@ -37,7 +37,7 @@ class TopicContent extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            content: null,
+            topicContent: null,
             drawerVisible: false,
             parent: 'TopicContent',
             isVote: 'rgb(200, 200, 200)',
@@ -45,6 +45,7 @@ class TopicContent extends React.Component {
             likeStatus: null,
             commentsToSee: [],
             reOrdered: null,
+            ordered: null,
             page: 1,
         }
     }
@@ -59,7 +60,7 @@ class TopicContent extends React.Component {
             })
         } else {
             this.setState({
-                commentsToSee: this.state.content.comment.slice((this.state.page - 1) * 15, (this.state.page - 1) * 15 + 15)
+                commentsToSee: this.state.ordered.slice((this.state.page - 1) * 15, (this.state.page - 1) * 15 + 15)
             })
         }
     }
@@ -245,7 +246,7 @@ class TopicContent extends React.Component {
         if (this.state.order === null || this.state.order === '正序') {
             this.setState({
                 page: pageNumber + 1,
-                commentsToSee: this.state.content.comment.slice(pageNumber * 15, pageNumber * 15 + 15)
+                commentsToSee: this.state.ordered.slice(pageNumber * 15, pageNumber * 15 + 15)
             })
         } else {
             this.setState({
@@ -261,17 +262,23 @@ class TopicContent extends React.Component {
         let tid = this.props.location.state ? this.props.location.state : this.props.location.pathname.split('/').reverse()[0]
         axios.get(`http://0.0.0.0:2000/topic/${tid}`)
             .then((response) => {
-                let reverseCopy = response.data.comment.concat()
-                reverseCopy.reverse()
                 this.setState({
-                    content: response.data,
-                    reOrdered: reverseCopy,
-                    commentsToSee: response.data.comment.slice(0, 15)
+                    topicContent: response.data,
                 })
-                changeTitle(this.state.content.board)
+                changeTitle(this.state.topicContent.board)
             })
             .catch((error) => {
                 console.log(error)
+            })
+        axios.get(`http://0.0.0.0:2000/api/comment/${tid}`)
+            .then((response) => {
+                let reverseCopy = response.data.concat()
+                reverseCopy.reverse()
+                this.setState({
+                    ordered: response.data,
+                    reOrdered: reverseCopy,
+                    commentsToSee: response.data.slice(0, 15)
+                })
             })
         this.isVoteUp()
         this.getLikeStatus()
@@ -284,60 +291,99 @@ class TopicContent extends React.Component {
                 <Menu.Item key="2">倒序</Menu.Item>
             </Menu>
         )
-        if (this.state.content === null || this.state.likeStatus === null) {
+        if (this.state.topicContent === null || this.state.likeStatus === null) {
             return <Spin style={{marginTop: '90px'}} size="large"/>
         } else {
             return (
                 <div className={'content TopicPage'}>
                     <Breadcrumb style={{marginTop: '15px', flexBasis: '75%'}}>
-                        <Breadcrumb.Item><Link to={'/'}>Home</Link></Breadcrumb.Item>
-                        <Breadcrumb.Item><Link to={'/'}>{this.state.content.board}</Link></Breadcrumb.Item>
-                        <Breadcrumb.Item>{this.state.content.title}</Breadcrumb.Item>
+                        <Breadcrumb.Item>
+                            <Link to={'/'}>
+                                Home
+                            </Link>
+                        </Breadcrumb.Item>
+                        <Breadcrumb.Item>
+                            <Link to={'/'}>
+                                {this.state.topicContent.board}
+                            </Link>
+                        </Breadcrumb.Item>
+                        <Breadcrumb.Item>
+                            {this.state.topicContent.title}
+                        </Breadcrumb.Item>
                     </Breadcrumb>
                     <div className={'content-title'}>
-                        <Icon type="tags" theme="filled"/>&nbsp;{this.state.content.title}
+                        <Icon type="tags" theme="filled"/>&nbsp;{this.state.topicContent.title}
                     </div>
                     <div className={'author-block'}>
-                        <Avatar size={70} src={`http://0.0.0.0:2000/avatar_by_id/${this.state.content.uid}`}
+                        <Avatar size={70} src={`http://0.0.0.0:2000/avatar_by_id/${this.state.topicContent.uid}`}
                                 className={'userHead'}/>
                         <div className={'content-detail'}>
                             <div className={'topicInfo'}>
                                 <div className={'info-left'}>
-                                    <Tag color="cyan">楼主</Tag><Link to={{
-                                    pathname: `/user-summary-${this.state.content.author}`,
-                                    state: {username: this.state.content.author, uid: this.state.content.uid}
-                                }}>{this.state.content.author}</Link>&nbsp;•&nbsp;
+                                    <Tag color="cyan">
+                                        楼主
+                                    </Tag>
+                                    <Link to={{
+                                        pathname: `/user-summary-${this.state.topicContent.author}-${this.state.topicContent.uid}`,
+                                        state: {
+                                            username: this.state.topicContent.author,
+                                            uid: this.state.topicContent.uid
+                                        }
+                                    }}>
+                                        {this.state.topicContent.author}
+                                    </Link>&nbsp;•&nbsp;
                                     <Tooltip placement="top"
-                                             title={moment(this.state.content.ct * 1000).format('YYYY年M月D日Ah点mm分')}>
-                                        <span>{moment(this.state.content.ct * 1000).fromNow()}</span>
-                                    </Tooltip>&nbsp;•&nbsp;发布于&nbsp;<Tag
-                                    color="geekblue">{this.state.content.board}</Tag>
+                                             title={moment(this.state.topicContent.ct * 1000).format('YYYY年M月D日Ah点mm分')}>
+                                        <span>
+                                            {moment(this.state.topicContent.ct * 1000).fromNow()}
+                                            </span>
+                                    </Tooltip>
+                                    &nbsp;•&nbsp;发布于&nbsp;
+                                    <Tag color="geekblue">
+                                        {this.state.topicContent.board}
+                                    </Tag>
                                 </div>
                                 <div className={'info-right'}>
                                     <div className={'vote'}>
-                                        <span className={'count'}>{this.state.content.vote}</span><br/><span
-                                        className={'countTitle'}>点赞</span>
+                                        <span className={'count'}>
+                                            {this.state.topicContent.vote}
+                                            </span><br/>
+                                        <span className={'countTitle'}>
+                                            点赞
+                                        </span>
                                     </div>
                                     <div className={'comments'}>
-                                        <span className={'count'}>{this.state.content.comments}</span><br/><span
-                                        className={'countTitle'}>回复</span>
+                                        <span className={'count'}>
+                                            {this.state.topicContent.comments}
+                                            </span><br/>
+                                        <span className={'countTitle'}>
+                                            回复
+                                        </span>
                                     </div>
                                     <div className={'views'}>
-                                        <span className={'count'}>{this.state.content.views}</span><br/><span
-                                        className={'countTitle'}>浏览</span>
+                                        <span className={'count'}>
+                                            {this.state.topicContent.views}
+                                            </span><br/>
+                                        <span className={'countTitle'}>
+                                            浏览
+                                        </span>
                                     </div>
                                 </div>
                             </div>
                             <Markdown className={'content-article'}
-                                      source={this.state.content.content}
+                                      source={this.state.topicContent.content}
                                       skipHtml={true}
                                       escapeHtml={true}
                                       renderers={{code: CodeBlock}}/>
                             <div className={'bottom-info'}>
                                 <div className={'bottom-left'}>
                                     <Button icon={'mail'} onClick={this.replyBox} size={'large'}
-                                            type="primary">回复主题</Button>
-                                    <Button icon={'eye'} size={'large'} type="default">关注该帖</Button>
+                                            type="primary">
+                                        回复主题
+                                    </Button>
+                                    <Button icon={'eye'} size={'large'} type="default">
+                                        关注该帖
+                                    </Button>
                                     <Dropdown overlay={menu}>
                                         <Button size={'large'}>
                                             {this.state.order ? this.state.order : '排序'}<Icon type="down"/>
@@ -346,14 +392,18 @@ class TopicContent extends React.Component {
                                 </div>
                                 <div className={'bottom-right'}>
                                     <Tooltip placement="bottom" title={'点赞'}>
-                                    <span><Icon onClick={this.upVote} style={{fontSize: '25px'}} type="like"
-                                                theme="twoTone"
-                                                twoToneColor={this.state.isVote}/></span>
+                                        <span>
+                                            <Icon onClick={this.upVote} style={{fontSize: '25px'}} type="like"
+                                                  theme="twoTone"
+                                                  twoToneColor={this.state.isVote}/>
+                                        </span>
                                     </Tooltip>
                                     <Tooltip placement="top" title={'分享'}>
-                                    <span><Icon onClick={this.copyUrl}
-                                                style={{fontSize: '25px', color: 'rgb(200, 200, 200)'}}
-                                                type="share-alt"/></span>
+                                        <span>
+                                            <Icon onClick={this.copyUrl}
+                                                  style={{fontSize: '25px', color: 'rgb(200, 200, 200)'}}
+                                                  type="share-alt"/>
+                                        </span>
                                     </Tooltip>
                                 </div>
                             </div>
@@ -364,21 +414,26 @@ class TopicContent extends React.Component {
                             return (
                                 <div id={`id-comment-${value.cid}`} key={index} className={'comment-block'}>
                                     <Avatar size={70} src={`http://0.0.0.0:2000/avatar_by_id/${value.uid}`}
-                                            className={'userHead'}/>
+                                            icon={'user'} className={'userHead'}/>
                                     <div className={'comment-detail'}>
                                         <div className={'comment-top'}>
                                             <div className={'comment-top-left'}>
                                                 {
-                                                    value.uid === this.state.content.uid ?
-                                                        <Tag color="cyan">楼主</Tag> : null
+                                                    value.uid === this.state.topicContent.uid ?
+                                                        <Tag color="cyan">
+                                                            楼主
+                                                        </Tag> : null
                                                 }
                                                 <Link to={{
-                                                    pathname: `/user-summary-${this.state.content.author}`,
-                                                    state: {username: value.username, uid: value.uid}
-                                                }}>{value.nickname}</Link>&nbsp;•&nbsp;
+                                                    pathname: `/user-summary-${value.nickname}-${value.uid}`,
+                                                    state: value.uid}}>
+                                                    {value.nickname}
+                                                </Link>&nbsp;•&nbsp;
                                                 <Tooltip placement="top"
                                                          title={moment(value.ct * 1000).format('YYYY年M月D日Ah点mm分')}>
-                                                    <span>{moment(value.ct * 1000).fromNow()}</span>
+                                                    <span>
+                                                        {moment(value.ct * 1000).fromNow()}
+                                                        </span>
                                                 </Tooltip>
                                             </div>
                                             <div className={'comment-top-right'}>
@@ -397,12 +452,14 @@ class TopicContent extends React.Component {
                                                           theme="twoTone"
                                                           twoToneColor={this.state.likeStatus.dislike[value.floor - 1] ? "crimson" : "rgb(200, 200, 200)"}/>
                                                 </Tooltip>
-                                                <span className={'dislikeCount'}
-                                                      style={{color: 'firebrick'}}>{value.dislike}</span>
+                                                <span className={'dislikeCount'} style={{color: 'firebrick'}}>
+                                                    {value.dislike}
+                                                    </span>
                                             </div>
                                             <div className={'comment-like'}>
-                                                <span className={'likeCount'}
-                                                      style={{color: 'limegreen'}}>{value.like}</span>
+                                                <span className={'likeCount'} style={{color: 'limegreen'}}>
+                                                    {value.like}
+                                                    </span>
                                                 <Tooltip placement="top" title={'支持'}>
                                                     <Icon onClick={this.likeCom.bind(this, {value})} type="like"
                                                           theme="twoTone"
@@ -416,13 +473,17 @@ class TopicContent extends React.Component {
                         })
                     }
                     {
-                        this.state.content.comment.length > 0 ? <div className={'topic-bottom'}>
+                        this.state.reOrdered.length > 0 ? <div className={'topic-bottom'}>
                             <Pagination defaultPageSize={15} showQuickJumper defaultCurrent={1}
-                                        total={this.state.content.comment.length} onChange={this.changeComments}/>
+                                        total={this.state.reOrdered.length} onChange={this.changeComments}/>
                             <div className={'topic-bottom-right'}>
                                 <Button icon={'mail'} onClick={this.replyBox} size={'large'}
-                                        type="primary">回复主题</Button>
-                                <Button icon={'eye'} size={'large'} type="default">关注该帖</Button>
+                                        type="primary">
+                                    回复主题
+                                </Button>
+                                <Button icon={'eye'} size={'large'} type="default">
+                                    关注该帖
+                                </Button>
                                 <Dropdown overlay={menu}>
                                     <Button size={'large'}>
                                         {this.state.order ? this.state.order : '排序'}<Icon type="down"/>

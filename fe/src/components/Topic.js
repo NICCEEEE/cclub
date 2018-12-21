@@ -55,8 +55,8 @@ class Topic extends React.Component {
                             <span>{moment(this.props.detail.ct * 1000).fromNow()}</span>
                         </Tooltip>&nbsp;•&nbsp;
                         <span style={{fontWeight: 'bold'}} className={'topicAuthor'}><Link to={{
-                            pathname: `/user-summary-${this.props.detail.author}`,
-                            state: {username: this.props.detail.author, uid: this.props.detail.uid}
+                            pathname: `/user-summary-${this.props.detail.author}-${this.props.detail.uid}`,
+                            state: this.props.detail.uid
                         }}>{this.props.detail.author}</Link></span>
                     </p>
                 </div>

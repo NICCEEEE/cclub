@@ -367,7 +367,7 @@ class TopicBox extends React.Component {
         } else if (this.props.Parent.state.parent === 'TopicContent') {
             env = 'TopicContent'
             DrawerTitle = "回复主题帖（支持Markdown语法）"
-            inputTitle = `正在回复 "${this.props.Parent.state.content.title}..."`
+            inputTitle = `正在回复 "${this.props.Parent.state.topicContent.title}..."`
         }
         return (
             <div className={'createTopic'}>

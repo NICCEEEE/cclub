@@ -22,8 +22,7 @@ class UserSummary extends React.Component {
     }
 
     componentDidMount() {
-        // let username = this.props.location.state.username
-        let uid = this.props.location.state.uid
+        let uid = this.props.match.params.uid ? this.props.match.params.uid : this.props.location.state
         axios.get(`http://0.0.0.0:2000/user-summary?&uid=${uid}`)
             .then((response) => {
                 if (response.data !== false) {
@@ -54,8 +53,8 @@ class UserSummary extends React.Component {
                 <div className={'profile-container'}>
                     <div className={'head'}>
                         <img alt={'cover'} className={'cover'} src={require('../assets/images/back3.png')}/>
-                        <Avatar size={128}
-                                style={{color: 'white', fontSize: '70px', backgroundColor: '#2196f3'}}>N</Avatar>
+                        <Avatar size={128} src={`http://0.0.0.0:2000/avatar_by_id/${this.state.summary.uid}`}
+                                icon={'user'}/>
                     </div>
 
                     <div className={'content profile'}>
@@ -99,7 +98,7 @@ class UserSummary extends React.Component {
                             </Tooltip>
                         </div>
                         <div className={'account-topics'}>
-                            <span className={'account-name'}>{this.props.location.state.username}&nbsp;最近发布的帖子</span>
+                            <span className={'account-name'}>{this.props.match.params.author}&nbsp;最近发布的帖子</span>
                             {
                                 recent_topices.length > 0 ? null : <div className={'topic-info'}>
                                     此用户最近未进行发言。
@@ -114,7 +113,7 @@ class UserSummary extends React.Component {
                                                     <Timeline.Item key={index}>
                                                         <Link to={{pathname: `/topic/${value.tid}`, state: value.tid}}>
                                                             <Tooltip placement="top"
-                                                                     title={moment(this.state.summary.ct * 1000).format('YYYY年M月D日Ah点mm分')}>
+                                                                     title={moment(value.ct * 1000).format('YYYY年M月D日Ah点mm分')}>
                                                                 <span>{moment(value.ct * 1000).fromNow()}</span><br/>
                                                             </Tooltip>
                                                             {value.title}
