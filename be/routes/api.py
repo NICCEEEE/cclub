@@ -124,7 +124,14 @@ def like_status(tid):
     username = session.get('username', None)
     user = User.find_one({}, username=username)
     if user is None:
-        return 'false'
+        comments = Comment.find_all({}, tid=tid)
+        if comments is None:
+            return 'false'
+        status = {
+            'like': [False for i in comments],
+            'dislike': [False for i in comments]
+        }
+        return jsonify(status)
     else:
         User.update_one({'username': username}, {'active_time': time.time()})
         comments = Comment.find_all({}, tid=tid)
