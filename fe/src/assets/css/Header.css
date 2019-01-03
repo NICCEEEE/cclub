@@ -23,6 +23,9 @@ header {
         animation: logoRotate infinite 10s linear; }
       header .headContent .headLeft .ant-input-search {
         width: 300px; }
+        @media only screen and (max-width: 768px) {
+          header .headContent .headLeft .ant-input-search {
+            display: none; } }
     header .headContent button {
       margin-left: 5px; }
     header .headContent .userStatus {

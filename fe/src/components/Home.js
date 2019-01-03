@@ -141,7 +141,7 @@ class Home extends React.Component {
     }
 
     render() {
-        const operations = <Button icon={'form'} onClick={this.createTopic} type="primary" size={'large'}>发布新帖</Button>;
+        const operations = <Button icon={'form'} onClick={this.createTopic} type="primary">发布新帖</Button>;
         const TabPane = Tabs.TabPane;
         let loading = null
         if (this.state.topics.length < 1) {
@@ -152,7 +152,7 @@ class Home extends React.Component {
         return (
             <div className={'content homePage'}>
                 <Tabs animated={{inkBar: true, tabPane: false}} activeKey={this.state.tabKey}
-                      onTabClick={key => this.handleBoardTab(key)} tabBarExtraContent={operations} size={'large'}>
+                      onTabClick={key => this.handleBoardTab(key)} tabBarExtraContent={operations}>
                     <TabPane tab="全部" key="1">
                         {loading}
                         <div style={{width: 'inherit'}}>

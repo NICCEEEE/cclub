@@ -1,5 +1,23 @@
 @charset "UTF-8";
 
+$breakpoints: (
+        's': 'only screen and ( max-width: 768px)',
+        'm': 'only screen and ( max-width: 992px)',
+        'l': 'only screen and ( max-width: 1200px)',
+) !default;
+
+@mixin respond-to($breakpoint) {
+  $query: map-get($breakpoints, $breakpoint);
+
+  @if not $query {
+    @error 'No value found for `#{$breakpoint}`. Please make sure it is defined in `$breakpoints` map.';
+  }
+
+  @media #{if(type-of($query) == 'string', unquote($query), inspect($query))} {
+    @content;
+  }
+}
+
 .ant-drawer-content-wrapper {
   transition: all .2s;
 }
@@ -23,12 +41,22 @@
       margin: 10px 0px;
       height: 30px;
       line-height: 30px;
+      flex-wrap: wrap;
+      @include respond-to(s) {
+        height: 50px;
+      }
       li {
         font-size: 20px;
         width: 30px;
         height: 30px;
         text-align: center;
         line-height: 30px;
+        @include respond-to(s) {
+          font-size: 13px;
+          width: 20px;
+          height: 20px;
+          line-height: 20px;
+        }
       }
       li:hover {
         background-color: rgb(245, 245, 245);
@@ -53,6 +81,14 @@
       display: flex;
       justify-content: space-between;
       flex-basis: 100%;
+      @include respond-to(s) {
+        display: initial;
+      }
+      .button-group {
+        @include respond-to(s) {
+          display: initial;
+        }
+      }
       .ant-input-group-wrapper {
         width: 100%;
       }

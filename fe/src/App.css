@@ -15,6 +15,11 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center; }
+    @media only screen and (max-width: 768px) {
+      .App .content {
+        width: 100%;
+        margin-left: 10px;
+        margin-right: 10px; } }
     .App .content .ant-breadcrumb {
       flex-basis: 100%;
       font-size: 20px;

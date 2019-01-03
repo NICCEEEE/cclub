@@ -1,5 +1,23 @@
 @charset "UTF-8";
 
+$breakpoints: (
+        's': 'only screen and ( max-width: 768px)',
+        'm': 'only screen and ( max-width: 992px)',
+        'l': 'only screen and ( max-width: 1200px)',
+) !default;
+
+@mixin respond-to($breakpoint) {
+  $query: map-get($breakpoints, $breakpoint);
+
+  @if not $query {
+    @error 'No value found for `#{$breakpoint}`. Please make sure it is defined in `$breakpoints` map.';
+  }
+
+  @media #{if(type-of($query) == 'string', unquote($query), inspect($query))} {
+    @content;
+  }
+}
+
 $height: 70px;
 .topicBox {
   display: flex;
@@ -9,21 +27,45 @@ $height: 70px;
   justify-content: space-between;
   margin-bottom: 20px;
   border-radius: 35px;
+  @include respond-to(m) {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-radius: 0px;
+    border-bottom: solid 1px rgb(238, 238, 238);
+  }
+  .userHead {
+    width: 70px;
+    height: 70px;
+    @include respond-to(s) {
+      width: 50px;
+      height: 50px;
+    }
+  }
   .topicBox-1 {
     flex-basis: 40%;
     height: 90px;
     display: flex;
     flex-direction: column;
+    margin-left: 5px;
     justify-content: space-around;
+    @include respond-to(m) {
+      flex-grow: 1;
+    }
+    @include respond-to(s) {
+      height: 70px;
+    }
     .topicTitle {
       margin-bottom: 0px;
-      height: 70px;
+      height: 70%;
       overflow: hidden;
       a {
         color: #337ab7;
         text-decoration: none;
         font-weight: bolder;
         font-size: 20px;
+        @include respond-to(s) {
+          font-size: 15px;
+        }
       }
       a:hover {
         color: darkblue;
@@ -33,6 +75,9 @@ $height: 70px;
       margin-bottom: 0px;
       height: 20px;
       overflow: hidden;
+      @include respond-to(s) {
+        font-size: 10px;
+      }
     }
 
   }
@@ -50,6 +95,11 @@ $height: 70px;
     }
     .countTitle {
       color: gray;
+    }
+    .views, .vote {
+      @include respond-to(s) {
+        display: none;
+      }
     }
   }
   .topicBox-3 {
@@ -69,6 +119,9 @@ $height: 70px;
     }
     .commentPreview {
       font-weight: bolder;
+    }
+    @include respond-to(m) {
+      display: none;
     }
   }
 }

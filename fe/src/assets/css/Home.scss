@@ -1,5 +1,23 @@
 @charset "UTF-8";
 
+$breakpoints: (
+        's': 'only screen and ( max-width: 768px)',
+        'm': 'only screen and ( max-width: 992px)',
+        'l': 'only screen and ( max-width: 1200px)',
+) !default;
+
+@mixin respond-to($breakpoint) {
+  $query: map-get($breakpoints, $breakpoint);
+
+  @if not $query {
+    @error 'No value found for `#{$breakpoint}`. Please make sure it is defined in `$breakpoints` map.';
+  }
+
+  @media #{if(type-of($query) == 'string', unquote($query), inspect($query))} {
+    @content;
+  }
+}
+
 .homePage {
   .ant-tabs {
     flex-basis: 100%;

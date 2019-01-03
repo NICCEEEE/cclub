@@ -362,7 +362,7 @@ class TopicBox extends React.Component {
         if (this.props.Parent.state.parent === 'Home') {
             env = 'Home'
             DrawerTitle = "新建主题帖（支持Markdown语法）"
-            inputTitle = <Input name={'topicTitle'} addonBefore="您的标题:" size="large"
+            inputTitle = <Input name={'topicTitle'} addonBefore="您的标题:"
                                 placeholder="标题字数不能少于8个字符且不能超过40个字符"/>
         } else if (this.props.Parent.state.parent === 'TopicContent') {
             env = 'TopicContent'
@@ -386,16 +386,16 @@ class TopicBox extends React.Component {
                         </div>
                         <div className={'button-group'} style={env === 'TopicContent' ? {flexBasis: '10%'} : null}>
                             {
-                                env === 'Home' ? <Dropdown overlay={menu}>
-                                    <Button size={'large'}>
+                                env === 'Home' ? <Dropdown overlay={menu} trigger={['click']}>
+                                    <Button>
                                         {this.state.selectedBoard ? this.state.selectedBoard : '选择板块'}<Icon type="down"/>
                                     </Button>
                                 </Dropdown> : null
                             }
-                            <Button size={'large'} type="primary" onClick={this.publish}>{env === 'Home' ? '发布' : '回复'}</Button>
+                            <Button type="primary" onClick={this.publish}>{env === 'Home' ? '发布' : '回复'}</Button>
                             <Popconfirm placement="topRight" title={'关闭后您的输入将被清空,您确定要关闭吗？'} onConfirm={this.onClose}
                                         okText="确定" cancelText="取消">
-                                <Button size={'large'} type="danger">关闭</Button>
+                                <Button type="danger">关闭</Button>
                             </Popconfirm>
                         </div>
                     </div>

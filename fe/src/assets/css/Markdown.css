@@ -17,13 +17,23 @@
     padding: 0px;
     margin: 10px 0px;
     height: 30px;
-    line-height: 30px; }
+    line-height: 30px;
+    flex-wrap: wrap; }
+    @media only screen and (max-width: 768px) {
+      .ant-drawer-content .ant-drawer-body .toolBox {
+        height: 50px; } }
     .ant-drawer-content .ant-drawer-body .toolBox li {
       font-size: 20px;
       width: 30px;
       height: 30px;
       text-align: center;
       line-height: 30px; }
+      @media only screen and (max-width: 768px) {
+        .ant-drawer-content .ant-drawer-body .toolBox li {
+          font-size: 13px;
+          width: 20px;
+          height: 20px;
+          line-height: 20px; } }
     .ant-drawer-content .ant-drawer-body .toolBox li:hover {
       background-color: whitesmoke; }
     .ant-drawer-content .ant-drawer-body .toolBox .switch button {
@@ -40,6 +50,12 @@
     display: flex;
     justify-content: space-between;
     flex-basis: 100%; }
+    @media only screen and (max-width: 768px) {
+      .ant-drawer-content .ant-drawer-body .titleBox {
+        display: initial; } }
+    @media only screen and (max-width: 768px) {
+      .ant-drawer-content .ant-drawer-body .titleBox .button-group {
+        display: initial; } }
     .ant-drawer-content .ant-drawer-body .titleBox .ant-input-group-wrapper {
       width: 100%; }
     .ant-drawer-content .ant-drawer-body .titleBox .ant-input-group-addon {

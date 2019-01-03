@@ -36,7 +36,7 @@ class Topic extends React.Component {
         return (
             <div className={'topicBox'}>
                 <Tooltip placement="left" title={this.props.detail.author}>
-                    <Avatar size={70} src={`http://0.0.0.0:2000/avatar_by_id/${this.props.detail.uid}`}
+                    <Avatar src={`http://0.0.0.0:2000/avatar_by_id/${this.props.detail.uid}`}
                             icon="user" className={'userHead'}/>
                 </Tooltip>
                 <div className={'topicBox-1'}>
