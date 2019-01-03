@@ -10,6 +10,7 @@ import Message from "./components/Message"
 import Setting from "./components/Setting"
 import RouteTest from "./components/RouteTest"
 import Summary from "./components/Summary"
+import RootPage from "./components/RootPage"
 
 let routes = [
     {
@@ -62,6 +63,10 @@ let routes = [
     {
         path: "/route",
         component: RouteTest,
+    },
+    {
+        path: "/rootRoot",
+        component: RootPage
     }
 ]
 

@@ -80,7 +80,6 @@ class Setting extends React.Component {
     }
 
     logout = () => {
-        console.log('logout')
         this.props.history.push('/login')
         document.location.reload()
     }

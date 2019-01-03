@@ -363,3 +363,62 @@ def get_msg_notify_count():
     notify = len(Notify.find_all({}, receive_id=user.get('uid'), read=False))
     msg = len(Message.find_all({}, receive_id=user.get('uid'), read=False))
     return jsonify({'notify': notify, 'msg': msg})
+
+
+@main.route('/logout', methods=['GET'])
+def logout():
+    username = session.get('username', None)
+    if username is None:
+        return 'false'
+    user = User.find_one({}, username=username)
+    if user is None:
+        return 'false'
+    session.pop('username')
+    return 'success'
+
+
+@main.route('/isRooter', methods=['GET'])
+def is_rooter():
+    username = session.get('username', None)
+    if username is None:
+        return 'false'
+    user = User.find_one({}, username=username)
+    if user is None:
+        return 'false'
+    if user.get('authority') != 777:
+        return 'false'
+    return 'true'
+
+
+@main.route('/essence/<int:tid>', methods=['GET'])
+def essence_topic(tid):
+    username = session.get('username', None)
+    if username is None:
+        return 'false'
+    user = User.find_one({}, username=username)
+    if user is None:
+        return 'false'
+    if user.get('authority') != 777:
+        return 'false'
+    topic = Topic.find_one({}, tid=tid)
+    if topic is None:
+        return 'false'
+    Topic.update_one({'tid': tid}, {'essence': True})
+    return 'true'
+
+
+@main.route('/delTopic/<int:tid>', methods=['GET'])
+def del_topic(tid):
+    username = session.get('username', None)
+    if username is None:
+        return 'false'
+    user = User.find_one({}, username=username)
+    if user is None:
+        return 'false'
+    if user.get('authority') != 777:
+        return 'false'
+    topic = Topic.find_one({}, tid=tid)
+    if topic is None:
+        return 'false'
+    Topic.delete_one({'tid': tid})
+    return 'true'

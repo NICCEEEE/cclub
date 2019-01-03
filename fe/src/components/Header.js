@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, Input, Avatar, Tooltip, Badge, Icon} from 'antd';
+import {Button, Input, Avatar, Tooltip, Badge, Icon, Popconfirm} from 'antd';
 import '../assets/css/Header.css';
 import {Link} from 'react-router-dom';
 import axios from 'axios'
@@ -22,6 +22,30 @@ class Header extends React.Component {
     search = (query) => {
         let url = 'https://www.baidu.com/s?ie=utf-8&f=3&rsv_bp=1&rsv_idx=1&ch=&tn=baidu&bar=&wd='
         window.open(url + query)
+    }
+
+    closeConfirm = () => {
+        return true
+    }
+
+    logout = () => {
+        let res = this.closeConfirm()
+        if (res === true) {
+            axios.get('http://0.0.0.0:2000/api/logout')
+                .then((response) => {
+                    if (response.data !== false) {
+                        window.history.pushState(null, null, '/login')
+                        document.location.reload()
+                        console.log(response.data)
+                    } else {
+                        error('登出失败，请稍候重试！')
+                    }
+                })
+                .catch((err) => {
+                    error('糟糕，出现未知异常，请稍候重试！')
+                    console.log(err)
+                })
+        }
     }
 
     componentWillMount() {
@@ -69,6 +93,14 @@ class Header extends React.Component {
         } else {
             head = (
                 <div className={'userStatus'}>
+                    <Popconfirm placement="bottom" title={'您确定要退出登录吗？'} onConfirm={this.logout}
+                                okText="确定" cancelText="取消">
+                        <Tooltip plactment={'bottom'} title='登出'>
+                            <span>
+                                <Icon type="logout" style={{fontSize: '25px'}}/>
+                            </span>
+                        </Tooltip>
+                    </Popconfirm>
                     <Badge count={this.state.notifyCount}>
                         <Tooltip plactment={'bottom'}
                                  title={this.state.notifyCount === 0 ? '通知' : `您有${this.state.notifyCount}条通知未读`}>
@@ -109,7 +141,7 @@ class Header extends React.Component {
                         </Link>
                         <div className={'buttonGroup'}>
                             <Search
-                                placeholder="百度一下，你就知道"
+                                placeholder="Search"
                                 onSearch={value => this.search(value)}
                                 enterButton
                             />

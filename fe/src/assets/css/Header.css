@@ -27,8 +27,9 @@ header {
       margin-left: 5px; }
     header .headContent .userStatus {
       display: flex;
+      flex-basis: 13%;
       align-items: center; }
-      header .headContent .userStatus span + span {
-        margin: 0px 30px; }
+      header .headContent .userStatus span {
+        margin-left: 20px; }
 
 /*# sourceMappingURL=Header.css.map */

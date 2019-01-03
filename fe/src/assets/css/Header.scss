@@ -36,9 +36,10 @@ header {
     }
     .userStatus {
       display: flex;
+      flex-basis: 13%;
       align-items: center;
-      span + span {
-        margin: 0px 30px ;
+      span {
+        margin-left: 20px;
       }
     }
   }
