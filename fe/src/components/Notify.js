@@ -1,6 +1,6 @@
 import React from 'react'
 import {Button, Breadcrumb, Menu, Dropdown, Icon, Tooltip, Collapse} from 'antd';
-import {Link} from 'react-router-dom'
+import {Link, Redirect} from 'react-router-dom'
 import axios from 'axios'
 import {error, success} from "../utilities"
 import moment from 'moment/min/moment-with-locales';
@@ -22,7 +22,8 @@ class Notify extends React.Component {
             all: [],
             system: [],
             reply: [],
-            vote: []
+            vote: [],
+            redirect: null,
         }
     }
 
@@ -133,6 +134,10 @@ class Notify extends React.Component {
                         reply: reply,
                         vote: vote
                     })
+                } else {
+                    this.setState({
+                        redirect: 'redirect'
+                    })
                 }
             })
             .catch((err) => {
@@ -193,6 +198,9 @@ class Notify extends React.Component {
     }
 
     render() {
+        if (this.state.redirect === 'redirect') {
+            return <Redirect to={'/'}/>
+        }
         const menu = (
             <Menu onClick={this.handleMenuClick}>
                 <Menu.Item key="1">所有消息</Menu.Item>

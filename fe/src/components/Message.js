@@ -2,21 +2,14 @@ import React from 'react'
 import {
     Modal,
     Form,
-    Avatar,
     Button,
     Breadcrumb,
-    Menu,
-    Dropdown,
-    Icon,
-    Spin,
     Tooltip,
-    Timeline,
     Input,
-    Radio,
     Tabs,
     Collapse,
 } from 'antd';
-import {Link} from 'react-router-dom'
+import {Link, Redirect} from 'react-router-dom'
 import moment from 'moment/min/moment-with-locales';
 import axios from 'axios'
 import qs from 'qs'
@@ -93,7 +86,8 @@ class Message extends React.Component {
             visible: false,
             received: [],
             sended: [],
-            receiver: null
+            receiver: null,
+            redirect: null
         }
     }
 
@@ -194,7 +188,10 @@ class Message extends React.Component {
         axios.get('http://0.0.0.0:2000/api/received-msg')
             .then((response) => {
                 if (response.data === false) {
-                    error('私信获取失败，请稍候重试！')
+                    this.setState({
+                        redirect: 'redirect'
+                    })
+                    return null
                 } else {
                     response.data.reverse()
                     this.setState({
@@ -209,7 +206,9 @@ class Message extends React.Component {
         axios.get('http://0.0.0.0:2000/api/sended-msg')
             .then((response) => {
                 if (response.data === false) {
-                    error('私信获取失败，请稍候重试！')
+                    this.setState({
+                        redirect: 'redirect'
+                    })
                 } else {
                     response.data.reverse()
                     this.setState({
@@ -224,6 +223,9 @@ class Message extends React.Component {
     }
 
     render() {
+        if (this.state.redirect === 'redirect') {
+            return <Redirect to={'/'}/>
+        }
         return (
             <div className={'content profile'}>
                 <Breadcrumb style={{marginTop: '5px'}}>

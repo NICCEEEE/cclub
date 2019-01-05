@@ -1,8 +1,15 @@
 .loginPage .loginBox {
   text-align: right; }
+  @media only screen and (max-width: 456px) {
+    .loginPage .loginBox {
+      text-align: left; } }
   .loginPage .loginBox input {
     width: 300px;
     margin: 15px; }
+    @media only screen and (max-width: 456px) {
+      .loginPage .loginBox input {
+        width: 150px;
+        margin: 7px; } }
   .loginPage .loginBox input[name=problem] {
     width: 135px;
     height: 40px;

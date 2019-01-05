@@ -1,5 +1,23 @@
 @charset "UTF-8";
 
+$breakpoints: (
+        's': 'only screen and ( max-width: 768px)',
+        'm': 'only screen and ( max-width: 992px)',
+        'l': 'only screen and ( max-width: 1200px)',
+) !default;
+
+@mixin respond-to($breakpoint) {
+  $query: map-get($breakpoints, $breakpoint);
+
+  @if not $query {
+    @error 'No value found for `#{$breakpoint}`. Please make sure it is defined in `$breakpoints` map.';
+  }
+
+  @media #{if(type-of($query) == 'string', unquote($query), inspect($query))} {
+    @content;
+  }
+}
+
 .content.TopicPage {
   justify-content: flex-start;
   .content-title {
@@ -7,12 +25,26 @@
     font-weight: bolder;
     color: black;
     flex-basis: 75%;
+    @include respond-to(s) {
+      flex-basis: 100%;
+    }
     margin: 40px 0px;
   }
   .author-block {
     flex-basis: 75%;
+    @include respond-to(s) {
+      flex-basis: 100%;
+    }
     display: flex;
     flex-wrap: wrap;
+    .userHead {
+      width: 70px;
+      height: 70px;
+      @include respond-to(s) {
+        width: 35px;
+        height: 35px;
+      }
+    }
     .content-detail {
       margin-left: 15px;
       flex: 1;
@@ -20,11 +52,18 @@
         margin-bottom: 10px;
         display: flex;
         justify-content: space-between;
+        @include respond-to(s) {
+          flex-wrap: wrap;
+          align-items: center;
+        }
         .info-left {
           font-weight: bold;
           a {
             font-weight: bolder;
             font-size: 17px;
+            @include respond-to(s) {
+              font-size: 12px;
+            }
           }
           span {
             text-decoration: underline;
@@ -35,16 +74,30 @@
           .comments, .views, .vote {
             text-align: center;
             margin: 0px 5px;
-            width: 60px
+            width: 60px;
+            @include respond-to(s) {
+              width: 30px;
+            }
+          }
+          .vote, .comments {
+            @include respond-to(s) {
+              display: none;
+            }
           }
           .count {
             font-size: 20px;
+            @include respond-to(s) {
+              font-size: 12px;
+            }
             font-weight: bolder;
             color: rgb(206, 120, 33);
           }
           .countTitle {
             color: gray;
             font-weight: bolder;
+            @include respond-to(s) {
+              font-size: 12px;
+            }
           }
         }
       }
@@ -101,6 +154,17 @@
   }
   .comment-block {
     flex-basis: 75%;
+    @include respond-to(s) {
+      flex-basis: 100%;
+    }
+    .userHead {
+      width: 70px;
+      height: 70px;
+      @include respond-to(s) {
+        width: 35px;
+        height: 35px;
+      }
+    }
     display: flex;
     flex-wrap: wrap;
     border-top: 1px solid lightgray;
@@ -124,6 +188,9 @@
         a {
           font-weight: bolder;
           font-size: 17px;
+          @include respond-to(s) {
+            font-size: 12px;
+          }
         }
       }
       .comment-article {
@@ -175,6 +242,9 @@
   }
   .topic-bottom {
     flex-basis: 75%;
+    @include respond-to(s) {
+      flex-basis: 100%;
+    }
     display: flex;
     justify-content: space-between;
     align-items: center;

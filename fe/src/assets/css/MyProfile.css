@@ -1,22 +1,23 @@
 .profile-container {
-  margin-top: 60px; }
-  .profile-container .head {
+  margin-top: 60px;
+  width: 100%; }
+  .profile-container .profile-head {
     width: 100%;
     height: 300px;
     position: relative; }
-    .profile-container .head img.cover {
+    .profile-container .profile-head img.cover {
       width: inherit;
       height: inherit; }
-    .profile-container .head .ant-btn {
+    .profile-container .profile-head .ant-btn {
       position: absolute;
       top: 91%;
       left: 76%;
       width: 50px;
       height: 50px;
       line-height: 50px; }
-      .profile-container .head .ant-btn i.anticon-appstore {
+      .profile-container .profile-head .ant-btn i.anticon-appstore {
         font-size: 20px; }
-    .profile-container .head .ant-avatar {
+    .profile-container .profile-head .ant-avatar {
       position: absolute;
       top: 76%;
       left: 50%;
@@ -126,25 +127,39 @@
       .profile-container .notify-tabs .notify-detail .panel-head {
         display: flex;
         justify-content: space-between; }
+        @media only screen and (max-width: 768px) {
+          .profile-container .notify-tabs .notify-detail .panel-head span {
+            font-size: 14px; } }
         .profile-container .notify-tabs .notify-detail .panel-head .status {
           color: red;
           border: 1px solid red;
           padding: 2px;
           border-radius: 5px;
           margin-right: 20px; }
+      @media only screen and (max-width: 768px) {
+        .profile-container .notify-tabs .notify-detail .ant-collapse-content-box p {
+          font-size: 17px; } }
   .profile-container .message-tabs {
     flex-basis: 100%;
     margin: 40px 0px; }
     .profile-container .message-tabs .ant-tabs-tab {
       width: 150px;
       text-align: center; }
+      @media only screen and (max-width: 768px) {
+        .profile-container .message-tabs .ant-tabs-tab {
+          width: 80px;
+          padding: 8px 10px; } }
   .profile-container .setting-tabs {
-    flex-basis: 50%;
+    flex-basis: 100%;
     margin: 40px 0px;
     height: 300px; }
     .profile-container .setting-tabs .ant-tabs-tab {
       width: 150px;
       text-align: center; }
+      @media only screen and (max-width: 768px) {
+        .profile-container .setting-tabs .ant-tabs-tab {
+          width: 90px;
+          padding: 8px 0px; } }
     .profile-container .setting-tabs .upload-tab {
       display: flex;
       flex-direction: column;
@@ -198,10 +213,16 @@
       color: #31708f;
       border-radius: 20px;
       padding: 0px 20px; }
+    @media only screen and (max-width: 768px) {
+      .profile-container .message .ant-tabs-content.ant-tabs-content-animated.ant-tabs-left-content {
+        padding-left: 5px; } }
     .profile-container .message .panel-head {
       display: flex;
       justify-content: space-between;
       font-size: 20px; }
+      @media only screen and (max-width: 768px) {
+        .profile-container .message .panel-head {
+          font-size: 14px; } }
       .profile-container .message .panel-head .status {
         color: red;
         border: 1px solid red;

@@ -1,5 +1,8 @@
 .registerPage .registerBox {
   text-align: right; }
+  @media only screen and (max-width: 456px) {
+    .registerPage .registerBox {
+      text-align: left; } }
   .registerPage .registerBox input {
     width: 300px;
     margin: 15px;

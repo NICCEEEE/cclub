@@ -6,10 +6,23 @@
     color: black;
     flex-basis: 75%;
     margin: 40px 0px; }
+    @media only screen and (max-width: 768px) {
+      .content.TopicPage .content-title {
+        flex-basis: 100%; } }
   .content.TopicPage .author-block {
     flex-basis: 75%;
     display: flex;
     flex-wrap: wrap; }
+    @media only screen and (max-width: 768px) {
+      .content.TopicPage .author-block {
+        flex-basis: 100%; } }
+    .content.TopicPage .author-block .userHead {
+      width: 70px;
+      height: 70px; }
+      @media only screen and (max-width: 768px) {
+        .content.TopicPage .author-block .userHead {
+          width: 35px;
+          height: 35px; } }
     .content.TopicPage .author-block .content-detail {
       margin-left: 15px;
       flex: 1; }
@@ -17,11 +30,18 @@
         margin-bottom: 10px;
         display: flex;
         justify-content: space-between; }
+        @media only screen and (max-width: 768px) {
+          .content.TopicPage .author-block .content-detail .topicInfo {
+            flex-wrap: wrap;
+            align-items: center; } }
         .content.TopicPage .author-block .content-detail .topicInfo .info-left {
           font-weight: bold; }
           .content.TopicPage .author-block .content-detail .topicInfo .info-left a {
             font-weight: bolder;
             font-size: 17px; }
+            @media only screen and (max-width: 768px) {
+              .content.TopicPage .author-block .content-detail .topicInfo .info-left a {
+                font-size: 12px; } }
           .content.TopicPage .author-block .content-detail .topicInfo .info-left span {
             text-decoration: underline; }
         .content.TopicPage .author-block .content-detail .topicInfo .info-right {
@@ -30,13 +50,25 @@
             text-align: center;
             margin: 0px 5px;
             width: 60px; }
+            @media only screen and (max-width: 768px) {
+              .content.TopicPage .author-block .content-detail .topicInfo .info-right .comments, .content.TopicPage .author-block .content-detail .topicInfo .info-right .views, .content.TopicPage .author-block .content-detail .topicInfo .info-right .vote {
+                width: 30px; } }
+          @media only screen and (max-width: 768px) {
+            .content.TopicPage .author-block .content-detail .topicInfo .info-right .vote, .content.TopicPage .author-block .content-detail .topicInfo .info-right .comments {
+              display: none; } }
           .content.TopicPage .author-block .content-detail .topicInfo .info-right .count {
             font-size: 20px;
             font-weight: bolder;
             color: #ce7821; }
+            @media only screen and (max-width: 768px) {
+              .content.TopicPage .author-block .content-detail .topicInfo .info-right .count {
+                font-size: 12px; } }
           .content.TopicPage .author-block .content-detail .topicInfo .info-right .countTitle {
             color: gray;
             font-weight: bolder; }
+            @media only screen and (max-width: 768px) {
+              .content.TopicPage .author-block .content-detail .topicInfo .info-right .countTitle {
+                font-size: 12px; } }
       .content.TopicPage .author-block .content-detail .content-article {
         font-size: 17px; }
         .content.TopicPage .author-block .content-detail .content-article table {
@@ -79,6 +111,16 @@
     flex-wrap: wrap;
     border-top: 1px solid lightgray;
     padding-top: 20px; }
+    @media only screen and (max-width: 768px) {
+      .content.TopicPage .comment-block {
+        flex-basis: 100%; } }
+    .content.TopicPage .comment-block .userHead {
+      width: 70px;
+      height: 70px; }
+      @media only screen and (max-width: 768px) {
+        .content.TopicPage .comment-block .userHead {
+          width: 35px;
+          height: 35px; } }
     .content.TopicPage .comment-block .comment-detail {
       margin-left: 15px;
       flex: 1; }
@@ -97,6 +139,9 @@
         .content.TopicPage .comment-block .comment-detail .comment-top a {
           font-weight: bolder;
           font-size: 17px; }
+          @media only screen and (max-width: 768px) {
+            .content.TopicPage .comment-block .comment-detail .comment-top a {
+              font-size: 12px; } }
       .content.TopicPage .comment-block .comment-detail .comment-article {
         font-size: 17px; }
         .content.TopicPage .comment-block .comment-detail .comment-article table {
@@ -140,6 +185,9 @@
     border-top: 1px solid lightblue;
     padding: 10px 0px;
     border-bottom: 1px solid lightblue; }
+    @media only screen and (max-width: 768px) {
+      .content.TopicPage .topic-bottom {
+        flex-basis: 100%; } }
     .content.TopicPage .topic-bottom button + button {
       margin-left: 5px; }
 

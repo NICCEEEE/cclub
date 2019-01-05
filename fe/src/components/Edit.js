@@ -1,6 +1,6 @@
 import React from 'react'
 import {Button, DatePicker, Breadcrumb, Input, Icon, Spin} from 'antd';
-import {Link} from 'react-router-dom'
+import {Link, Redirect} from 'react-router-dom'
 import moment from 'moment/min/moment-with-locales';
 import axios from 'axios'
 import qs from 'qs'
@@ -16,15 +16,18 @@ class Edit extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            summary: null
+            summary: null,
+            redirect: null
         }
     }
 
     componentDidMount() {
         axios.get('http://0.0.0.0:2000/my-summary')
             .then((response) => {
-                if (response.data === 'false') {
-                    error('载入错误')
+                if (response.data === false) {
+                    this.setState({
+                        redirect: 'redirect'
+                    })
                 } else {
                     this.setState({
                         summary: response.data
@@ -71,6 +74,9 @@ class Edit extends React.Component {
     }
 
     render() {
+        if (this.state.redirect === 'redirect') {
+            return <Redirect to={'/'}/>
+        }
         if (this.state.summary === null) {
             return <Spin style={{marginTop: '90px'}} size="large"/>
         } else {

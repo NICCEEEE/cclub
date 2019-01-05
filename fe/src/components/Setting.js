@@ -8,7 +8,7 @@ import {
     Tabs,
     Input
 } from 'antd';
-import {Link} from 'react-router-dom'
+import {Link, Redirect} from 'react-router-dom'
 import {changeTitle, debounce, error, success} from "../utilities"
 import axios from 'axios'
 import qs from 'qs'
@@ -44,7 +44,8 @@ class Setting extends React.Component {
             currentState: null,
             newState: null,
             nickState: null,
-            nickname: null
+            nickname: null,
+            redirect: null
         }
     }
 
@@ -70,6 +71,10 @@ class Setting extends React.Component {
                 if (response.data !== false) {
                     this.setState({
                         nickname: response.data
+                    })
+                } else {
+                    this.setState({
+                        redirect: 'redirect'
                     })
                 }
             })
@@ -216,6 +221,9 @@ class Setting extends React.Component {
     }
 
     render() {
+        if (this.state.redirect === 'redirect') {
+            return <Redirect to={'/'}/>
+        }
         const uploadButton = (
             <div>
                 <Icon type={this.state.loading ? 'loading' : 'plus'}/>

@@ -315,7 +315,7 @@ class TopicContent extends React.Component {
                         <Icon type="tags" theme="filled"/>&nbsp;{this.state.topicContent.title}
                     </div>
                     <div className={'author-block'}>
-                        <Avatar size={70} src={`http://0.0.0.0:2000/avatar_by_id/${this.state.topicContent.uid}`}
+                        <Avatar src={`http://0.0.0.0:2000/avatar_by_id/${this.state.topicContent.uid}`}
                                 className={'userHead'}/>
                         <div className={'content-detail'}>
                             <div className={'topicInfo'}>
@@ -377,15 +377,12 @@ class TopicContent extends React.Component {
                                       renderers={{code: CodeBlock}}/>
                             <div className={'bottom-info'}>
                                 <div className={'bottom-left'}>
-                                    <Button icon={'mail'} onClick={this.replyBox} size={'large'}
+                                    <Button icon={'mail'} onClick={this.replyBox}
                                             type="primary">
                                         回复主题
                                     </Button>
-                                    <Button icon={'eye'} size={'large'} type="default">
-                                        关注该帖
-                                    </Button>
                                     <Dropdown overlay={menu}>
-                                        <Button size={'large'}>
+                                        <Button>
                                             {this.state.order ? this.state.order : '排序'}<Icon type="down"/>
                                         </Button>
                                     </Dropdown>
@@ -413,7 +410,7 @@ class TopicContent extends React.Component {
                         this.state.commentsToSee.map((value, index) => {
                             return (
                                 <div id={`id-comment-${value.cid}`} key={index} className={'comment-block'}>
-                                    <Avatar size={70} src={`http://0.0.0.0:2000/avatar_by_id/${value.uid}`}
+                                    <Avatar src={`http://0.0.0.0:2000/avatar_by_id/${value.uid}`}
                                             icon={'user'} className={'userHead'}/>
                                     <div className={'comment-detail'}>
                                         <div className={'comment-top'}>
@@ -426,7 +423,8 @@ class TopicContent extends React.Component {
                                                 }
                                                 <Link to={{
                                                     pathname: `/user-summary-${value.nickname}-${value.uid}`,
-                                                    state: value.uid}}>
+                                                    state: value.uid
+                                                }}>
                                                     {value.nickname}
                                                 </Link>&nbsp;•&nbsp;
                                                 <Tooltip placement="top"
@@ -477,15 +475,12 @@ class TopicContent extends React.Component {
                             <Pagination defaultPageSize={15} showQuickJumper defaultCurrent={1}
                                         total={this.state.reOrdered.length} onChange={this.changeComments}/>
                             <div className={'topic-bottom-right'}>
-                                <Button icon={'mail'} onClick={this.replyBox} size={'large'}
+                                <Button icon={'mail'} onClick={this.replyBox}
                                         type="primary">
                                     回复主题
                                 </Button>
-                                <Button icon={'eye'} size={'large'} type="default">
-                                    关注该帖
-                                </Button>
                                 <Dropdown overlay={menu}>
-                                    <Button size={'large'}>
+                                    <Button>
                                         {this.state.order ? this.state.order : '排序'}<Icon type="down"/>
                                     </Button>
                                 </Dropdown>

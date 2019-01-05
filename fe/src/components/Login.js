@@ -9,7 +9,7 @@ import qs from 'qs'
 
 
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-axios.defaults.withCredentials  = true;
+axios.defaults.withCredentials = true;
 
 
 class Login extends React.Component {
@@ -89,9 +89,9 @@ class Login extends React.Component {
     }
 
     render() {
-        if(this.state.loginSuccess === 'success'){
+        if (this.state.loginSuccess === 'success') {
             document.location.reload()
-            return (<Redirect to={{pathname: '/', state: { loginStatus: this.state.loginSuccess }}}/>);
+            return (<Redirect to={{pathname: '/', state: {loginStatus: this.state.loginSuccess}}}/>);
         }
         return (
             <div className={'content loginPage'}>
@@ -115,13 +115,14 @@ class Login extends React.Component {
                         <Input name={'problem'} disabled={true}
                                placeholder={this.state.problem.problem.concat(" = ?")}/>
                         <Motion defaultStyle={{degree: 0}} style={{degree: spring(this.state.degree)}}>
-                            {({degree}) => <Tooltip placement="bottom" title={'点击换一题'}><Icon onClick={changeCodeword.bind(this)}
-                                                                                             style={{
-                                                                                                 fontSize: '20px',
-                                                                                                 cursor: 'pointer',
-                                                                                                 transform: `rotate(${degree}deg`
-                                                                                             }}
-                                                                                             type="reload"/></Tooltip>}
+                            {({degree}) => <Tooltip placement="bottom" title={'点击换一题'}><Icon
+                                onClick={changeCodeword.bind(this)}
+                                style={{
+                                    fontSize: '20px',
+                                    cursor: 'pointer',
+                                    transform: `rotate(${degree}deg`
+                                }}
+                                type="reload"/></Tooltip>}
                         </Motion>
                         <span style={{fontSize: '20px', marginLeft: '15px'}}>答案:</span><Input required={true}
                                                                                               size={'large'}

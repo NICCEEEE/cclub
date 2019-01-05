@@ -31,7 +31,7 @@ class MyProfile extends React.Component {
         );
         return (
             <div className={'profile-container'}>
-                <div className={'head'}>
+                <div className={'profile-head'}>
                     <img alt={'cover'} className={'cover'} src={require('../assets/images/back3.png')}/>
                     <Avatar size={128} icon="user" src={`http://0.0.0.0:2000/avatar`}/>
                     <Dropdown overlay={menu} placement="bottomCenter">

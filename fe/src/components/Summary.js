@@ -1,6 +1,6 @@
 import React from 'react'
 import {Breadcrumb, Spin, Tooltip, Timeline} from 'antd';
-import {Link, withRouter} from 'react-router-dom'
+import {Link, Redirect} from 'react-router-dom'
 import moment from 'moment/min/moment-with-locales';
 import {changeTitle, error} from "../utilities"
 import axios from 'axios'
@@ -10,6 +10,7 @@ class Summary extends React.Component {
         super(props)
         this.state = {
             summary: null,
+            redirect: null
         }
     }
 
@@ -27,6 +28,10 @@ class Summary extends React.Component {
                         summary: response.data
                     })
                     changeTitle('用户主页')
+                } else {
+                    this.setState({
+                        redirect: 'redirect'
+                    })
                 }
             })
             .catch((err) => {
@@ -36,6 +41,9 @@ class Summary extends React.Component {
     }
 
     render() {
+        if (this.state.redirect === 'redirect') {
+            return <Redirect to={'/'}/>
+        }
         if (this.state.summary === null) {
             return <Spin style={{marginTop: '90px'}} size="large"/>
         } else {
