@@ -35,27 +35,27 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Asm.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/components/Asm.js">
+      <file leaf-file-name="coreCompile.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/coreCompile.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="528">
-              <caret line="62" column="37" selection-start-line="62" selection-start-column="37" selection-end-line="62" selection-end-column="37" />
+            <state relative-caret-position="2373">
+              <caret line="217" column="29" selection-start-line="217" selection-start-column="29" selection-end-line="217" selection-end-column="29" />
               <folding>
-                <element signature="e#0#25#0" expanded="true" />
+                <element signature="e#4992#5451#0" />
+                <element signature="e#5494#6286#0" />
+                <element signature="e#6323#6728#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="coreCompile.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/coreCompile.js">
+      <file leaf-file-name="Asm.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/components/Asm.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="168">
-              <caret line="145" column="9" lean-forward="true" selection-start-line="145" selection-start-column="9" selection-end-line="145" selection-end-column="9" />
+            <state relative-caret-position="271">
+              <caret line="58" column="72" lean-forward="true" selection-start-line="58" selection-start-column="72" selection-end-line="58" selection-end-column="72" />
               <folding>
-                <element signature="e#4043#4518#0" />
-                <element signature="e#4561#5353#0" />
-                <element signature="e#5391#5772#0" />
+                <element signature="e#0#25#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -330,12 +330,12 @@
       <workItem from="1550471915189" duration="334000" />
       <workItem from="1550732917333" duration="130000" />
       <workItem from="1550828422109" duration="1225000" />
-      <workItem from="1550986977889" duration="46730000" />
+      <workItem from="1550986977889" duration="56412000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="434594000" />
+    <option name="totallyTimeSpent" value="444276000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1200" extended-state="0" />
@@ -654,16 +654,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/App.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="513">
-          <caret line="19" column="12" selection-start-line="19" selection-start-column="12" selection-end-line="19" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Login.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2511">
@@ -699,10 +689,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/App.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="513">
+          <caret line="19" column="12" selection-start-line="19" selection-start-column="12" selection-end-line="19" selection-end-column="12" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Asm.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="528">
-          <caret line="62" column="37" selection-start-line="62" selection-start-column="37" selection-end-line="62" selection-end-column="37" />
+        <state relative-caret-position="271">
+          <caret line="58" column="72" lean-forward="true" selection-start-line="58" selection-start-column="72" selection-end-line="58" selection-end-column="72" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
@@ -711,12 +711,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/coreCompile.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="145" column="9" lean-forward="true" selection-start-line="145" selection-start-column="9" selection-end-line="145" selection-end-column="9" />
+        <state relative-caret-position="2373">
+          <caret line="217" column="29" selection-start-line="217" selection-start-column="29" selection-end-line="217" selection-end-column="29" />
           <folding>
-            <element signature="e#4043#4518#0" />
-            <element signature="e#4561#5353#0" />
-            <element signature="e#5391#5772#0" />
+            <element signature="e#4992#5451#0" />
+            <element signature="e#5494#6286#0" />
+            <element signature="e#6323#6728#0" />
           </folding>
         </state>
       </provider>

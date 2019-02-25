@@ -49,18 +49,18 @@ class Asm extends React.Component {
             <div style={{margin: '60px auto'}}>
                 {
                     this.state.value ? <ul>
-                        <li>AX: {this.state.value.AX}</li>
-                        <li>BX: {this.state.value.BX}</li>
-                        <li>CX: {this.state.value.CX}</li>
-                        <li>DX: {this.state.value.DX}</li>
-                        <li>SP: {this.state.value.SP}</li>
-                        <li>BP: {this.state.value.BP}</li>
-                        <li>SI: {this.state.value.SI}</li>
-                        <li>DI: {this.state.value.DI}</li>
-                        <li>DS: {this.state.value.DS}</li>
-                        <li>ES: {this.state.value.ES}</li>
-                        <li>SS: {this.state.value.SS}</li>
-                        <li>CS: {this.state.value.CS}</li>
+                        <li>AX: {this.state.value.AX.toUpperCase()}</li>
+                        <li>BX: {this.state.value.BX.toUpperCase()}</li>
+                        <li>CX: {this.state.value.CX.toUpperCase()}</li>
+                        <li>DX: {this.state.value.DX.toUpperCase()}</li>
+                        <li>SP: {this.state.value.SP.toUpperCase()}</li>
+                        <li>BP: {this.state.value.BP.toUpperCase()}</li>
+                        <li>SI: {this.state.value.SI.toUpperCase()}</li>
+                        <li>DI: {this.state.value.DI.toUpperCase()}</li>
+                        <li>DS: {this.state.value.DS.toUpperCase()}</li>
+                        <li>ES: {this.state.value.ES.toUpperCase()}</li>
+                        <li>SS: {this.state.value.SS.toUpperCase()}</li>
+                        <li>CS: {this.state.value.CS.toUpperCase()}</li>
                     </ul> : <ul>
                         <li>AX: 0000</li>
                         <li>BX: 0000</li>

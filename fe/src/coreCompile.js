@@ -1,9 +1,9 @@
 // 通用寄存器
-let ax = {h: 0, l: 0}, bx = {h: 0, l: 0}, cx = {h: 0, l: 0}, dx = {h: 0, l: 0}
-let si = 0, di = 0, bp = 0, sp = 0
+let ax = {h: '00', l: '00'}, bx = {h: '00', l: '00'}, cx = {h: '00', l: '00'}, dx = {h: '00', l: '00'}
+let si = '0000', di = '0000', bp = '0000', sp = '0000'
 
 // 段寄存器
-let cs = 0, ds = 0, es = 0, ss = 0
+let cs = '0000', ds = '0000', es = '0000', ss = '0000'
 
 // 合法16位寄存器
 let reg88 = {ax: ax, bx: bx, cx: cx, dx: dx}
@@ -123,16 +123,19 @@ function funcMov(cmdLine, lineNum) {
         console.log(`第${lineNum}行含有非法操作符${src}!`)
         return 'error'
     }
+    console.log(typeDst, typeSrc)
     // 执行相应mov操作
     // dst => reg16 reg88 reg8 sreg memory
     // src => reg16 reg88 reg8 sreg memory immediate-l immediate-h bin8 bin16
     if (typeDst === 'reg16') {
-        if (typeSrc === ('immediate-h' || 'immediate-l')) {
+        if (typeSrc === 'immediate-h' || typeSrc === 'immediate-l') {
             src = src.split(/[hH]/)[0]
             src = parseInt(src, 16).toString(16)
+            src = '0'.repeat(4 - src.length) + src
             reg16[dst] = src
-        } else if (typeSrc === ('bin8' || 'bin16')) {
+        } else if (typeSrc === 'bin8' || typeSrc === 'bin16') {
             src = parseInt(src, 2).toString(16)
+            src = '0'.repeat(4 - src.length) + src
             reg16[dst] = src
         } else if (typeSrc === typeDst) {
             reg16[dst] = reg16[src]
@@ -148,12 +151,75 @@ function funcMov(cmdLine, lineNum) {
         if (typeSrc === typeDst) {
             reg88[dst].h = reg88[src].h
             reg88[dst].l = reg88[src].l
-        } else if (typeSrc === ('immediate-h' || 'immediate-l')) {
+        } else if (typeSrc === 'immediate-h' || typeSrc === 'immediate-l') {
             src = src.split(/[hH]/)[0]
             src = parseInt(src, 16).toString(16)
-
+            src = '0'.repeat(4 - src.length) + src
+            let h = src.slice(0, 2)
+            let l = src.slice(2, 4)
+            reg88[dst].h = h
+            reg88[dst].l = l
+        } else if (typeSrc === 'bin8' || typeSrc === 'bin16') {
+            src = parseInt(src, 2).toString(16)
+            src = '0'.repeat(4 - src.length) + src
+            let h = src.slice(0, 2)
+            let l = src.slice(2, 4)
+            reg88[dst].h = h
+            reg88[dst].l = l
+        } else if (typeSrc === 'sreg') {
+            src = sreg[src]
+            src = '0'.repeat(4 - src.length) + src
+            let h = src.slice(0, 2)
+            let l = src.slice(2, 4)
+            reg88[dst].h = h
+            reg88[dst].l = l
+        } else if (typeSrc === 'reg16') {
+            src = reg16[src]
+            src = '0'.repeat(4 - src.length) + src
+            let h = src.slice(0, 2)
+            let l = src.slice(2, 4)
+            reg88[dst].h = h
+            reg88[dst].l = l
+        } else {
+            console.log(`第${lineNum}行语法错误!`)
+            return 'error'
         }
-
+    } else if (typeDst === 'reg8') {
+        if (typeSrc === typeDst) {
+            reg88[dst[0] + 'x'][dst[1]] = reg88[src[0] + 'x'][src[1]]
+        } else if (typeSrc === 'immediate-l') {
+            src = src.split(/[hH]/)[0]
+            src = parseInt(src, 16).toString(16)
+            src = '0'.repeat(2 - src.length) + src
+            reg88[dst[0] + 'x'][dst[1]] = src
+        } else if (typeSrc === 'bin8') {
+            src = parseInt(src, 2).toString(16)
+            src = '0'.repeat(2 - src.length) + src
+            reg88[dst[0] + 'x'][dst[1]] = src
+        } else {
+            console.log(`第${lineNum}行语法错误!`)
+            return 'error'
+        }
+    } else if (typeDst === 'sreg') {
+        if (typeSrc === typeDst) {
+            sreg[dst] = sreg[src]
+        } else if (typeSrc === 'immediate-h' || typeSrc === 'immediate-l') {
+            src = src.split(/[hH]/)[0]
+            src = parseInt(src, 16).toString(16)
+            src = '0'.repeat(4 - src.length) + src
+            sreg[dst] = src
+        } else if (typeSrc === 'bin8' || typeSrc === 'bin16') {
+            src = parseInt(src, 2).toString(16)
+            src = '0'.repeat(4 - src.length) + src
+            sreg[dst] = src
+        } else if (typeSrc === 'reg88') {
+            sreg[dst] = reg88[src].h + reg88[src].l
+        } else if (typeSrc === 'sreg') {
+            sreg[dst] = reg16[src]
+        } else {
+            console.log(`第${lineNum}行语法错误!`)
+            return 'error'
+        }
     }
     console.log(cmdLine.split(/\s+/g))
 }
@@ -161,19 +227,19 @@ function funcMov(cmdLine, lineNum) {
 // 寄存器初始化
 function reset() {
     // 通用寄存器
-    ax = {h: 0, l: 0}
-    bx = {h: 0, l: 0}
-    cx = {h: 0, l: 0}
-    dx = {h: 0, l: 0}
-    si = 0
-    di = 0
-    bp = 0
-    sp = 0
+    ax = {h: '00', l: '00'}
+    bx = {h: '00', l: '00'}
+    cx = {h: '00', l: '00'}
+    dx = {h: '00', l: '00'}
+    si = '0000'
+    di = '0000'
+    bp = '0000'
+    sp = '0000'
     // 段寄存器
-    cs = 0
-    ds = 0
-    es = 0
-    ss = 0
+    cs = '0000'
+    ds = '0000'
+    es = '0000'
+    ss = '0000'
     reg88 = {ax: ax, bx: bx, cx: cx, dx: dx}
     reg16 = {di: di, si: si, bp: bp, sp: sp}
     // 合法8位寄存器
@@ -212,14 +278,13 @@ export function compile(rawCode) {
     console.log('执行完毕！')
 }
 
-
 // 寄存器显示
 export function display() {
     return {
-        AX: String(reg8.ah) + String(reg8.al),
-        BX: String(reg8.bh) + String(reg8.bl),
-        CX: String(reg8.ch) + String(reg8.cl),
-        DX: String(reg8.dh) + String(reg8.dl),
+        AX: String(reg88.ax.h) + String(reg88.ax.l),
+        BX: String(reg88.bx.h) + String(reg88.bx.l),
+        CX: String(reg88.cx.h) + String(reg88.cx.l),
+        DX: String(reg88.dx.h) + String(reg88.dx.l),
         SP: reg16.sp,
         BP: reg16.bp,
         SI: reg16.si,
@@ -230,52 +295,3 @@ export function display() {
         CS: sreg.cs
     }
 }
-
-// // 检验目标操作符类型, typeDst作为类型标志
-// switch (typeDst) {
-//     case 'reg16':
-//         console.log('16位寄存器', dst)
-//         break
-//     case 'reg8':
-//         console.log('8位寄存器', dst)
-//         break
-//     case 'sreg':
-//         console.log('段寄存器', dst)
-//         break
-//     case 'memory':
-//         console.log('内存块', dst)
-//         break
-//     default:
-//         console.log(`第${lineNum}行含有非法操作符${dst}!`)
-//         return 'error'
-// }
-// // 检验源操作符类型
-// switch (typeSrc) {
-//     case 'reg16':
-//         console.log('16位寄存器', src)
-//         break
-//     case 'reg8':
-//         console.log('8位寄存器', src)
-//         break
-//     case 'sreg':
-//         console.log('段寄存器', src)
-//         break
-//     case 'immediate-l':
-//         console.log('8位立即数', src)
-//         break
-//     case 'immediate-h':
-//         console.log('16位立即数', src)
-//         break
-//     case 'memory':
-//         console.log('内存块', src)
-//         break
-//     case 'bin8':
-//         console.log('8位2进制数', src)
-//         break
-//     case 'bin16':
-//         console.log('16位2进制数', src)
-//         break
-//     default:
-//         console.log(`第${lineNum}行含有非法操作符${src}!`)
-//         return 'error'
-// }
