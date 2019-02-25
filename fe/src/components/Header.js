@@ -139,13 +139,16 @@ class Header extends React.Component {
                         <Link to={'/'}>
                             <img src={require('../assets/images/logo.svg')} alt={'logo'}/>
                         </Link>
-                        <div className={'buttonGroup'}>
+                        {/*<div className={'buttonGroup'}>*/}
                             <Search
                                 placeholder="Search"
                                 onSearch={value => this.search(value)}
                                 enterButton
                             />
-                        </div>
+                            <Link style={{fontSize: '25px', margin: '10px'}} to={{pathname: '/asm', state: {uid: this.state.uid}}}>
+                                <Icon title={'汇编实验楼'} type="experiment" />
+                            </Link>
+                        {/*</div>*/}
                     </div>
                     {head}
                 </div>

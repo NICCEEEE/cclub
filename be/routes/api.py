@@ -19,6 +19,8 @@ from models.message import Message
 from models import codeword
 from random import randint
 import time
+import pandas as pd
+
 main = Blueprint('api', __name__)
 
 
@@ -422,3 +424,5 @@ def del_topic(tid):
         return 'false'
     Topic.delete_one({'tid': tid})
     return 'true'
+
+

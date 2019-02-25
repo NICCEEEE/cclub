@@ -8,9 +8,10 @@ import Edit from "./components/Edit"
 import Notify from "./components/Notify"
 import Message from "./components/Message"
 import Setting from "./components/Setting"
-import RouteTest from "./components/RouteTest"
 import Summary from "./components/Summary"
 import RootPage from "./components/RootPage"
+import NotFound from "./components/NotFound"
+import Asm from "./components/Asm"
 
 let routes = [
     {
@@ -61,12 +62,16 @@ let routes = [
         component: UserSummary,
     },
     {
-        path: "/route",
-        component: RouteTest,
+        path: "/asm",
+        component: Asm,
     },
     {
         path: "/rootRoot",
         component: RootPage
+    },
+    {
+        path: "*",
+        component: NotFound
     }
 ]
 

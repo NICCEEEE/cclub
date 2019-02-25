@@ -25,12 +25,14 @@ class App extends Component {
                                 if (route.exact === true) {
                                     return <Route key={index} exact path={route.path}
                                                   render={props => (
-                                                      <route.component {...props} handleLogin={this.handleLogin} routes={route.routes}/>
+                                                      <route.component {...props} handleLogin={this.handleLogin}
+                                                                       routes={route.routes}/>
                                                   )}/>
                                 } else {
                                     return <Route key={index} path={route.path}
                                                   render={props => (
-                                                      <route.component {...props} handleLogin={this.handleLogin} routes={route.routes}/>
+                                                      <route.component {...props} handleLogin={this.handleLogin}
+                                                                       routes={route.routes}/>
                                                   )}/>
                                 }
                             })
