@@ -38,9 +38,17 @@
       <file leaf-file-name="coreCompile.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/coreCompile.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-39">
-              <caret line="137" column="20" lean-forward="true" selection-start-line="137" selection-start-column="20" selection-end-line="137" selection-end-column="20" />
+            <state relative-caret-position="-7927">
+              <caret line="63" column="29" selection-start-line="63" selection-start-column="29" selection-end-line="63" selection-end-column="29" />
               <folding>
+                <element signature="e#641#713#0" />
+                <element signature="e#586#722#0" />
+                <element signature="e#768#1201#0" />
+                <element signature="n#!!block;n#checkMemory#0" />
+                <element signature="e#1242#1783#0" />
+                <element signature="e#1823#2437#0" />
+                <element signature="n#!!block;n#funcPush#0" />
+                <element signature="n#!!block;n#funcPop#0" />
                 <element signature="e#4992#5451#0" />
                 <element signature="e#5494#6286#0" />
                 <element signature="e#6323#6728#0" />
@@ -100,7 +108,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>success</find>
       <find>topicsToSee</find>
       <find>this.handleBoardTab.bind(this)</find>
       <find>\n</find>
@@ -130,6 +137,7 @@
       <find>res2</find>
       <find>ah</find>
       <find>al</find>
+      <find>memories</find>
     </findStrings>
     <replaceStrings>
       <replace>300</replace>
@@ -330,12 +338,12 @@
       <workItem from="1550471915189" duration="334000" />
       <workItem from="1550732917333" duration="130000" />
       <workItem from="1550828422109" duration="1225000" />
-      <workItem from="1550986977889" duration="66810000" />
+      <workItem from="1550986977889" duration="89150000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="454674000" />
+    <option name="totallyTimeSpent" value="477014000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1200" extended-state="0" />
@@ -711,9 +719,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/coreCompile.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-39">
-          <caret line="137" column="20" lean-forward="true" selection-start-line="137" selection-start-column="20" selection-end-line="137" selection-end-column="20" />
+        <state relative-caret-position="-7927">
+          <caret line="63" column="29" selection-start-line="63" selection-start-column="29" selection-end-line="63" selection-end-column="29" />
           <folding>
+            <element signature="e#641#713#0" />
+            <element signature="e#586#722#0" />
+            <element signature="e#768#1201#0" />
+            <element signature="n#!!block;n#checkMemory#0" />
+            <element signature="e#1242#1783#0" />
+            <element signature="e#1823#2437#0" />
+            <element signature="n#!!block;n#funcPush#0" />
+            <element signature="n#!!block;n#funcPop#0" />
             <element signature="e#4992#5451#0" />
             <element signature="e#5494#6286#0" />
             <element signature="e#6323#6728#0" />

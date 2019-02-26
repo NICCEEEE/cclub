@@ -18,12 +18,18 @@ let sreg = {cs: cs, ds: ds, es: es, ss: ss}
 // 内存堆
 let memories = {}
 
+// 堆栈数组
+let stack = []
+
 // 非法符号
 const invalid = '`~！!@#￥$%^……&*()_——=【】{}、|：「」"\'『』《》<>？、/,'
 
 // 指令字典
 let instructions = {
     mov: funcMov,
+    push: funcPush,
+    pop: funcPop,
+    xchg: funcXchg,
 }
 
 // 检查非法字符
@@ -59,20 +65,21 @@ function checkMemory(memory) {
     memory = memory.slice(1, -1)
     memory = memory.split('+')
     let validAddress = ['bx', 'si', 'di', 'bp']
-    let address = 0
+    let address = ''
     for (let i = 0; i < memory.length; i++) {
         let addr = memory[i].toLowerCase()
         if (validAddress.includes(addr)) {
             if (addr === 'bx') {
-                address += parseInt(String(reg88.bx.h + reg88.bx.l), 16)
+                address += reg88.bx.h + reg88.bx.l + addr.charCodeAt(0) + addr.charCodeAt(1)
             } else {
-                address += parseInt(String(reg16[addr]), 16)
+                address += reg16[addr] + addr.charCodeAt()
             }
+            console.log(memories)
         } else {
             return 'error'
         }
     }
-    return String(address)
+    return 'memory:' + address
 }
 
 // 检查目标操作数
@@ -88,7 +95,19 @@ function checkDst(dst, ins) {
             } else if (dst in sreg && dst !== 'cs') {
                 return 'sreg'
             } else if (dst.startsWith('[') && dst.endsWith(']')) {
-                return checkMemory(dst) === 'error' ? 'error' : 'memory:' + checkMemory(dst)
+                return checkMemory(dst) === 'error' ? 'error' : checkMemory(dst)
+            } else {
+                return 'error'
+            }
+        case 'xchg':
+            if (dst in reg16) {
+                return 'reg16'
+            } else if (dst in reg88) {
+                return 'reg88'
+            } else if (dst in reg8) {
+                return 'reg8'
+            } else if (dst.startsWith('[') && dst.endsWith(']')) {
+                return checkMemory(dst) === 'error' ? 'error' : checkMemory(dst)
             } else {
                 return 'error'
             }
@@ -110,9 +129,21 @@ function checkSrc(src, ins) {
             } else if (src in sreg) {
                 return 'sreg'
             } else if (src.startsWith('[') && src.endsWith(']')) {
-                return checkMemory(src) === 'error' ? 'error' : 'memory:' + checkMemory(src)
+                return checkMemory(src) === 'error' ? 'error' : checkMemory(src)
             } else if (checkImmediate(src)) {
                 return checkImmediate(src)
+            } else {
+                return 'error'
+            }
+        case 'xchg':
+            if (src in reg16) {
+                return 'reg16'
+            } else if (src in reg88) {
+                return 'reg88'
+            } else if (src in reg8) {
+                return 'reg8'
+            } else if (src.startsWith('[') && src.endsWith(']')) {
+                return checkMemory(src) === 'error' ? 'error' : checkMemory(src)
             } else {
                 return 'error'
             }
@@ -120,7 +151,6 @@ function checkSrc(src, ins) {
             return '其它指令'
     }
 }
-
 
 // MOV指令函数
 function funcMov(cmdLine, lineNum) {
@@ -312,6 +342,169 @@ function funcMov(cmdLine, lineNum) {
     console.log(cmdLine.split(/\s+/g))
 }
 
+// PUSH指令函数
+function funcPush(cmdLine, lineNum) {
+    let src = cmdLine.trim().split(';')[0].slice(4).split(/\s+/)[1]
+    if (src in reg16) {
+        stack.push(reg16[src])
+    } else if (src in reg88) {
+        stack.push(reg88[src].h + reg88[src].l)
+    } else if (src in sreg) {
+        stack.push(sreg[src])
+    } else if (checkMemory(src).includes('memory')) {
+        let value = memories[checkMemory(src).split(':')[1]]
+        if (value) {
+            stack.push(value)
+        } else {
+            stack.push('0000')
+        }
+    } else {
+        console.log(`第${lineNum}行语法错误`)
+        return 'error'
+    }
+    console.log(stack)
+    console.log(cmdLine)
+}
+
+// POP指令函数
+function funcPop(cmdLine, lineNum) {
+    let src = cmdLine.trim().split(';')[0].slice(3).split(/\s+/)[1]
+    if (stack.length === 0) {
+        console.log('当前堆栈为空！')
+        return 'error'
+    }
+    if (src in reg16) {
+        reg16[src] = stack.pop()
+    } else if (src in reg88) {
+        let value = stack.pop()
+        reg88[src].h = value.slice(0, 2)
+        reg88[src].l = value.slice(2, 4)
+    } else if (src in sreg) {
+        sreg[src] = stack.pop()
+    } else if (checkMemory(src).includes('memory')) {
+        memories[checkMemory(src).split(':')[1]] = stack.pop()
+    } else {
+        console.log(`第${lineNum}行语法错误`)
+        return 'error'
+    }
+    console.log(stack)
+    console.log(cmdLine)
+}
+
+// XCHG指令函数
+function funcXchg(cmdLine, lineNum) {
+    if (!cmdLine.includes(',')) {
+        console.log(`第${lineNum}行语法错误!`)
+        return 'error'
+    }
+    // 去两边空格、注释、逗号获得命令主体
+    cmdLine = cmdLine.trim().split(';')[0].replace(',', ' ')
+    // 检查非法字符
+    if (checkParam(cmdLine) === 'invalid') {
+        console.log(`第${lineNum}行含有非法字符!`)
+        return 'error'
+    }
+    let dst = cmdLine.split(/\s+/g)[1].toLowerCase()
+    let src = cmdLine.split(/\s+/g)[2].toLowerCase()
+    let typeDst = checkDst(dst, 'xchg')
+    let typeSrc = checkSrc(src, 'xchg')
+    // 具体类型具体操作
+    // src dst reg88 reg8 reg16 memory 
+    if (typeDst === 'reg8') {
+        if (typeSrc === 'reg8') {
+            let transfer = reg88[dst[0] + 'x'][dst[1]]
+            reg88[dst[0] + 'x'][dst[1]] = reg88[src[0] + 'x'][src[1]]
+            reg88[src[0] + 'x'][src[1]] = transfer
+        } else if (typeSrc.includes('memory')) {
+            src = memories[typeSrc.split(':')[1]]
+            if (src) {
+                src = src.slice(-2)
+            } else {
+                src = '00'
+            }
+            let transfer = reg88[dst[0] + 'x'][dst[1]]
+            reg88[dst[0] + 'x'][dst[1]] = src
+            memories[typeSrc.split(':')[1]] = '0'.repeat(4 - transfer.length) + transfer
+        } else {
+            console.log(`第${lineNum}行语法错误,请确认类型是否匹配!`)
+            return 'error'
+        }
+    } else if (typeDst === 'reg16') {
+        if (typeSrc === typeDst) {
+            let transfer = reg16[dst]
+            reg16[dst] = reg16[src]
+            reg16[src] = transfer
+        } else if (typeSrc === 'reg88') {
+            let transfer = reg16[dst]
+            reg16[dst] = reg88[src].h + reg88[src].l
+            reg88[src].h = transfer.slice(0, 2)
+            reg88[src].l = transfer.slice(2, 4)
+        } else if (typeSrc.includes('memory')) {
+            src = memories[typeSrc.split(':')[1]]
+            if (src) {
+                src = '0'.repeat(4 - src.length) + src
+            } else {
+                src = '0000'
+            }
+            let transfer = reg16[dst]
+            reg16[dst] = src
+            memories[typeSrc.split(':')[1]] = transfer
+        } else {
+            console.log(`第${lineNum}行语法错误,请确认类型是否匹配!`)
+            return 'error'
+        }
+    } else if (typeDst === 'reg88') {
+        if (typeSrc === typeDst) {
+            let transfer = reg88[dst].h + reg88[dst].l
+            reg88[dst].h = reg88[src].h
+            reg88[dst].l = reg88[src].l
+            reg88[src].h = transfer.slice(0, 2)
+            reg88[src].l = transfer.slice(2, 4)
+        } else if (typeSrc === 'reg16') {
+            let transfer = reg88[dst].h + reg88[dst].l
+            reg88[dst].h = reg16[src].slice(0, 2)
+            reg88[dst].l = reg16[src].slice(2, 4)
+            reg16[src] = transfer
+        } else if (typeSrc.includes('memory')) {
+            let transfer = reg88[dst].h + reg88[dst].l
+            src = memories[typeSrc.split(':')[1]]
+            if (src) {
+                src = '0'.repeat(4 - src.length) + src
+            } else {
+                src = '0000'
+            }
+            reg88[dst].h = src.slice(0, 2)
+            reg88[dst].l = src.slice(2, 4)
+            memories[typeSrc.split(':')[1]] = transfer
+        } else {
+            console.log(`第${lineNum}行语法错误,请确认类型是否匹配!`)
+            return 'error'
+        }
+    } else {
+        if (typeSrc === 'reg88') {
+            let transfer = memories[typeDst.split(':')[1]]
+            memories[typeDst.split(':')[1]] = reg88[src].h + reg88[src].l
+            reg88[src].h = transfer.slice(0, 2)
+            reg88[src].l = transfer.slice(2, 4)
+        } else if (typeSrc === 'reg16') {
+            let transfer = memories[typeDst.split(':')[1]]
+            memories[typeDst.split(':')[1]] = reg16[src]
+            reg16[src] = transfer
+        } else if (typeSrc.includes('memory')) {
+            let transfer = memories[typeDst.split(':')[1]]
+            src = memories[typeSrc.split(':')[1]]
+            if (src) {
+                src = '0'.repeat(4 - src.length) + src
+            } else {
+                src = '0000'
+            }
+            memories[typeDst.split(':')[1]] = src
+            memories[typeSrc.split(':')[1]] = transfer
+        }
+    }
+    console.log(dst, src)
+}
+
 // 寄存器初始化
 function reset() {
     // 通用寄存器
@@ -345,7 +538,7 @@ export function compile(rawCode) {
     // 判断每行指令
     for (let i = 0; i < codeLines.length; i++) {
         // 取具体指令
-        let ins = codeLines[i].trim().split(' ')[0]
+        let ins = codeLines[i].trim().split(/\s+/)[0]
         console.log(`第${i + 1}行指令为:【${codeLines[i]}】指令头为:【${ins}】`)
         if (ins.toLowerCase() in instructions) {
             // 指令存在则执行相应操作
