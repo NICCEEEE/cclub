@@ -15,6 +15,9 @@ let reg8 = {ah: ax.h, al: ax.l, bl: bx.l, bh: bx.h, ch: cx.h, cl: cx.l, dh: dx.h
 // 合法段寄存器
 let sreg = {cs: cs, ds: ds, es: es, ss: ss}
 
+// 内存堆
+let memories = {}
+
 // 非法符号
 const invalid = '`~！!@#￥$%^……&*()_——=【】{}、|：「」"\'『』《》<>？、/,'
 
@@ -51,6 +54,27 @@ function checkImmediate(immediate) {
     }
 }
 
+// 检查内存块
+function checkMemory(memory) {
+    memory = memory.slice(1, -1)
+    memory = memory.split('+')
+    let validAddress = ['bx', 'si', 'di', 'bp']
+    let address = 0
+    for (let i = 0; i < memory.length; i++) {
+        let addr = memory[i].toLowerCase()
+        if (validAddress.includes(addr)) {
+            if (addr === 'bx') {
+                address += parseInt(String(reg88.bx.h + reg88.bx.l), 16)
+            } else {
+                address += parseInt(String(reg16[addr]), 16)
+            }
+        } else {
+            return 'error'
+        }
+    }
+    return String(address)
+}
+
 // 检查目标操作数
 function checkDst(dst, ins) {
     switch (ins) {
@@ -64,7 +88,7 @@ function checkDst(dst, ins) {
             } else if (dst in sreg && dst !== 'cs') {
                 return 'sreg'
             } else if (dst.startsWith('[') && dst.endsWith(']')) {
-                return 'memory'
+                return checkMemory(dst) === 'error' ? 'error' : 'memory:' + checkMemory(dst)
             } else {
                 return 'error'
             }
@@ -86,7 +110,7 @@ function checkSrc(src, ins) {
             } else if (src in sreg) {
                 return 'sreg'
             } else if (src.startsWith('[') && src.endsWith(']')) {
-                return 'memory'
+                return checkMemory(src) === 'error' ? 'error' : 'memory:' + checkMemory(src)
             } else if (checkImmediate(src)) {
                 return checkImmediate(src)
             } else {
@@ -139,10 +163,18 @@ function funcMov(cmdLine, lineNum) {
             reg16[dst] = src
         } else if (typeSrc === typeDst) {
             reg16[dst] = reg16[src]
-        } else if (typeSrc === 'sreg')  {
+        } else if (typeSrc === 'sreg') {
             reg16[dst] = sreg[src]
         } else if (typeSrc === 'reg88') {
             reg16[dst] = reg88[src].h + reg88[src].l
+        } else if (typeSrc.includes('memory')) {
+            src = memories[typeSrc.split(':')[1]]
+            if (src) {
+                src = '0'.repeat(4 - src.length) + src
+            } else {
+                src = '0000'
+            }
+            reg16[dst] = src
         } else {
             console.log(`第${lineNum}行语法错误!`)
             return 'error'
@@ -180,6 +212,17 @@ function funcMov(cmdLine, lineNum) {
             let l = src.slice(2, 4)
             reg88[dst].h = h
             reg88[dst].l = l
+        } else if (typeSrc.includes('memory')) {
+            src = memories[typeSrc.split(':')[1]]
+            if (src) {
+                src = '0'.repeat(4 - src.length) + src
+            } else {
+                src = '0000'
+            }
+            let h = src.slice(0, 2)
+            let l = src.slice(2, 4)
+            reg88[dst].h = h
+            reg88[dst].l = l
         } else {
             console.log(`第${lineNum}行语法错误!`)
             return 'error'
@@ -195,6 +238,15 @@ function funcMov(cmdLine, lineNum) {
         } else if (typeSrc === 'bin8') {
             src = parseInt(src, 2).toString(16)
             src = '0'.repeat(2 - src.length) + src
+            reg88[dst[0] + 'x'][dst[1]] = src
+        } else if (typeSrc.includes('memory')) {
+            src = memories[typeSrc.split(':')[1]]
+            if (src) {
+                src = '0'.repeat(4 - src.length) + src
+                src = src.slice(2, 4)
+            } else {
+                src = '00'
+            }
             reg88[dst[0] + 'x'][dst[1]] = src
         } else {
             console.log(`第${lineNum}行语法错误!`)
@@ -216,6 +268,42 @@ function funcMov(cmdLine, lineNum) {
             sreg[dst] = reg88[src].h + reg88[src].l
         } else if (typeSrc === 'sreg') {
             sreg[dst] = reg16[src]
+        } else if (typeSrc.includes('memory')) {
+            src = memories[typeSrc.split(':')[1]]
+            if (src) {
+                src = '0'.repeat(4 - src.length) + src
+            } else {
+                src = '0000'
+            }
+            sreg[dst] = src
+        } else {
+            console.log(`第${lineNum}行语法错误!`)
+            return 'error'
+        }
+    } else {
+        if (typeSrc === 'reg16') {
+            src = reg16[src]
+            src = '0'.repeat(4 - src.length) + src
+            memories[typeDst.split(':')[1]] = src
+        } else if (typeSrc === 'reg88') {
+            memories[typeDst.split(':')[1]] = reg88[src].h + reg88[src].l
+        } else if (typeSrc === 'sreg') {
+            src = sreg[src]
+            src = '0'.repeat(4 - src.length) + src
+            memories[typeDst.split(':')[1]] = src
+        } else if (typeSrc === 'reg8') {
+            src = reg88[src[0] + 'x'][src[1]]
+            src = '0'.repeat(4 - src.length) + src
+            memories[typeDst.split(':')[1]] = src
+        } else if (typeSrc === 'immediate-h' || typeSrc === 'immediate-l') {
+            src = src.split(/[hH]/)[0]
+            src = parseInt(src, 16).toString(16)
+            src = '0'.repeat(4 - src.length) + src
+            memories[typeDst.split(':')[1]] = src
+        } else if (typeSrc === 'bin8' || typeSrc === 'bin16') {
+            src = parseInt(src, 2).toString(16)
+            src = '0'.repeat(4 - src.length) + src
+            memories[typeDst.split(':')[1]] = src
         } else {
             console.log(`第${lineNum}行语法错误!`)
             return 'error'
