@@ -22,7 +22,7 @@ let memories = {}
 let stack = []
 
 // 非法符号
-const invalid = '`~！!@#￥$%^……&*()_——=【】{}、|：「」"\'『』《》<>？、/,'
+const invalid = '`~！!@#￥$%^…；：;…&*()_——=【】{}、|『』，:「」"\'『』《》<>？、/,'
 
 // 指令字典
 let instructions = {
@@ -30,6 +30,7 @@ let instructions = {
     push: funcPush,
     pop: funcPop,
     xchg: funcXchg,
+    lea: funcLea,
 }
 
 // 检查非法字符
@@ -65,20 +66,25 @@ function checkMemory(memory) {
     memory = memory.slice(1, -1)
     memory = memory.split('+')
     let validAddress = ['bx', 'si', 'di', 'bp']
-    let address = ''
+    let address = 0
     for (let i = 0; i < memory.length; i++) {
         let addr = memory[i].toLowerCase()
         if (validAddress.includes(addr)) {
             if (addr === 'bx') {
-                address += reg88.bx.h + reg88.bx.l + addr.charCodeAt(0) + addr.charCodeAt(1)
+                address += parseInt(reg88.bx.h + reg88.bx.l, 16)
             } else {
-                address += reg16[addr] + addr.charCodeAt()
+                address += parseInt(reg16[addr], 16)
             }
-            console.log(memories)
         } else {
             return 'error'
         }
     }
+    if (parseInt(address) === 0) {
+        address = '0000'
+    } else {
+        address = address.toString(16)
+    }
+    console.log(memories)
     return 'memory:' + address
 }
 
@@ -108,6 +114,16 @@ function checkDst(dst, ins) {
                 return 'reg8'
             } else if (dst.startsWith('[') && dst.endsWith(']')) {
                 return checkMemory(dst) === 'error' ? 'error' : checkMemory(dst)
+            } else {
+                return 'error'
+            }
+        case 'lea':
+            if (dst in reg16) {
+                return 'reg16'
+            } else if (dst in reg88) {
+                return 'reg88'
+            } else if (dst in sreg) {
+                return 'sreg'
             } else {
                 return 'error'
             }
@@ -147,6 +163,12 @@ function checkSrc(src, ins) {
             } else {
                 return 'error'
             }
+        case 'lea':
+            if (src.startsWith('[') && src.endsWith(']')) {
+                return checkMemory(src) === 'error' ? 'error' : checkMemory(src)
+            } else {
+                return 'error'
+            }
         default:
             return '其它指令'
     }
@@ -159,7 +181,12 @@ function funcMov(cmdLine, lineNum) {
         return 'error'
     }
     // 去两边空格、注释、逗号获得命令主体
-    cmdLine = cmdLine.trim().split(';')[0].replace(',', ' ')
+    cmdLine = cmdLine.trim().split(';')[0]
+    cmdLine = cmdLine.replace(',', ' ')
+    if (!(cmdLine.split(/\s+/g).length === 3 || cmdLine.split(/\s+/g).length === 4)) {
+        console.log(`第${lineNum}行语法错误!`, cmdLine)
+        return 'error'
+    }
     // 检查非法字符
     if (checkParam(cmdLine) === 'invalid') {
         console.log(`第${lineNum}行含有非法字符!`)
@@ -398,7 +425,12 @@ function funcXchg(cmdLine, lineNum) {
         return 'error'
     }
     // 去两边空格、注释、逗号获得命令主体
-    cmdLine = cmdLine.trim().split(';')[0].replace(',', ' ')
+    cmdLine = cmdLine.trim().split(';')[0]
+    cmdLine = cmdLine.replace(',', ' ')
+    if (!(cmdLine.split(/\s+/g).length === 3 || cmdLine.split(/\s+/g).length === 4)) {
+        console.log(`第${lineNum}行语法错误!`, cmdLine)
+        return 'error'
+    }
     // 检查非法字符
     if (checkParam(cmdLine) === 'invalid') {
         console.log(`第${lineNum}行含有非法字符!`)
@@ -505,7 +537,67 @@ function funcXchg(cmdLine, lineNum) {
     console.log(dst, src)
 }
 
-// 寄存器初始化
+// LEA指令函数
+function funcLea(cmdLine, lineNum) {
+    if (!cmdLine.includes(',')) {
+        console.log(`第${lineNum}行语法错误!`)
+        return 'error'
+    }
+    // 去两边空格、注释、逗号获得命令主体
+    cmdLine = cmdLine.trim().split(';')[0]
+    cmdLine = cmdLine.replace(',', ' ')
+    if (!(cmdLine.split(/\s+/g).length === 3 || cmdLine.split(/\s+/g).length === 4)) {
+        console.log(`第${lineNum}行语法错误!`, cmdLine)
+        return 'error'
+    }
+    // 检查非法字符
+    if (checkParam(cmdLine) === 'invalid') {
+        console.log(`第${lineNum}行含有非法字符!`)
+        return 'error'
+    }
+    let dst = cmdLine.split(/\s+/g)[1].toLowerCase()
+    let src = cmdLine.split(/\s+/g)[2].toLowerCase()
+    let typeDst = checkDst(dst, 'lea')
+    let typeSrc = checkSrc(src, 'lea')
+    console.log(typeDst, typeSrc)
+    if (typeDst === 'reg16') {
+        if (typeSrc.includes('memory')) {
+            let address = typeSrc.split(':')[1]
+            if (address.length > 4) {
+                address = address.slice(-4)
+            }
+            reg16[dst] = address
+        } else {
+            console.log(`第${lineNum}错误！源操作数必须是内存块。`)
+            return 'error'
+        }
+    } else if (typeDst === 'sreg') {
+        if (typeSrc.includes('memory')) {
+            let address = typeSrc.split(':')[1]
+            if (address.length > 4) {
+                address = address.slice(-4)
+            }
+            sreg[dst] = address
+        } else {
+            console.log(`第${lineNum}错误！源操作数必须是内存块。`)
+            return 'error'
+        }
+    } else if (typeDst === 'reg88') {
+        if (typeSrc.includes('memory')) {
+            let address = typeSrc.split(':')[1]
+            if (address.length > 4) {
+                address = address.slice(-4)
+            }
+            reg88[dst].h = address.slice(0, 2)
+            reg88[dst].l = address.slice(2, 4)
+        } else {
+            console.log(`第${lineNum}错误！源操作数必须是内存块。`)
+            return 'error'
+        }
+    }
+}
+
+// 初始化
 function reset() {
     // 通用寄存器
     ax = {h: '00', l: '00'}
@@ -527,6 +619,11 @@ function reset() {
     reg8 = {ah: ax.h, al: ax.l, bl: bx.l, bh: bx.h, ch: cx.h, cl: cx.l, dh: dx.h, dl: dx.l}
     // 合法段寄存器
     sreg = {cs: cs, ds: ds, es: es, ss: ss}
+    // 内存堆
+    memories = {}
+
+// 堆栈数组
+    stack = []
 }
 
 // 编译入口

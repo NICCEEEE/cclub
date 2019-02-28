@@ -26,8 +26,8 @@
       <file leaf-file-name="App.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/App.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="513">
-              <caret line="19" column="12" selection-start-line="19" selection-start-column="12" selection-end-line="19" selection-end-column="12" />
+            <state relative-caret-position="540">
+              <caret line="20" column="26" lean-forward="true" selection-start-line="20" selection-start-column="26" selection-end-line="20" selection-end-column="26" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -38,20 +38,20 @@
       <file leaf-file-name="coreCompile.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/coreCompile.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-7927">
-              <caret line="63" column="29" selection-start-line="63" selection-start-column="29" selection-end-line="63" selection-end-column="29" />
+            <state relative-caret-position="389">
+              <caret line="595" column="10" lean-forward="true" selection-start-line="595" selection-start-column="10" selection-end-line="595" selection-end-column="10" />
               <folding>
-                <element signature="e#641#713#0" />
-                <element signature="e#586#722#0" />
-                <element signature="e#768#1201#0" />
+                <element signature="n#!!block;n#checkParam#0" />
+                <element signature="n#!!block;n#checkImmediate#0" />
                 <element signature="n#!!block;n#checkMemory#0" />
-                <element signature="e#1242#1783#0" />
-                <element signature="e#1823#2437#0" />
+                <element signature="n#!!block;n#checkDst#0" />
+                <element signature="n#!!block;n#checkSrc#0" />
+                <element signature="n#!!block;n#funcMov#0" />
                 <element signature="n#!!block;n#funcPush#0" />
                 <element signature="n#!!block;n#funcPop#0" />
-                <element signature="e#4992#5451#0" />
-                <element signature="e#5494#6286#0" />
-                <element signature="e#6323#6728#0" />
+                <element signature="n#!!block;n#reset#0" />
+                <element signature="n#!!block;n#compile#0" />
+                <element signature="n#!!block;n#display#0" />
               </folding>
             </state>
           </provider>
@@ -72,7 +72,7 @@
       <file leaf-file-name="Edit.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/Edit.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3161">
+            <state>
               <caret column="20" selection-start-column="20" selection-end-column="20" />
             </state>
           </provider>
@@ -338,12 +338,12 @@
       <workItem from="1550471915189" duration="334000" />
       <workItem from="1550732917333" duration="130000" />
       <workItem from="1550828422109" duration="1225000" />
-      <workItem from="1550986977889" duration="89150000" />
+      <workItem from="1550986977889" duration="102145000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="477014000" />
+    <option name="totallyTimeSpent" value="490009000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1200" extended-state="0" />
@@ -381,13 +381,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/App.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="81">
-          <caret line="3" selection-start-line="3" selection-end-line="3" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/assets/css/Login.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="162">
@@ -524,13 +517,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="621">
           <caret line="23" column="17" lean-forward="true" selection-start-line="23" selection-start-column="17" selection-end-line="23" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="567">
-          <caret line="21" column="7" lean-forward="true" selection-start-line="21" selection-start-column="7" selection-end-line="21" selection-end-column="7" />
         </state>
       </provider>
     </entry>
@@ -690,19 +676,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/App.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="513">
-          <caret line="19" column="12" selection-start-line="19" selection-start-column="12" selection-end-line="19" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Edit.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3161">
+        <state>
           <caret column="20" selection-start-column="20" selection-end-column="20" />
         </state>
       </provider>
@@ -717,22 +693,46 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/App.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="20" column="26" lean-forward="true" selection-start-line="20" selection-start-column="26" selection-end-line="20" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/yarn.lock">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="537">
+          <caret line="205" column="19" lean-forward="true" selection-start-line="205" selection-start-column="19" selection-end-line="205" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="567">
+          <caret line="21" column="7" lean-forward="true" selection-start-line="21" selection-start-column="7" selection-end-line="21" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/coreCompile.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-7927">
-          <caret line="63" column="29" selection-start-line="63" selection-start-column="29" selection-end-line="63" selection-end-column="29" />
+        <state relative-caret-position="389">
+          <caret line="595" column="10" lean-forward="true" selection-start-line="595" selection-start-column="10" selection-end-line="595" selection-end-column="10" />
           <folding>
-            <element signature="e#641#713#0" />
-            <element signature="e#586#722#0" />
-            <element signature="e#768#1201#0" />
+            <element signature="n#!!block;n#checkParam#0" />
+            <element signature="n#!!block;n#checkImmediate#0" />
             <element signature="n#!!block;n#checkMemory#0" />
-            <element signature="e#1242#1783#0" />
-            <element signature="e#1823#2437#0" />
+            <element signature="n#!!block;n#checkDst#0" />
+            <element signature="n#!!block;n#checkSrc#0" />
+            <element signature="n#!!block;n#funcMov#0" />
             <element signature="n#!!block;n#funcPush#0" />
             <element signature="n#!!block;n#funcPop#0" />
-            <element signature="e#4992#5451#0" />
-            <element signature="e#5494#6286#0" />
-            <element signature="e#6323#6728#0" />
+            <element signature="n#!!block;n#reset#0" />
+            <element signature="n#!!block;n#compile#0" />
+            <element signature="n#!!block;n#display#0" />
           </folding>
         </state>
       </provider>
