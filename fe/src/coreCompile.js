@@ -5,6 +5,9 @@ let si = '0000', di = '0000', bp = '0000', sp = '0000'
 // 段寄存器
 let cs = '0000', ds = '0000', es = '0000', ss = '0000'
 
+// 标志位
+let cf = 0, zf = 0
+
 // 合法16位寄存器
 let reg88 = {ax: ax, bx: bx, cx: cx, dx: dx}
 let reg16 = {di: di, si: si, bp: bp, sp: sp}
@@ -31,6 +34,8 @@ let instructions = {
     pop: funcPop,
     xchg: funcXchg,
     lea: funcLea,
+    add: funcAdd,
+    sub: funcSub,
 }
 
 // 检查非法字符
@@ -79,7 +84,7 @@ function checkMemory(memory) {
             return 'error'
         }
     }
-    if (parseInt(address) === 0) {
+    if (address === 0) {
         address = '0000'
     } else {
         address = address.toString(16)
@@ -127,6 +132,30 @@ function checkDst(dst, ins) {
             } else {
                 return 'error'
             }
+        case 'add':
+            if (dst in reg16) {
+                return 'reg16'
+            } else if (dst in reg88) {
+                return 'reg88'
+            } else if (dst in reg8) {
+                return 'reg8'
+            } else if (dst.startsWith('[') && dst.endsWith(']')) {
+                return checkMemory(dst) === 'error' ? 'error' : checkMemory(dst)
+            } else {
+                return 'error'
+            }
+        case 'sub':
+            if (dst in reg16) {
+                return 'reg16'
+            } else if (dst in reg88) {
+                return 'reg88'
+            } else if (dst in reg8) {
+                return 'reg8'
+            } else if (dst.startsWith('[') && dst.endsWith(']')) {
+                return checkMemory(dst) === 'error' ? 'error' : checkMemory(dst)
+            } else {
+                return 'error'
+            }
         default:
             return '其它指令'
     }
@@ -166,6 +195,34 @@ function checkSrc(src, ins) {
         case 'lea':
             if (src.startsWith('[') && src.endsWith(']')) {
                 return checkMemory(src) === 'error' ? 'error' : checkMemory(src)
+            } else {
+                return 'error'
+            }
+        case 'add':
+            if (src in reg16) {
+                return 'reg16'
+            } else if (src in reg88) {
+                return 'reg88'
+            } else if (src in reg8) {
+                return 'reg8'
+            } else if (src.startsWith('[') && src.endsWith(']')) {
+                return checkMemory(src) === 'error' ? 'error' : checkMemory(src)
+            } else if (checkImmediate(src)) {
+                return checkImmediate(src)
+            } else {
+                return 'error'
+            }
+        case 'sub':
+            if (src in reg16) {
+                return 'reg16'
+            } else if (src in reg88) {
+                return 'reg88'
+            } else if (src in reg8) {
+                return 'reg8'
+            } else if (src.startsWith('[') && src.endsWith(']')) {
+                return checkMemory(src) === 'error' ? 'error' : checkMemory(src)
+            } else if (checkImmediate(src)) {
+                return checkImmediate(src)
             } else {
                 return 'error'
             }
@@ -595,6 +652,370 @@ function funcLea(cmdLine, lineNum) {
             return 'error'
         }
     }
+}
+
+// ADD指令函数
+function funcAdd(cmdLine, lineNum) {
+    if (!cmdLine.includes(',')) {
+        console.log(`第${lineNum}行语法错误!`)
+        return 'error'
+    }
+    // 去两边空格、注释、逗号获得命令主体
+    cmdLine = cmdLine.trim().split(';')[0]
+    cmdLine = cmdLine.replace(',', ' ')
+    if (!(cmdLine.split(/\s+/g).length === 3 || cmdLine.split(/\s+/g).length === 4)) {
+        console.log(`第${lineNum}行语法错误!`, cmdLine)
+        return 'error'
+    }
+    // 检查非法字符
+    if (checkParam(cmdLine) === 'invalid') {
+        console.log(`第${lineNum}行含有非法字符!`)
+        return 'error'
+    }
+    let dst = cmdLine.split(/\s+/g)[1].toLowerCase()
+    let src = cmdLine.split(/\s+/g)[2].toLowerCase()
+    let typeDst = checkDst(dst, 'add')
+    let typeSrc = checkSrc(src, 'add')
+    // 执行相应add操作
+    // dst => reg16 reg88 reg8 memory
+    // src => reg16 reg88 reg8 memory immediate-l immediate-h bin8 bin16
+    if (typeDst === 'reg16') {
+        if (typeSrc === 'immediate-h' || typeSrc === 'immediate-l') {
+            src = src.split(/[hH]/)[0]
+            src = parseInt(src, 16)
+            reg16[dst] = (parseInt(reg16[dst], 16) + src).toString(16).slice(-4)
+        } else if (typeSrc === 'bin8' || typeSrc === 'bin16') {
+            src = parseInt(src, 2)
+            reg16[dst] = (parseInt(reg16[dst], 16) + src).toString(16).slice(-4)
+        } else if (typeSrc === typeDst) {
+            reg16[dst] = (parseInt(reg16[dst], 16) + parseInt(reg16[src], 16)).toString(16).slice(-4)
+        } else if (typeSrc === 'reg88') {
+            reg16[dst] = (parseInt(reg16[dst], 16) + parseInt(reg88[src].h + reg88[src].l, 16)).toString(16).slice(-4)
+        } else if (typeSrc.includes('memory')) {
+            src = memories[typeSrc.split(':')[1]]
+            if (src) {
+                reg16[dst] = (parseInt(reg16[dst], 16) + parseInt(src, 16)).toString(16).slice(-4)
+            }
+        } else {
+            console.log(`第${lineNum}行语法错误!`)
+            return 'error'
+        }
+    } else if (typeDst === 'reg88') {
+        if (typeSrc === typeDst) {
+            let value = (parseInt(reg88[dst].h + reg88[dst].l, 16) + parseInt(reg88[src].h + reg88[src].l, 16)).toString(16).slice(-4)
+            reg88[dst].h = value.slice(0, 2)
+            reg88[dst].l = value.slice(2, 4)
+        } else if (typeSrc === 'immediate-h' || typeSrc === 'immediate-l') {
+            src = src.split(/[hH]/)[0]
+            src = parseInt(src, 16)
+            let value = (parseInt(reg88[dst].h + reg88[dst].l, 16) + src).toString(16).slice(-4)
+            reg88[dst].h = value.slice(0, 2)
+            reg88[dst].l = value.slice(2, 4)
+        } else if (typeSrc === 'bin8' || typeSrc === 'bin16') {
+            src = parseInt(src, 2)
+            let value = (parseInt(reg88[dst].h + reg88[dst].l, 16) + src).toString(16).slice(-4)
+            reg88[dst].h = value.slice(0, 2)
+            reg88[dst].l = value.slice(2, 4)
+        } else if (typeSrc === 'reg16') {
+            src = reg16[src]
+            let value = (parseInt(reg88[dst].h + reg88[dst].l, 16) + parseInt(src, 16)).toString(16).slice(-4)
+            reg88[dst].h = value.slice(0, 2)
+            reg88[dst].l = value.slice(2, 4)
+        } else if (typeSrc.includes('memory')) {
+            src = memories[typeSrc.split(':')[1]]
+            if (src) {
+                let value = (parseInt(reg88[dst].h + reg88[dst].l, 16) + parseInt(src, 16)).toString(16).slice(-4)
+                reg88[dst].h = value.slice(0, 2)
+                reg88[dst].l = value.slice(2, 4)
+            }
+        } else {
+            console.log(`第${lineNum}行语法错误!`)
+            return 'error'
+        }
+    } else if (typeDst === 'reg8') {
+        if (typeSrc === typeDst) {
+            reg88[dst[0] + 'x'][dst[1]] = (parseInt(reg88[dst[0] + 'x'][dst[1]], 16) + parseInt(reg88[src[0] + 'x'][src[1]], 16)).toString(16).slice(-2)
+        } else if (typeSrc === 'immediate-l') {
+            src = src.split(/[hH]/)[0]
+            reg88[dst[0] + 'x'][dst[1]] = (parseInt(reg88[dst[0] + 'x'][dst[1]], 16) + parseInt(src, 16)).toString(16).slice(-2)
+        } else if (typeSrc === 'bin8') {
+            reg88[dst[0] + 'x'][dst[1]] = (parseInt(reg88[dst[0] + 'x'][dst[1]], 16) + parseInt(src, 2)).toString(16).slice(-2)
+        } else if (typeSrc.includes('memory')) {
+            src = memories[typeSrc.split(':')[1]]
+            if (src) {
+                reg88[dst[0] + 'x'][dst[1]] = (parseInt(reg88[dst[0] + 'x'][dst[1]], 16) + parseInt(src, 16)).toString(16).slice(-2)
+            }
+        } else {
+            console.log(`第${lineNum}行语法错误!`)
+            return 'error'
+        }
+    } else {
+        if (typeSrc === 'reg16') {
+            src = reg16[src]
+            memories[typeDst.split(':')[1]] = (parseInt(src, 16) + parseInt(memories[typeDst.split(':')[1]], 16)).toString(16).slice(-4)
+        } else if (typeSrc === 'reg88') {
+            memories[typeDst.split(':')[1]] = (parseInt(reg88[src].h + reg88[src].l, 16) + parseInt(memories[typeDst.split(':')[1]], 16)).toString(16).slice(-4)
+        } else if (typeSrc === 'reg8') {
+            src = reg88[src[0] + 'x'][src[1]]
+            memories[typeDst.split(':')[1]] = (parseInt(src, 16) + parseInt(memories[typeDst.split(':')[1]], 16)).toString(16).slice(-4)
+        } else if (typeSrc === 'immediate-h' || typeSrc === 'immediate-l') {
+            src = src.split(/[hH]/)[0]
+            memories[typeDst.split(':')[1]] = (parseInt(src, 16) + parseInt(memories[typeDst.split(':')[1]], 16)).toString(16).slice(-4)
+        } else if (typeSrc === 'bin8' || typeSrc === 'bin16') {
+            memories[typeDst.split(':')[1]] = (parseInt(src, 2) + parseInt(memories[typeDst.split(':')[1]], 16)).toString(16).slice(-4)
+        } else {
+            console.log(`第${lineNum}行语法错误!`)
+            return 'error'
+        }
+    }
+    console.log(cmdLine.split(/\s+/g))
+}
+
+// SUB指令函数
+function funcSub(cmdLine, lineNum) {
+    if (!cmdLine.includes(',')) {
+        console.log(`第${lineNum}行语法错误!`)
+        return 'error'
+    }
+    // 去两边空格、注释、逗号获得命令主体
+    cmdLine = cmdLine.trim().split(';')[0]
+    cmdLine = cmdLine.replace(',', ' ')
+    if (!(cmdLine.split(/\s+/g).length === 3 || cmdLine.split(/\s+/g).length === 4)) {
+        console.log(`第${lineNum}行语法错误!`, cmdLine)
+        return 'error'
+    }
+    // 检查非法字符
+    if (checkParam(cmdLine) === 'invalid') {
+        console.log(`第${lineNum}行含有非法字符!`)
+        return 'error'
+    }
+    let dst = cmdLine.split(/\s+/g)[1].toLowerCase()
+    let src = cmdLine.split(/\s+/g)[2].toLowerCase()
+    let typeDst = checkDst(dst, 'sub')
+    let typeSrc = checkSrc(src, 'sub')
+    // 执行相应sub操作
+    // dst => reg16 reg88 reg8 memory
+    // src => reg16 reg88 reg8 memory immediate-l immediate-h bin8 bin16
+    if (typeDst === 'reg16') {
+        if (typeSrc === 'immediate-h' || typeSrc === 'immediate-l') {
+            src = src.split(/[hH]/)[0]
+            src = parseInt(src, 16)
+            if (parseInt(reg16[dst], 16) > src) {
+                reg16[dst] = (parseInt(reg16[dst], 16) - src).toString(16).slice(-4)
+            } else {
+                reg16[dst] = (parseInt('1' + reg16[dst], 16) - src).toString(16).slice(-4)
+                cf = 1
+            }
+        } else if (typeSrc === 'bin8' || typeSrc === 'bin16') {
+            src = parseInt(src, 2)
+            if (parseInt(reg16[dst], 16) > src) {
+                reg16[dst] = (parseInt(reg16[dst], 16) - src).toString(16).slice(-4)
+            } else {
+                reg16[dst] = (parseInt('1' + reg16[dst], 16) - src).toString(16).slice(-4)
+                cf = 1
+            }
+        } else if (typeSrc === typeDst) {
+            if (parseInt(reg16[dst], 16) > parseInt(reg16[src], 16)) {
+                reg16[dst] = (parseInt(reg16[dst], 16) - parseInt(reg16[src], 16)).toString(16).slice(-4)
+            } else {
+                reg16[dst] = (parseInt('1' + reg16[dst], 16) - parseInt(reg16[src], 16)).toString(16).slice(-4)
+                cf = 1
+            }
+        } else if (typeSrc === 'reg88') {
+            let value = parseInt(reg88[src].h + reg88[src].l, 16)
+            if (parseInt(reg16[dst], 16) > src) {
+                reg16[dst] = (parseInt(reg16[dst], 16) - value).toString(16).slice(-4)
+            } else {
+                reg16[dst] = (parseInt('1' + reg16[dst], 16) - value).toString(16).slice(-4)
+                cf = 1
+            }
+        } else if (typeSrc.includes('memory')) {
+            src = memories[typeSrc.split(':')[1]]
+            if (src) {
+                if (parseInt(reg16[dst], 16) > parseInt(src, 16)) {
+                    reg16[dst] = (parseInt(reg16[dst], 16) - parseInt(src, 16)).toString(16).slice(-4)
+                } else {
+                    reg16[dst] = (parseInt('1' + reg16[dst], 16) - parseInt(src, 16)).toString(16).slice(-4)
+                    cf = 1
+                }
+            }
+        } else {
+            console.log(`第${lineNum}行语法错误!`)
+            return 'error'
+        }
+    } else if (typeDst === 'reg88') {
+        if (typeSrc === typeDst) {
+            let valueSrc = parseInt(reg88[src].h + reg88[src].l, 16)
+            let valueDst = parseInt(reg88[dst].h + reg88[dst].l, 16)
+            if (valueDst > valueSrc) {
+                let value = (valueDst - valueSrc).toString(16).slice(-4)
+                reg88[dst].h = value.slice(0, 2)
+                reg88[dst].l = value.slice(2, 4)
+            } else {
+                let value = (parseInt('1' + reg88[dst].h + reg88[dst].l, 16) - valueSrc).toString(16).slice(-4)
+                reg88[dst].h = value.slice(0, 2)
+                reg88[dst].l = value.slice(2, 4)
+                cf = 1
+            }
+        } else if (typeSrc === 'immediate-h' || typeSrc === 'immediate-l') {
+            src = src.split(/[hH]/)[0]
+            src = parseInt(src, 16)
+            let valueDst = parseInt(reg88[dst].h + reg88[dst].l, 16)
+            if (valueDst > src) {
+                let value = (valueDst - src).toString(16).slice(-4)
+                reg88[dst].h = value.slice(0, 2)
+                reg88[dst].l = value.slice(2, 4)
+            } else {
+                let value = (parseInt('1' + reg88[dst].h + reg88[dst].l, 16) - src).toString(16).slice(-4)
+                reg88[dst].h = value.slice(0, 2)
+                reg88[dst].l = value.slice(2, 4)
+                cf = 1
+            }
+        } else if (typeSrc === 'bin8' || typeSrc === 'bin16') {
+            src = parseInt(src, 2)
+            let valueDst = parseInt(reg88[dst].h + reg88[dst].l, 16)
+            if (valueDst > src) {
+                let value = (valueDst - src).toString(16).slice(-4)
+                reg88[dst].h = value.slice(0, 2)
+                reg88[dst].l = value.slice(2, 4)
+            } else {
+                let value = (parseInt('1' + reg88[dst].h + reg88[dst].l, 16) - src).toString(16).slice(-4)
+                reg88[dst].h = value.slice(0, 2)
+                reg88[dst].l = value.slice(2, 4)
+                cf = 1
+            }
+        } else if (typeSrc === 'reg16') {
+            src = reg16[src]
+            let valueDst = parseInt(reg88[dst].h + reg88[dst].l, 16)
+            if (valueDst > src) {
+                let value = (valueDst - parseInt(src, 16)).toString(16).slice(-4)
+                reg88[dst].h = value.slice(0, 2)
+                reg88[dst].l = value.slice(2, 4)
+            } else {
+                let value = (parseInt('1' + reg88[dst].h + reg88[dst].l, 16) - parseInt(src, 16)).toString(16).slice(-4)
+                reg88[dst].h = value.slice(0, 2)
+                reg88[dst].l = value.slice(2, 4)
+                cf = 1
+            }
+        } else if (typeSrc.includes('memory')) {
+            src = memories[typeSrc.split(':')[1]]
+            let valueDst = parseInt(reg88[dst].h + reg88[dst].l, 16)
+            if (src) {
+                if (valueDst > parseInt(src, 16)) {
+                    let value = (valueDst - parseInt(src, 16)).toString(16).slice(-4)
+                    reg88[dst].h = value.slice(0, 2)
+                    reg88[dst].l = value.slice(2, 4)
+                } else {
+                    let value = (parseInt('1' + reg88[dst].h + reg88[dst].l, 16) - parseInt(src, 16)).toString(16).slice(-4)
+                    reg88[dst].h = value.slice(0, 2)
+                    reg88[dst].l = value.slice(2, 4)
+                    cf = 1
+                }
+            }
+        } else {
+            console.log(`第${lineNum}行语法错误!`)
+            return 'error'
+        }
+    } else if (typeDst === 'reg8') {
+        if (typeSrc === typeDst) {
+            src = parseInt(reg88[src[0] + 'x'][src[1]], 16)
+            let valueDst = parseInt(reg88[dst[0] + 'x'][dst[1]], 16)
+            if (valueDst > src) {
+                reg88[dst[0] + 'x'][dst[1]] = (valueDst - src).toString(16).slice(-2)
+            } else {
+                reg88[dst[0] + 'x'][dst[1]] = (parseInt('1' + reg88[dst[0] + 'x'][dst[1]], 16) - src).toString(16).slice(-2)
+                cf = 1
+            }
+        } else if (typeSrc === 'immediate-l') {
+            src = src.split(/[hH]/)[0]
+            src = parseInt(src, 16)
+            let valueDst = parseInt(reg88[dst[0] + 'x'][dst[1]], 16)
+            if (valueDst > src) {
+                reg88[dst[0] + 'x'][dst[1]] = (valueDst - src).toString(16).slice(-2)
+            } else {
+                reg88[dst[0] + 'x'][dst[1]] = (parseInt('1' + reg88[dst[0] + 'x'][dst[1]], 16) - src).toString(16).slice(-2)
+                cf = 1
+            }
+        } else if (typeSrc === 'bin8') {
+            src = parseInt(src, 2)
+            let valueDst = parseInt(reg88[dst[0] + 'x'][dst[1]], 16)
+            if (valueDst > src) {
+                reg88[dst[0] + 'x'][dst[1]] = (valueDst - src).toString(16).slice(-2)
+            } else {
+                reg88[dst[0] + 'x'][dst[1]] = (parseInt('1' + reg88[dst[0] + 'x'][dst[1]], 16) - src).toString(16).slice(-2)
+                cf = 1
+            }
+        } else if (typeSrc.includes('memory')) {
+            src = memories[typeSrc.split(':')[1]]
+            if (src) {
+                src = parseInt(src.slice(-2), 16)
+                let valueDst = parseInt(reg88[dst[0] + 'x'][dst[1]], 16)
+                if (valueDst > src) {
+                    reg88[dst[0] + 'x'][dst[1]] = (valueDst - src).toString(16).slice(-2)
+                } else {
+                    reg88[dst[0] + 'x'][dst[1]] = (parseInt('1' + reg88[dst[0] + 'x'][dst[1]], 16) - src).toString(16).slice(-2)
+                    cf = 1
+                }
+            }
+        } else {
+            console.log(`第${lineNum}行语法错误!`)
+            return 'error'
+        }
+    } else {
+        if (typeSrc === 'reg16') {
+            src = reg16[src]
+            src = parseInt(src, 16)
+            let valueDst = parseInt(memories[typeDst.split(':')[1]], 16)
+            if (valueDst > src) {
+                memories[typeDst.split(':')[1]] = (valueDst - src).toString(16).slice(-4)
+            } else {
+                memories[typeDst.split(':')[1]] = (parseInt('1' + memories[typeDst.split(':')[1]], 16) - src).toString(16).slice(-4)
+                cf = 1
+            }
+        } else if (typeSrc === 'reg88') {
+            src = parseInt(reg88[src].h + reg88[src].l, 16)
+            let valueDst = parseInt(memories[typeDst.split(':')[1]], 16)
+            if (valueDst > src) {
+                memories[typeDst.split(':')[1]] = (valueDst - src).toString(16).slice(-4)
+            } else {
+                memories[typeDst.split(':')[1]] = (parseInt('1' + memories[typeDst.split(':')[1]], 16) - src).toString(16).slice(-4)
+                cf = 1
+            }
+        } else if (typeSrc === 'reg8') {
+            src = reg88[src[0] + 'x'][src[1]]
+            src = parseInt(src, 16)
+            let valueDst = parseInt(memories[typeDst.split(':')[1]], 16)
+            if (valueDst > src) {
+                memories[typeDst.split(':')[1]] = (valueDst - src).toString(16).slice(-4)
+            } else {
+                memories[typeDst.split(':')[1]] = (parseInt('1' + memories[typeDst.split(':')[1]], 16) - src).toString(16).slice(-4)
+                cf = 1
+            }
+        } else if (typeSrc === 'immediate-h' || typeSrc === 'immediate-l') {
+            src = src.split(/[hH]/)[0]
+            src = parseInt(src, 16)
+            let valueDst = parseInt(memories[typeDst.split(':')[1]], 16)
+            if (valueDst > src) {
+                memories[typeDst.split(':')[1]] = (valueDst - src).toString(16).slice(-4)
+            } else {
+                memories[typeDst.split(':')[1]] = (parseInt('1' + memories[typeDst.split(':')[1]], 16) - src).toString(16).slice(-4)
+                cf = 1
+            }
+        } else if (typeSrc === 'bin8' || typeSrc === 'bin16') {
+            src = parseInt(src, 2)
+            let valueDst = parseInt(memories[typeDst.split(':')[1]], 16)
+            if (valueDst > src) {
+                memories[typeDst.split(':')[1]] = (valueDst - src).toString(16).slice(-4)
+            } else {
+                memories[typeDst.split(':')[1]] = (parseInt('1' + memories[typeDst.split(':')[1]], 16) - src).toString(16).slice(-4)
+                cf = 1
+            }
+        } else {
+            console.log(`第${lineNum}行语法错误!`)
+            return 'error'
+        }
+    }
+    console.log(cmdLine.split(/\s+/g))
 }
 
 // 初始化

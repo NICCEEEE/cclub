@@ -38,17 +38,27 @@
       <file leaf-file-name="coreCompile.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/coreCompile.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="389">
-              <caret line="595" column="10" lean-forward="true" selection-start-line="595" selection-start-column="10" selection-end-line="595" selection-end-column="10" />
+            <state relative-caret-position="326">
+              <caret line="1019" lean-forward="true" selection-start-line="1019" selection-end-line="1019" />
               <folding>
                 <element signature="n#!!block;n#checkParam#0" />
                 <element signature="n#!!block;n#checkImmediate#0" />
                 <element signature="n#!!block;n#checkMemory#0" />
                 <element signature="n#!!block;n#checkDst#0" />
+                <element signature="e#2213#2723#0" />
+                <element signature="e#2732#3159#0" />
+                <element signature="e#3168#3446#0" />
                 <element signature="n#!!block;n#checkSrc#0" />
+                <element signature="e#4454#5037#0" />
+                <element signature="e#5046#5473#0" />
+                <element signature="e#5482#5700#0" />
                 <element signature="n#!!block;n#funcMov#0" />
                 <element signature="n#!!block;n#funcPush#0" />
                 <element signature="n#!!block;n#funcPop#0" />
+                <element signature="n#!!block;n#funcXchg#0" />
+                <element signature="n#!!block;n#funcLea#0" />
+                <element signature="n#!!block;n#funcAdd#0" />
+                <element signature="n#!!block;n#funcSub#0" />
                 <element signature="n#!!block;n#reset#0" />
                 <element signature="n#!!block;n#compile#0" />
                 <element signature="n#!!block;n#display#0" />
@@ -338,12 +348,12 @@
       <workItem from="1550471915189" duration="334000" />
       <workItem from="1550732917333" duration="130000" />
       <workItem from="1550828422109" duration="1225000" />
-      <workItem from="1550986977889" duration="102145000" />
+      <workItem from="1550986977889" duration="118026000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="490009000" />
+    <option name="totallyTimeSpent" value="505890000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1200" extended-state="0" />
@@ -719,17 +729,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/coreCompile.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="389">
-          <caret line="595" column="10" lean-forward="true" selection-start-line="595" selection-start-column="10" selection-end-line="595" selection-end-column="10" />
+        <state relative-caret-position="326">
+          <caret line="1019" lean-forward="true" selection-start-line="1019" selection-end-line="1019" />
           <folding>
             <element signature="n#!!block;n#checkParam#0" />
             <element signature="n#!!block;n#checkImmediate#0" />
             <element signature="n#!!block;n#checkMemory#0" />
             <element signature="n#!!block;n#checkDst#0" />
+            <element signature="e#2213#2723#0" />
+            <element signature="e#2732#3159#0" />
+            <element signature="e#3168#3446#0" />
             <element signature="n#!!block;n#checkSrc#0" />
+            <element signature="e#4454#5037#0" />
+            <element signature="e#5046#5473#0" />
+            <element signature="e#5482#5700#0" />
             <element signature="n#!!block;n#funcMov#0" />
             <element signature="n#!!block;n#funcPush#0" />
             <element signature="n#!!block;n#funcPop#0" />
+            <element signature="n#!!block;n#funcXchg#0" />
+            <element signature="n#!!block;n#funcLea#0" />
+            <element signature="n#!!block;n#funcAdd#0" />
+            <element signature="n#!!block;n#funcSub#0" />
             <element signature="n#!!block;n#reset#0" />
             <element signature="n#!!block;n#compile#0" />
             <element signature="n#!!block;n#display#0" />
