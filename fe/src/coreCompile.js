@@ -36,6 +36,8 @@ let instructions = {
     lea: funcLea,
     add: funcAdd,
     sub: funcSub,
+    inc: funcInc,
+    dec: funcDec,
 }
 
 // 检查非法字符
@@ -1018,6 +1020,74 @@ function funcSub(cmdLine, lineNum) {
     console.log(cmdLine.split(/\s+/g))
 }
 
+// INC指令函数
+function funcInc(cmdLine, lineNum) {
+    let src = cmdLine.trim().split(';')[0].slice(3).split(/\s+/)[1]
+    if (src in reg16) {
+        reg16[src] = (parseInt(reg16[src], 16) + 1).toString(16)
+    } else if (src in reg88) {
+        let value = (parseInt(reg88[src].h + reg88[src].l, 16) + 1).toString(16)
+        reg88[src].h = value.slice(0, 2)
+        reg88[src].l = value.slice(2, 4)
+    } else if (checkMemory(src).includes('memory')) {
+        let value = memories[checkMemory(src).split(':')[1]]
+        if (value) {
+            memories[checkMemory(src).split(':')[1]] = (parseInt(memories[checkMemory(src).split(':')[1]], 16) + 1).toString(16)
+        } else {
+            memories[checkMemory(src).split(':')[1]] = '0001'
+        }
+    } else if (src in reg8) {
+        reg88[src[0] + 'x'][src[1]] = (parseInt(reg88[src[0] + 'x'][src[1]], 16) + 1).toString(16)
+    } else {
+        console.log(`第${lineNum}行语法错误`)
+        return 'error'
+    }
+    console.log(cmdLine)
+}
+
+// DEC指令函数
+function funcDec(cmdLine, lineNum) {
+    let src = cmdLine.trim().split(';')[0].slice(3).split(/\s+/)[1]
+    if (src in reg16) {
+        if (parseInt(reg16[src], 16) - 1 <= 0) {
+            reg16[src] = (parseInt('1' + reg16[src], 16) - 1).toString(16).slice(-4)
+        } else {
+            reg16[src] = (parseInt(reg16[src], 16) - 1).toString(16)
+        }
+    } else if (src in reg88) {
+        if (parseInt(reg88[src].h + reg88[src].l, 16) - 1 <= 0) {
+            let value = (parseInt('1' + reg88[src].h + reg88[src].l, 16) - 1).toString(16).slice(-4)
+            reg88[src].h = value.slice(0, 2)
+            reg88[src].l = value.slice(2, 4)
+        } else {
+            let value = (parseInt(reg88[src].h + reg88[src].l, 16) - 1).toString(16).slice(-4)
+            reg88[src].h = value.slice(0, 2)
+            reg88[src].l = value.slice(2, 4)
+        }
+    } else if (checkMemory(src).includes('memory')) {
+        let value = memories[checkMemory(src).split(':')[1]]
+        if (value) {
+            if (parseInt(memories[checkMemory(src).split(':')[1]], 16) - 1 <= 0) {
+                memories[checkMemory(src).split(':')[1]] = (parseInt('1' + memories[checkMemory(src).split(':')[1]], 16) - 1).toString(16).slice(-4)
+            } else {
+                memories[checkMemory(src).split(':')[1]] = (parseInt(memories[checkMemory(src).split(':')[1]], 16) - 1).toString(16).slice(-4)
+            }
+        } else {
+            memories[checkMemory(src).split(':')[1]] = 'ffff'
+        }
+    } else if (src in reg8) {
+        if (parseInt(reg88[src[0] + 'x'][src[1]], 16) - 1 <= 0) {
+            reg88[src[0] + 'x'][src[1]] = (parseInt('1' + reg88[src[0] + 'x'][src[1]], 16) - 1).toString(16).slice(-2)
+        } else {
+            reg88[src[0] + 'x'][src[1]] = (parseInt(reg88[src[0] + 'x'][src[1]], 16) - 1).toString(16)
+        }
+    } else {
+        console.log(`第${lineNum}行语法错误`)
+        return 'error'
+    }
+    console.log(cmdLine)
+}
+
 // 初始化
 function reset() {
     // 通用寄存器
@@ -1042,8 +1112,9 @@ function reset() {
     sreg = {cs: cs, ds: ds, es: es, ss: ss}
     // 内存堆
     memories = {}
-
-// 堆栈数组
+    // 标志位
+    cf = 0
+    // 堆栈数组
     stack = []
 }
 
