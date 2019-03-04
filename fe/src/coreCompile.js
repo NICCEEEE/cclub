@@ -38,6 +38,8 @@ let instructions = {
     sub: funcSub,
     inc: funcInc,
     dec: funcDec,
+    mul: funcMul,
+    div: funcDiv,
 }
 
 // 检查非法字符
@@ -430,7 +432,7 @@ function funcMov(cmdLine, lineNum) {
 
 // PUSH指令函数
 function funcPush(cmdLine, lineNum) {
-    let src = cmdLine.trim().split(';')[0].slice(4).split(/\s+/)[1]
+    let src = cmdLine.trim().split(';')[0].slice(4).split(/\s+/)[1].toLowerCase()
     if (src in reg16) {
         stack.push(reg16[src])
     } else if (src in reg88) {
@@ -454,7 +456,7 @@ function funcPush(cmdLine, lineNum) {
 
 // POP指令函数
 function funcPop(cmdLine, lineNum) {
-    let src = cmdLine.trim().split(';')[0].slice(3).split(/\s+/)[1]
+    let src = cmdLine.trim().split(';')[0].slice(3).split(/\s+/)[1].toLowerCase()
     if (stack.length === 0) {
         console.log('当前堆栈为空！')
         return 'error'
@@ -1022,7 +1024,7 @@ function funcSub(cmdLine, lineNum) {
 
 // INC指令函数
 function funcInc(cmdLine, lineNum) {
-    let src = cmdLine.trim().split(';')[0].slice(3).split(/\s+/)[1]
+    let src = cmdLine.trim().split(';')[0].slice(3).split(/\s+/)[1].toLowerCase()
     if (src in reg16) {
         reg16[src] = (parseInt(reg16[src], 16) + 1).toString(16)
     } else if (src in reg88) {
@@ -1047,7 +1049,7 @@ function funcInc(cmdLine, lineNum) {
 
 // DEC指令函数
 function funcDec(cmdLine, lineNum) {
-    let src = cmdLine.trim().split(';')[0].slice(3).split(/\s+/)[1]
+    let src = cmdLine.trim().split(';')[0].slice(3).split(/\s+/)[1].toLowerCase()
     if (src in reg16) {
         if (parseInt(reg16[src], 16) - 1 <= 0) {
             reg16[src] = (parseInt('1' + reg16[src], 16) - 1).toString(16).slice(-4)
@@ -1086,6 +1088,92 @@ function funcDec(cmdLine, lineNum) {
         return 'error'
     }
     console.log(cmdLine)
+}
+
+// MUL指令函数
+function funcMul(cmdLine, lineNum) {
+    let src = cmdLine.trim().split(';')[0].slice(3).split(/\s+/)[1].toLowerCase()
+    if (src in reg16) {
+        let value = parseInt(reg88.ax.h + reg88.ax.l, 16) * parseInt(reg16[src], 16)
+        if (value < 65535) {
+            reg88.ax.h = value.toString(16).slice(0, 2)
+            reg88.ax.l = value.toString(16).slice(2, 4)
+        } else {
+            let value1 = value.toString(16).slice(-4)
+            let value2 = value.toString(16).slice(-8, -4)
+            value2 = '0'.repeat(4 - value2.length) + value2
+            reg88.ax.h = value1.toString(16).slice(0, 2)
+            reg88.ax.l = value1.toString(16).slice(2, 4)
+            reg88.dx.h = value2.toString(16).slice(0, 2)
+            reg88.dx.l = value2.toString(16).slice(2, 4)
+        }
+    } else if (src in reg88) {
+        let value = parseInt(reg88.ax.h + reg88.ax.l, 16) * parseInt(reg88[src].h + reg88[src].l, 16)
+        if (value < 65535) {
+            reg88.ax.h = value.toString(16).slice(0, 2)
+            reg88.ax.l = value.toString(16).slice(2, 4)
+        } else {
+            let value1 = value.toString(16).slice(-4)
+            let value2 = value.toString(16).slice(-8, -4)
+            value2 = '0'.repeat(4 - value2.length) + value2
+            reg88.ax.h = value1.toString(16).slice(0, 2)
+            reg88.ax.l = value1.toString(16).slice(2, 4)
+            reg88.dx.h = value2.toString(16).slice(0, 2)
+            reg88.dx.l = value2.toString(16).slice(2, 4)
+        }
+    } else if (src in reg8) {
+        let value = (parseInt(reg88.ax.l, 16) * parseInt(reg88[src[0] + 'x'][src[1]], 16)).toString(16)
+        value = '0'.repeat(4 - value.length) + value
+        reg88.ax.h = value.slice(0, 2)
+        reg88.ax.l = value.slice(2, 4)
+    } else {
+        console.log(`第${lineNum}行语法错误`)
+        return 'error'
+    }
+    console.log(cmdLine, src)
+}
+
+// DIV指令函数
+function funcDiv(cmdLine, lineNum) {
+    let src = cmdLine.trim().split(';')[0].slice(3).split(/\s+/)[1].toLowerCase()
+    if (src in reg16) {
+        let value = parseInt(reg88.ax.h + reg88.ax.l, 16) * parseInt(reg16[src], 16)
+        if (value < 65535) {
+            reg88.ax.h = value.toString(16).slice(0, 2)
+            reg88.ax.l = value.toString(16).slice(2, 4)
+        } else {
+            let value1 = value.toString(16).slice(-4)
+            let value2 = value.toString(16).slice(-8, -4)
+            value2 = '0'.repeat(4 - value2.length) + value2
+            reg88.ax.h = value1.toString(16).slice(0, 2)
+            reg88.ax.l = value1.toString(16).slice(2, 4)
+            reg88.dx.h = value2.toString(16).slice(0, 2)
+            reg88.dx.l = value2.toString(16).slice(2, 4)
+        }
+    } else if (src in reg88) {
+        let value = parseInt(reg88.ax.h + reg88.ax.l, 16) * parseInt(reg88[src].h + reg88[src].l, 16)
+        if (value < 65535) {
+            reg88.ax.h = value.toString(16).slice(0, 2)
+            reg88.ax.l = value.toString(16).slice(2, 4)
+        } else {
+            let value1 = value.toString(16).slice(-4)
+            let value2 = value.toString(16).slice(-8, -4)
+            value2 = '0'.repeat(4 - value2.length) + value2
+            reg88.ax.h = value1.toString(16).slice(0, 2)
+            reg88.ax.l = value1.toString(16).slice(2, 4)
+            reg88.dx.h = value2.toString(16).slice(0, 2)
+            reg88.dx.l = value2.toString(16).slice(2, 4)
+        }
+    } else if (src in reg8) {
+        let value = (parseInt(reg88.ax.l, 16) * parseInt(reg88[src[0] + 'x'][src[1]], 16)).toString(16)
+        value = '0'.repeat(4 - value.length) + value
+        reg88.ax.h = value.slice(0, 2)
+        reg88.ax.l = value.slice(2, 4)
+    } else {
+        console.log(`第${lineNum}行语法错误`)
+        return 'error'
+    }
+    console.log(cmdLine, src)
 }
 
 // 初始化

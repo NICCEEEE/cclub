@@ -1,93 +1,126 @@
 import React from 'react'
-import CodeMirror from '@uiw/react-codemirror';
-import 'codemirror/addon/display/autorefresh';
-import 'codemirror/addon/comment/comment';
-import 'codemirror/addon/edit/matchbrackets';
-import 'codemirror/keymap/sublime';
-import 'codemirror/theme/mdn-like.css';
-import {compile, display} from '../coreCompile';
-
-// const code = `;这是自动生成的代码模板
-// STACKS  SEGMENT   STACK       ;堆栈段
-//       DW        128 DUP(?)  ;注意这里只有128个字节
-// STACKS  ENDS
-// DATAS  SEGMENT               ;数据段
-// ;这里是预先定义好的数据
-// DATAS  ENDS
-// CODES  SEGMENT               ;代码段
-//       ASSUME    CS:CODES,DS:DATAS
-// START:MOV       AX, DATAS    ;初始化
-//       MOV       DS, AX
-// ;请在这里添加您的代码
-//       MOV       AX, 4C00H    ;退出程序
-//       INT       21H
-// CODES  ENDS
-//       END       START`
-const code = `MOV AX, 0B800h    　　; 将ax设置为 B800h.
-MOV DS, AX        　　　; 将 AX 值拷贝到 DS.
-MOV CH, 01011111b 　　; 将ch设置为二进制的01011111b
-MOV BX, 15Eh     　　　 ;  将 BX 设置成 15Eh.
-MOV [BX], CX    　　  ; 将 CX 放到 bx 指出的内存单元 B800:015E`
-
+import '../assets/css/Asm.css'
+import {Icon, Breadcrumb, Avatar} from 'antd'
+import {Link} from 'react-router-dom'
 
 class Asm extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {}
-    }
-
-    runCode = () => {
-        let rawCode = this.refs.editor.editor.getValue()
-        compile(rawCode)
-        this.setState({
-            value: display()
-        })
+        this.state = {
+            board: '汇编实验楼'
+        }
     }
 
     render() {
         return (
-            <div style={{margin: '60px auto'}}>
-                {
-                    this.state.value ? <ul>
-                        <li>AX: {this.state.value.AX.toUpperCase()}</li>
-                        <li>BX: {this.state.value.BX.toUpperCase()}</li>
-                        <li>CX: {this.state.value.CX.toUpperCase()}</li>
-                        <li>DX: {this.state.value.DX.toUpperCase()}</li>
-                        <li>SP: {this.state.value.SP.toUpperCase()}</li>
-                        <li>BP: {this.state.value.BP.toUpperCase()}</li>
-                        <li>SI: {this.state.value.SI.toUpperCase()}</li>
-                        <li>DI: {this.state.value.DI.toUpperCase()}</li>
-                        <li>DS: {this.state.value.DS.toUpperCase()}</li>
-                        <li>ES: {this.state.value.ES.toUpperCase()}</li>
-                        <li>SS: {this.state.value.SS.toUpperCase()}</li>
-                        <li>CS: {this.state.value.CS.toUpperCase()}</li>
-                    </ul> : <ul>
-                        <li>AX: 0000</li>
-                        <li>BX: 0000</li>
-                        <li>CX: 0000</li>
-                        <li>DX: 0000</li>
-                        <li>SP: 0000</li>
-                        <li>BP: 0000</li>
-                        <li>SI: 0000</li>
-                        <li>DI: 0000</li>
-                        <li>DS: 0000</li>
-                        <li>ES: 0000</li>
-                        <li>SS: 0000</li>
-                        <li>CS: 0000</li>
-                    </ul>
-                }
-                <CodeMirror
-                    width='500px'
-                    height='500px'
-                    value={code}
-                    options={{
-                        theme: 'mdn-like',
-                        keyMap: 'sublime',
-                        mode: 'plain',
-                    }}
-                    ref='editor'
-                />
-                <button onClick={this.runCode}>运行</button>
+            <div className={'content'}>
+                <Breadcrumb style={{margin: '15px 0px', flexBasis: '100%'}}>
+                    <Breadcrumb.Item>
+                        <Link to={'/'}>
+                            Home
+                        </Link>
+                    </Breadcrumb.Item>
+                    <Breadcrumb.Item>
+                        <Link to={'/'}>
+                            {this.state.board}
+                        </Link>
+                    </Breadcrumb.Item>
+                </Breadcrumb>
+                <div className={'asmBox'}>
+                    <div className={'leftBox'}>
+                        <div className={'courseTitle'}>
+                            <div className={'title'}>《微型计算机系统原理及应用》杨素行等编著配套汇编语言实验</div>
+                            <div>
+                                本课程实验是基于《微型计算机系统原理及应用》（杨素行 编著，清华大学出版社）制作，
+                                可以配合该教材使用，在CCLUB汇编实验楼环境中完成教材中所有实例及实验。
+                            </div>
+                            <button>开始实验</button>
+                        </div>
+                        <div className={'testList'}>
+                            <ul>
+                                <li>实验列表</li>
+                            </ul>
+                            <div className={'testItem'}>
+                                <Icon style={{'fontSize': '20px', 'margin': '0 15px', 'color': 'lightgray'}} type="check-circle" theme="filled" />
+                                <span className={'testIndex'}>实验一</span>
+                                <span className={'testName'}>简单汇编程序调试一</span>
+                                <Link to={'/Question'}><button>开始实验</button></Link>
+                            </div>
+                            <div className={'testItem'}>
+                                <Icon style={{'fontSize': '20px', 'margin': '0 15px', 'color': 'lightgray'}} type="check-circle" theme="filled" />
+                                <span className={'testIndex'}>实验一</span>
+                                <span className={'testName'}>简单汇编程序调试一</span>
+                                <button>开始实验</button>
+                            </div>
+                            <div className={'testItem'}>
+                                <Icon style={{'fontSize': '20px', 'margin': '0 15px', 'color': 'lightgray'}} type="check-circle" theme="filled" />
+                                <span className={'testIndex'}>实验一</span>
+                                <span className={'testName'}>简单汇编程序调试一</span>
+                                <button>开始实验</button>
+                            </div>
+                            <div className={'testItem'}>
+                                <Icon style={{'fontSize': '20px', 'margin': '0 15px', 'color': 'lightgray'}} type="check-circle" theme="filled" />
+                                <span className={'testIndex'}>实验一</span>
+                                <span className={'testName'}>简单汇编程序调试一</span>
+                                <button>开始实验</button>
+                            </div>
+                            <div className={'testItem'}>
+                                <Icon style={{'fontSize': '20px', 'margin': '0 15px', 'color': 'lightgray'}} type="check-circle" theme="filled" />
+                                <span className={'testIndex'}>实验一</span>
+                                <span className={'testName'}>简单汇编程序调试一</span>
+                                <button>开始实验</button>
+                            </div>
+                            <div className={'testItem'}>
+                                <Icon style={{'fontSize': '20px', 'margin': '0 15px', 'color': 'lightgray'}} type="check-circle" theme="filled" />
+                                <span className={'testIndex'}>实验一</span>
+                                <span className={'testName'}>简单汇编程序调试一</span>
+                                <button>开始实验</button>
+                            </div>
+                        </div>
+                    </div>
+                    <aside className={'rightBox'}>
+                        <div className={'book'}>
+                            <ul>
+                                <li>参考书籍</li>
+                            </ul>
+                            <img src={require('../assets/images/bookCover.png')}/>
+                            <div className={'bookDetail'}>
+                                <div id={'bookName'}>
+                                    书名：《微型计算机系统原理及应用》杨素行等编著教材
+                                </div>
+                                <div id={'author'}>
+                                    作者：杨素行等
+                                </div>
+                                <div id={'detail'}>
+                                    简介：《微型计算机系统原理及应用（第3版）/清华大学计算机基础教育课程系列教材》
+                                    主要面向高等院校工科非计算机专业的学生。本次修订注意强化计算机近年来的新
+                                    发展和应用的内容，同时删减比较陈旧的内容和非教学重点的内容，进一步加强实用性和教学适用性。
+                                </div>
+                                <div id={'bookLink'}>
+                                    <a href={'https://item.jd.com/12504148.html'}>购书链接>></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div className={'teacher'}>
+                            <ul>
+                                <li>课程教师</li>
+                            </ul>
+                            <div className={'teacherDetail'}>
+                                <div>
+                                    <Avatar size={64} src={require('../assets/images/github.png')} />
+                                </div>
+                                <div className={'profile'}>
+                                    <div>杨素行</div>
+                                    <div>清华大学</div>
+                                    <div>
+                                        女，教授，1936年生。江苏南京人。1959年毕业于清华大学自动化系。现任清华大学自
+                                        动化系教授。北京电子学会教育委员会委员，电子线路分会理事。
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
             </div>
         )
     }

@@ -12,6 +12,7 @@ import Summary from "./components/Summary"
 import RootPage from "./components/RootPage"
 import NotFound from "./components/NotFound"
 import Asm from "./components/Asm"
+import Question from "./components/Question"
 
 let routes = [
     {
@@ -64,6 +65,10 @@ let routes = [
     {
         path: "/asm",
         component: Asm,
+    },
+    {
+        path: "/Question",
+        component: Question
     },
     {
         path: "/rootRoot",

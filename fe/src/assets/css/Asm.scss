@@ -1,0 +1,187 @@
+.asmBox {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  height: 100%;
+  background-color: #edeff0;
+  .leftBox {
+    flex-basis: 75%;
+    height: 100%;
+    .courseTitle {
+      box-sizing: content-box;
+      padding: 17px;
+      background-color: white;
+      border-color: lightgray;
+      height: 250px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      align-content: space-around;
+      .title {
+        margin-left: 20px;
+        font-size: 25px;
+        font-weight: bolder;
+      }
+      div {
+        margin-left: 20px;
+        font-size: 20px;
+        color: #4c5157;
+      }
+      button {
+        background-color: rgb(10, 190, 145);
+        color: white;
+        padding: 13px 78px;
+        font-size: 18px;
+        font-weight: bolder;
+        border-radius: 4px;
+        margin-left: 20px;
+        outline: none;
+      }
+    }
+    .testList {
+      background-color: white;
+      padding: 25px;
+      margin-top: 10px;
+      ul {
+        list-style: none;
+        padding: 0px;
+        border-bottom: 1px solid #eee;
+        li {
+          float: left;
+          font-size: 18px;
+          font-weight: bolder;
+          border-bottom: 1px solid rgb(0, 204, 153);
+        }
+      }
+      ul::after {
+        content: '';
+        display: block;
+        clear: both;
+      }
+      .testItem {
+        height: 60px;
+        background-color: #f7f7f7;
+        border: 1px solid #eee;
+        line-height: 60px;
+        margin: 15px 0;
+        .testIndex {
+          font-size: 17px;
+          margin: 0 15px;
+          color: gray;
+        }
+        .testName {
+          font-size: 20px;
+          margin: 0 15px;
+          font-weight: bold;
+        }
+        button {
+          background-color: rgb(10, 190, 145);
+          color: white;
+          font-size: 15px;
+          font-weight: bolder;
+          border-radius: 4px;
+          outline: none;
+          width: 100px;
+          height: 40px;
+          line-height: 40px;
+          float: right;
+          margin: 10px 20px;
+        }
+      }
+    }
+    .testList::after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+  }
+  .rightBox {
+    flex-basis: 23%;
+    height: 100%;
+    margin: 15px 0;
+    align-self: flex-start;
+    .book {
+      padding: 20px;
+      text-align: center;
+      background-color: white;
+      img {
+        width: 130px;
+        height: 200px;
+      }
+      ul {
+        list-style: none;
+        padding: 0px;
+        border-bottom: 1px solid #eee;
+        li {
+          float: left;
+          font-size: 18px;
+          font-weight: bolder;
+        }
+      }
+      ul::after {
+        content: '';
+        display: block;
+        clear: both;
+      }
+      .bookDetail {
+        #bookName {
+          font-size: 15px;
+          font-weight: bold;
+          margin: 10px 0;
+          text-align: left;
+        }
+        #author {
+          font-size: 15px;
+          margin: 10px 0;
+          text-align: left;
+          font-weight: bold;
+        }
+        #detail {
+          font-size: 15px;
+          margin: 10px 0;
+          text-align: left;
+          font-weight: bold;
+        }
+        #bookLink {
+          font-size: 15px;
+          margin: 10px 0;
+          text-align: right;
+          font-weight: bold;
+          color: rgb(10, 190, 145);
+        }
+      }
+    }
+    .teacher {
+      padding: 20px;
+      background-color: white;
+      margin-top: 10px;
+      ul {
+        list-style: none;
+        padding: 0px;
+        border-bottom: 1px solid #eee;
+        li {
+          float: left;
+          font-size: 18px;
+          font-weight: bolder;
+        }
+      }
+      ul::after {
+        content: '';
+        display: block;
+        clear: both;
+      }
+      .teacherDetail {
+        display: flex;
+        .profile {
+          margin-left: 15px;
+          div {
+            margin: 5px;
+            font-size: 15px;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+}
