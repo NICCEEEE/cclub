@@ -42,6 +42,14 @@ let instructions = {
     div: funcDiv,
 }
 
+let messages = []
+
+// 运行状态查看器
+function consoleInfo(message) {
+    console.log(message)
+    messages.push(message)
+}
+
 // 检查非法字符
 function checkParam(code) {
     for (let i = 0; i < invalid.length; i++) {
@@ -93,7 +101,7 @@ function checkMemory(memory) {
     } else {
         address = address.toString(16)
     }
-    console.log(memories)
+    consoleInfo(memories)
     return 'memory:' + address
 }
 
@@ -238,19 +246,19 @@ function checkSrc(src, ins) {
 // MOV指令函数
 function funcMov(cmdLine, lineNum) {
     if (!cmdLine.includes(',')) {
-        console.log(`第${lineNum}行语法错误!`)
+        consoleInfo(`第${lineNum}行语法错误!`)
         return 'error'
     }
     // 去两边空格、注释、逗号获得命令主体
     cmdLine = cmdLine.trim().split(';')[0]
     cmdLine = cmdLine.replace(',', ' ')
     if (!(cmdLine.split(/\s+/g).length === 3 || cmdLine.split(/\s+/g).length === 4)) {
-        console.log(`第${lineNum}行语法错误!`, cmdLine)
+        consoleInfo(`第${lineNum}行语法错误!`, cmdLine)
         return 'error'
     }
     // 检查非法字符
     if (checkParam(cmdLine) === 'invalid') {
-        console.log(`第${lineNum}行含有非法字符!`)
+        consoleInfo(`第${lineNum}行含有非法字符!`)
         return 'error'
     }
     // 取目标寄存器或目标内存单元
@@ -259,13 +267,13 @@ function funcMov(cmdLine, lineNum) {
     let typeDst = checkDst(dst, 'mov')
     let typeSrc = checkSrc(src, 'mov')
     if (typeDst === 'error') {
-        console.log(`第${lineNum}行含有非法操作符${dst}!`)
+        consoleInfo(`第${lineNum}行含有非法操作符${dst}!`)
         return 'error'
     } else if (typeSrc === 'error') {
-        console.log(`第${lineNum}行含有非法操作符${src}!`)
+        consoleInfo(`第${lineNum}行含有非法操作符${src}!`)
         return 'error'
     }
-    console.log(typeDst, typeSrc)
+    consoleInfo(typeDst, typeSrc)
     // 执行相应mov操作
     // dst => reg16 reg88 reg8 sreg memory
     // src => reg16 reg88 reg8 sreg memory immediate-l immediate-h bin8 bin16
@@ -294,7 +302,7 @@ function funcMov(cmdLine, lineNum) {
             }
             reg16[dst] = src
         } else {
-            console.log(`第${lineNum}行语法错误!`)
+            consoleInfo(`第${lineNum}行语法错误!`)
             return 'error'
         }
     } else if (typeDst === 'reg88') {
@@ -342,7 +350,7 @@ function funcMov(cmdLine, lineNum) {
             reg88[dst].h = h
             reg88[dst].l = l
         } else {
-            console.log(`第${lineNum}行语法错误!`)
+            consoleInfo(`第${lineNum}行语法错误!`)
             return 'error'
         }
     } else if (typeDst === 'reg8') {
@@ -367,7 +375,7 @@ function funcMov(cmdLine, lineNum) {
             }
             reg88[dst[0] + 'x'][dst[1]] = src
         } else {
-            console.log(`第${lineNum}行语法错误!`)
+            consoleInfo(`第${lineNum}行语法错误!`)
             return 'error'
         }
     } else if (typeDst === 'sreg') {
@@ -395,7 +403,7 @@ function funcMov(cmdLine, lineNum) {
             }
             sreg[dst] = src
         } else {
-            console.log(`第${lineNum}行语法错误!`)
+            consoleInfo(`第${lineNum}行语法错误!`)
             return 'error'
         }
     } else {
@@ -423,11 +431,11 @@ function funcMov(cmdLine, lineNum) {
             src = '0'.repeat(4 - src.length) + src
             memories[typeDst.split(':')[1]] = src
         } else {
-            console.log(`第${lineNum}行语法错误!`)
+            consoleInfo(`第${lineNum}行语法错误!`)
             return 'error'
         }
     }
-    console.log(cmdLine.split(/\s+/g))
+    consoleInfo(cmdLine.split(/\s+/g))
 }
 
 // PUSH指令函数
@@ -447,18 +455,18 @@ function funcPush(cmdLine, lineNum) {
             stack.push('0000')
         }
     } else {
-        console.log(`第${lineNum}行语法错误`)
+        consoleInfo(`第${lineNum}行语法错误`)
         return 'error'
     }
-    console.log(stack)
-    console.log(cmdLine)
+    consoleInfo(stack)
+    consoleInfo(cmdLine)
 }
 
 // POP指令函数
 function funcPop(cmdLine, lineNum) {
     let src = cmdLine.trim().split(';')[0].slice(3).split(/\s+/)[1].toLowerCase()
     if (stack.length === 0) {
-        console.log('当前堆栈为空！')
+        consoleInfo('当前堆栈为空！')
         return 'error'
     }
     if (src in reg16) {
@@ -472,29 +480,29 @@ function funcPop(cmdLine, lineNum) {
     } else if (checkMemory(src).includes('memory')) {
         memories[checkMemory(src).split(':')[1]] = stack.pop()
     } else {
-        console.log(`第${lineNum}行语法错误`)
+        consoleInfo(`第${lineNum}行语法错误`)
         return 'error'
     }
-    console.log(stack)
-    console.log(cmdLine)
+    consoleInfo(stack)
+    consoleInfo(cmdLine)
 }
 
 // XCHG指令函数
 function funcXchg(cmdLine, lineNum) {
     if (!cmdLine.includes(',')) {
-        console.log(`第${lineNum}行语法错误!`)
+        consoleInfo(`第${lineNum}行语法错误!`)
         return 'error'
     }
     // 去两边空格、注释、逗号获得命令主体
     cmdLine = cmdLine.trim().split(';')[0]
     cmdLine = cmdLine.replace(',', ' ')
     if (!(cmdLine.split(/\s+/g).length === 3 || cmdLine.split(/\s+/g).length === 4)) {
-        console.log(`第${lineNum}行语法错误!`, cmdLine)
+        consoleInfo(`第${lineNum}行语法错误!`, cmdLine)
         return 'error'
     }
     // 检查非法字符
     if (checkParam(cmdLine) === 'invalid') {
-        console.log(`第${lineNum}行含有非法字符!`)
+        consoleInfo(`第${lineNum}行含有非法字符!`)
         return 'error'
     }
     let dst = cmdLine.split(/\s+/g)[1].toLowerCase()
@@ -519,7 +527,7 @@ function funcXchg(cmdLine, lineNum) {
             reg88[dst[0] + 'x'][dst[1]] = src
             memories[typeSrc.split(':')[1]] = '0'.repeat(4 - transfer.length) + transfer
         } else {
-            console.log(`第${lineNum}行语法错误,请确认类型是否匹配!`)
+            consoleInfo(`第${lineNum}行语法错误,请确认类型是否匹配!`)
             return 'error'
         }
     } else if (typeDst === 'reg16') {
@@ -543,7 +551,7 @@ function funcXchg(cmdLine, lineNum) {
             reg16[dst] = src
             memories[typeSrc.split(':')[1]] = transfer
         } else {
-            console.log(`第${lineNum}行语法错误,请确认类型是否匹配!`)
+            consoleInfo(`第${lineNum}行语法错误,请确认类型是否匹配!`)
             return 'error'
         }
     } else if (typeDst === 'reg88') {
@@ -570,7 +578,7 @@ function funcXchg(cmdLine, lineNum) {
             reg88[dst].l = src.slice(2, 4)
             memories[typeSrc.split(':')[1]] = transfer
         } else {
-            console.log(`第${lineNum}行语法错误,请确认类型是否匹配!`)
+            consoleInfo(`第${lineNum}行语法错误,请确认类型是否匹配!`)
             return 'error'
         }
     } else {
@@ -595,32 +603,32 @@ function funcXchg(cmdLine, lineNum) {
             memories[typeSrc.split(':')[1]] = transfer
         }
     }
-    console.log(dst, src)
+    consoleInfo(dst, src)
 }
 
 // LEA指令函数
 function funcLea(cmdLine, lineNum) {
     if (!cmdLine.includes(',')) {
-        console.log(`第${lineNum}行语法错误!`)
+        consoleInfo(`第${lineNum}行语法错误!`)
         return 'error'
     }
     // 去两边空格、注释、逗号获得命令主体
     cmdLine = cmdLine.trim().split(';')[0]
     cmdLine = cmdLine.replace(',', ' ')
     if (!(cmdLine.split(/\s+/g).length === 3 || cmdLine.split(/\s+/g).length === 4)) {
-        console.log(`第${lineNum}行语法错误!`, cmdLine)
+        consoleInfo(`第${lineNum}行语法错误!`, cmdLine)
         return 'error'
     }
     // 检查非法字符
     if (checkParam(cmdLine) === 'invalid') {
-        console.log(`第${lineNum}行含有非法字符!`)
+        consoleInfo(`第${lineNum}行含有非法字符!`)
         return 'error'
     }
     let dst = cmdLine.split(/\s+/g)[1].toLowerCase()
     let src = cmdLine.split(/\s+/g)[2].toLowerCase()
     let typeDst = checkDst(dst, 'lea')
     let typeSrc = checkSrc(src, 'lea')
-    console.log(typeDst, typeSrc)
+    consoleInfo(typeDst, typeSrc)
     if (typeDst === 'reg16') {
         if (typeSrc.includes('memory')) {
             let address = typeSrc.split(':')[1]
@@ -629,7 +637,7 @@ function funcLea(cmdLine, lineNum) {
             }
             reg16[dst] = address
         } else {
-            console.log(`第${lineNum}错误！源操作数必须是内存块。`)
+            consoleInfo(`第${lineNum}错误！源操作数必须是内存块。`)
             return 'error'
         }
     } else if (typeDst === 'sreg') {
@@ -640,7 +648,7 @@ function funcLea(cmdLine, lineNum) {
             }
             sreg[dst] = address
         } else {
-            console.log(`第${lineNum}错误！源操作数必须是内存块。`)
+            consoleInfo(`第${lineNum}错误！源操作数必须是内存块。`)
             return 'error'
         }
     } else if (typeDst === 'reg88') {
@@ -652,7 +660,7 @@ function funcLea(cmdLine, lineNum) {
             reg88[dst].h = address.slice(0, 2)
             reg88[dst].l = address.slice(2, 4)
         } else {
-            console.log(`第${lineNum}错误！源操作数必须是内存块。`)
+            consoleInfo(`第${lineNum}错误！源操作数必须是内存块。`)
             return 'error'
         }
     }
@@ -661,19 +669,19 @@ function funcLea(cmdLine, lineNum) {
 // ADD指令函数
 function funcAdd(cmdLine, lineNum) {
     if (!cmdLine.includes(',')) {
-        console.log(`第${lineNum}行语法错误!`)
+        consoleInfo(`第${lineNum}行语法错误!`)
         return 'error'
     }
     // 去两边空格、注释、逗号获得命令主体
     cmdLine = cmdLine.trim().split(';')[0]
     cmdLine = cmdLine.replace(',', ' ')
     if (!(cmdLine.split(/\s+/g).length === 3 || cmdLine.split(/\s+/g).length === 4)) {
-        console.log(`第${lineNum}行语法错误!`, cmdLine)
+        consoleInfo(`第${lineNum}行语法错误!`, cmdLine)
         return 'error'
     }
     // 检查非法字符
     if (checkParam(cmdLine) === 'invalid') {
-        console.log(`第${lineNum}行含有非法字符!`)
+        consoleInfo(`第${lineNum}行含有非法字符!`)
         return 'error'
     }
     let dst = cmdLine.split(/\s+/g)[1].toLowerCase()
@@ -701,7 +709,7 @@ function funcAdd(cmdLine, lineNum) {
                 reg16[dst] = (parseInt(reg16[dst], 16) + parseInt(src, 16)).toString(16).slice(-4)
             }
         } else {
-            console.log(`第${lineNum}行语法错误!`)
+            consoleInfo(`第${lineNum}行语法错误!`)
             return 'error'
         }
     } else if (typeDst === 'reg88') {
@@ -733,7 +741,7 @@ function funcAdd(cmdLine, lineNum) {
                 reg88[dst].l = value.slice(2, 4)
             }
         } else {
-            console.log(`第${lineNum}行语法错误!`)
+            consoleInfo(`第${lineNum}行语法错误!`)
             return 'error'
         }
     } else if (typeDst === 'reg8') {
@@ -750,7 +758,7 @@ function funcAdd(cmdLine, lineNum) {
                 reg88[dst[0] + 'x'][dst[1]] = (parseInt(reg88[dst[0] + 'x'][dst[1]], 16) + parseInt(src, 16)).toString(16).slice(-2)
             }
         } else {
-            console.log(`第${lineNum}行语法错误!`)
+            consoleInfo(`第${lineNum}行语法错误!`)
             return 'error'
         }
     } else {
@@ -768,29 +776,29 @@ function funcAdd(cmdLine, lineNum) {
         } else if (typeSrc === 'bin8' || typeSrc === 'bin16') {
             memories[typeDst.split(':')[1]] = (parseInt(src, 2) + parseInt(memories[typeDst.split(':')[1]], 16)).toString(16).slice(-4)
         } else {
-            console.log(`第${lineNum}行语法错误!`)
+            consoleInfo(`第${lineNum}行语法错误!`)
             return 'error'
         }
     }
-    console.log(cmdLine.split(/\s+/g))
+    consoleInfo(cmdLine.split(/\s+/g))
 }
 
 // SUB指令函数
 function funcSub(cmdLine, lineNum) {
     if (!cmdLine.includes(',')) {
-        console.log(`第${lineNum}行语法错误!`)
+        consoleInfo(`第${lineNum}行语法错误!`)
         return 'error'
     }
     // 去两边空格、注释、逗号获得命令主体
     cmdLine = cmdLine.trim().split(';')[0]
     cmdLine = cmdLine.replace(',', ' ')
     if (!(cmdLine.split(/\s+/g).length === 3 || cmdLine.split(/\s+/g).length === 4)) {
-        console.log(`第${lineNum}行语法错误!`, cmdLine)
+        consoleInfo(`第${lineNum}行语法错误!`, cmdLine)
         return 'error'
     }
     // 检查非法字符
     if (checkParam(cmdLine) === 'invalid') {
-        console.log(`第${lineNum}行含有非法字符!`)
+        consoleInfo(`第${lineNum}行含有非法字符!`)
         return 'error'
     }
     let dst = cmdLine.split(/\s+/g)[1].toLowerCase()
@@ -844,7 +852,7 @@ function funcSub(cmdLine, lineNum) {
                 }
             }
         } else {
-            console.log(`第${lineNum}行语法错误!`)
+            consoleInfo(`第${lineNum}行语法错误!`)
             return 'error'
         }
     } else if (typeDst === 'reg88') {
@@ -917,7 +925,7 @@ function funcSub(cmdLine, lineNum) {
                 }
             }
         } else {
-            console.log(`第${lineNum}行语法错误!`)
+            consoleInfo(`第${lineNum}行语法错误!`)
             return 'error'
         }
     } else if (typeDst === 'reg8') {
@@ -962,7 +970,7 @@ function funcSub(cmdLine, lineNum) {
                 }
             }
         } else {
-            console.log(`第${lineNum}行语法错误!`)
+            consoleInfo(`第${lineNum}行语法错误!`)
             return 'error'
         }
     } else {
@@ -1015,11 +1023,11 @@ function funcSub(cmdLine, lineNum) {
                 cf = 1
             }
         } else {
-            console.log(`第${lineNum}行语法错误!`)
+            consoleInfo(`第${lineNum}行语法错误!`)
             return 'error'
         }
     }
-    console.log(cmdLine.split(/\s+/g))
+    consoleInfo(cmdLine.split(/\s+/g))
 }
 
 // INC指令函数
@@ -1041,10 +1049,10 @@ function funcInc(cmdLine, lineNum) {
     } else if (src in reg8) {
         reg88[src[0] + 'x'][src[1]] = (parseInt(reg88[src[0] + 'x'][src[1]], 16) + 1).toString(16)
     } else {
-        console.log(`第${lineNum}行语法错误`)
+        consoleInfo(`第${lineNum}行语法错误`)
         return 'error'
     }
-    console.log(cmdLine)
+    consoleInfo(cmdLine)
 }
 
 // DEC指令函数
@@ -1084,10 +1092,10 @@ function funcDec(cmdLine, lineNum) {
             reg88[src[0] + 'x'][src[1]] = (parseInt(reg88[src[0] + 'x'][src[1]], 16) - 1).toString(16)
         }
     } else {
-        console.log(`第${lineNum}行语法错误`)
+        consoleInfo(`第${lineNum}行语法错误`)
         return 'error'
     }
-    console.log(cmdLine)
+    consoleInfo(cmdLine)
 }
 
 // MUL指令函数
@@ -1127,10 +1135,10 @@ function funcMul(cmdLine, lineNum) {
         reg88.ax.h = value.slice(0, 2)
         reg88.ax.l = value.slice(2, 4)
     } else {
-        console.log(`第${lineNum}行语法错误`)
+        consoleInfo(`第${lineNum}行语法错误`)
         return 'error'
     }
-    console.log(cmdLine, src)
+    consoleInfo(cmdLine, src)
 }
 
 // DIV指令函数
@@ -1170,10 +1178,10 @@ function funcDiv(cmdLine, lineNum) {
         reg88.ax.h = value.slice(0, 2)
         reg88.ax.l = value.slice(2, 4)
     } else {
-        console.log(`第${lineNum}行语法错误`)
+        consoleInfo(`第${lineNum}行语法错误`)
         return 'error'
     }
-    console.log(cmdLine, src)
+    consoleInfo(cmdLine, src)
 }
 
 // 初始化
@@ -1204,19 +1212,21 @@ function reset() {
     cf = 0
     // 堆栈数组
     stack = []
+    // 状态栈
+    messages = []
 }
 
 // 编译入口
 export function compile(rawCode) {
     reset()
-    console.log('编译执行中，请稍候...')
+    consoleInfo('编译执行中，请稍候...')
     // 获取指令序列
     let codeLines = rawCode.trim().split(/\n+/)
     // 判断每行指令
     for (let i = 0; i < codeLines.length; i++) {
         // 取具体指令
         let ins = codeLines[i].trim().split(/\s+/)[0]
-        console.log(`第${i + 1}行指令为:【${codeLines[i]}】指令头为:【${ins}】`)
+        consoleInfo(`第${i + 1}行指令为:【${codeLines[i]}】指令头为:【${ins}】`)
         if (ins.toLowerCase() in instructions) {
             // 指令存在则执行相应操作
             let res = instructions[ins.toLowerCase()](codeLines[i], i + 1)
@@ -1225,15 +1235,15 @@ export function compile(rawCode) {
             }
         } else if (ins.startsWith(';')) {
             // 纯注释行则无动作
-            console.log(`第${i + 1}行为纯注释行!`)
+            consoleInfo(`第${i + 1}行为纯注释行!`)
         }
         else {
             // 指令不存在则报错
-            console.log(`第${i + 1}行指令错误！`)
+            consoleInfo(`第${i + 1}行指令错误！`)
             break
         }
     }
-    console.log('执行完毕！')
+    consoleInfo('执行完毕！')
 }
 
 // 寄存器显示
@@ -1252,4 +1262,9 @@ export function display() {
         SS: sreg.ss,
         CS: sreg.cs
     }
+}
+
+// 状态显示
+export function stateDis() {
+    return messages
 }

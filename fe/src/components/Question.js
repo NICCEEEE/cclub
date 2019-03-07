@@ -13,13 +13,124 @@ import 'codemirror/theme/mbo.css';
 import 'codemirror/theme/mdn-like.css';
 import 'codemirror/theme/rubyblue.css';
 import 'codemirror/theme/the-matrix.css';
-import {compile, display} from '../coreCompile';
+import {compile, display, stateDis} from '../coreCompile';
 import '../assets/css/Asm.css'
 import {Link} from 'react-router-dom'
 import '../assets/css/Question.css'
 import {Icon, Tabs, Menu, Dropdown, Button} from 'antd'
+import CodeBlock from "../code-block"
+import Markdown from 'react-markdown'
 
-const code = `MOV AX, 0B800h    　　; 将ax设置为 B800h.
+
+/*
+Todo:
+1.创建管理员题库添加组件，用于添加题目描述、解答，构建数据库和api
+2.添加支持的汇编指令的相关文档
+ */
+
+const experiment = `#### 一、实验目的
+
+1. 熟悉8086常用指令
+
+2. 掌握Wdm86集成操作软件的操作指令
+
+
+#### 二、实验内容
+
+ 1. 在右侧虚拟编辑环境下输入下列程序片段，单击**执行代码**按钮并记录结果。
+
+
+----
+ - 程序段1
+
+\`\`\`语种
+MOV  AX, 2000H
+MOV  DS, AX    ;DS=
+MOV  DX, 0100H
+MOV  SI, 0000H
+MOV  BYTE PTR[SI+0100H], 0AAH	;DS: 0100=      DS: 0100=
+MOV  AL, [SI+0100H]    ;AL=
+MOV  BX, 0100H
+MOV  WORD PTR[SI+BX], 1234H
+MOV  AX, [SI+BX+0H]    ;AX=
+INT   20H
+\`\`\`
+----
+
+ - 程序段2
+
+\`\`\`语种
+MOV  AL, 0FFH
+MOV  AH, 00H	;AX=
+XCHG  AL, AH	;AX=
+MOV  AL, 07H
+MOV  AH, 00H
+MOV  BL, 08H
+ADD  AL, BL	;AH=          AL=
+AAA		;AH=          AL=
+MOV  AX, 0FFFFH
+MOV  BX, 8080H
+SUB  AX, BX	;AX=
+MOV  AX, 0FFFFH
+MOV  BX, 0FFFFH
+MUL  BX		;DX=          AX=
+MOV  AX, 1000H
+MOV  DX, 2000H
+MOV  CX, 4000H
+DIV   CX	;DX=          AX=
+INT   20H
+\`\`\``
+
+const result = `----
+    - 程序段1
+
+\`\`\`语种
+MOV  AX, 2000H
+MOV  DS, AX    ;DS=1234H
+MOV  DX, 0100H
+MOV  SI, 0000H
+MOV  BYTE PTR[SI+0100H], 0AAH	;DS: 0100=4321H      DS: 0100=1234H
+MOV  AL, [SI+0100H]    ;AL=1234H
+MOV  BX, 0100H
+MOV  WORD PTR[SI+BX], 1234H
+MOV  AX, [SI+BX+0H]    ;AX=1234H
+INT   20H
+\`\`\`
+----
+
+ - 程序段2
+
+\`\`\`语种
+MOV  AL, 0FFH
+MOV  AH, 00H	;AX=1234H
+XCHG  AL, AH	;AX=1234H
+MOV  AL, 07H
+MOV  AH, 00H
+MOV  BL, 08H
+ADD  AL, BL	;AH=1234H          AL=1234H
+AAA		;AH=1234H          AL=1234H
+MOV  AX, 0FFFFH
+MOV  BX, 8080H
+SUB  AX, BX	;AX=1234H
+MOV  AX, 0FFFFH
+MOV  BX, 0FFFFH
+MUL  BX		;DX=1234H          AX=1234H
+MOV  AX, 1000H
+MOV  DX, 2000H
+MOV  CX, 4000H
+DIV   CX	;DX=1234H          AX=1234H
+INT   20H
+\`\`\``
+const code = `;在这里你不再需要输入诸如
+;	DATA	SEGMENT
+;	DATA	ENDS
+;	CODE	SEGMENT
+;		ASSUME CS: CODE, DS: DATA
+;	CODE	ENDS
+;		END  START
+;等标准头、尾部代码，直接输入START之后的主体代码即可, 如下 ⬇️⬇️⬇️
+
+MOV AX, B800h    　　; 将ax设置为 B800h.
 MOV DS, AX        　　　; 将 AX 值拷贝到 DS.
 MOV CH, 01011111b 　　; 将ch设置为二进制的01011111b
 MOV BX, 15Eh     　　　 ;  将 BX 设置成 15Eh.
@@ -33,9 +144,10 @@ class Question extends React.Component {
         this.state = {
             mask: false,
             font: '14px',
-            theme: 'mdn-like',
+            theme: 'eclipse',
             keymap: 'sublime',
-            tab: 4
+            tab: 4,
+            state: '通过此窗口查看代码执行情况...'
         }
     }
 
@@ -85,7 +197,8 @@ class Question extends React.Component {
         let rawCode = this.refs.editor.editor.getValue()
         compile(rawCode)
         this.setState({
-            value: display()
+            value: display(),
+            state: stateDis()
         })
     }
 
@@ -225,32 +338,18 @@ class Question extends React.Component {
                         <div className="card-container">
                             <Tabs type="card" size={'large'}>
                                 <TabPane tab={<span><Icon type="profile"/>描述</span>} key="1">
-                                    <p>Content of Tab Pane 1</p>
-                                    <p>Content of Tab Pane 1</p>
-                                    <p>Content of Tab Pane 1</p>
-                                    <p>Content of Tab Pane 1</p>
-                                    <p>Content of Tab Pane 1</p>
-                                    <p>Content of Tab Pane 1</p>
-                                    <p>Content of Tab Pane 1</p>
-                                    <p>Content of Tab Pane 1</p>
-                                    <p>Content of Tab Pane 1</p>
-                                    <p>Content of Tab Pane 1</p>
-                                    <p>Content of Tab Pane 1</p>
-                                    <p>Content of Tab Pane 1</p>
-                                    <p>Content of Tab Pane 1</p>
-                                    <p>Content of Tab Pane 1</p>
-                                    <p>Content of Tab Pane 1</p>
-                                    <p>Content of Tab Pane 1</p>
-                                    <p>Content of Tab Pane 1</p>
-                                    <p>Content of Tab Pane 1</p>
-                                    <p>Content of Tab Pane 1</p>
-                                    <p>Content of Tab Pane 1</p>
-                                    <p>Content of Tab Pane 1</p>
+                                    <Markdown className={'experiment'}
+                                              source={experiment}
+                                              skipHtml={true}
+                                              escapeHtml={true}
+                                              renderers={{code: CodeBlock}}/>
                                 </TabPane>
                                 <TabPane tab={<span><Icon type="bulb"/>解答</span>} key="2">
-                                    <p>Content of Tab Pane 3</p>
-                                    <p>Content of Tab Pane 3</p>
-                                    <p>Content of Tab Pane 3</p>
+                                    <Markdown className={'experiment'}
+                                              source={result}
+                                              skipHtml={true}
+                                              escapeHtml={true}
+                                              renderers={{code: CodeBlock}}/>
                                 </TabPane>
                             </Tabs>
                         </div>
@@ -341,7 +440,12 @@ class Question extends React.Component {
                     </div>
                     <div className={'consoleBox'}>
                         <div className={'consoleContent'}>
-                            <p>通过此窗口查看代码执行情况...</p>
+                            {
+                                typeof this.state.state === 'string' ? <p>{this.state.state}</p> :
+                                    this.state.state.map((value, index) => {
+                                        return <p key={index}>{value.toString()}</p>
+                                    })
+                            }
                         </div>
                     </div>
                 </div>
