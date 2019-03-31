@@ -19,7 +19,6 @@ class Asm extends React.Component {
                 this.setState({
                     questions: res.data
                 })
-                console.log(res.data)
             })
     }
 
@@ -33,9 +32,7 @@ class Asm extends React.Component {
                         </Link>
                     </Breadcrumb.Item>
                     <Breadcrumb.Item>
-                        <Link to={'/'}>
-                            {this.state.board}
-                        </Link>
+                        {this.state.board}
                     </Breadcrumb.Item>
                 </Breadcrumb>
                 <div className={'asmBox'}>
@@ -46,7 +43,11 @@ class Asm extends React.Component {
                                 本课程实验是基于《微型计算机系统原理及应用》（杨素行 编著，清华大学出版社）制作，
                                 可以配合该教材使用，在CCLUB汇编实验楼环境中完成教材中所有实例及实验。
                             </div>
-                            <button>查看指令面板</button>
+                            <button>
+                                <Link to={'/command'}>
+                                    查看指令面板
+                                </Link>
+                            </button>
                         </div>
                         <div className={'testList'}>
                             <ul>
@@ -59,7 +60,8 @@ class Asm extends React.Component {
                                               type="check-circle" theme="filled"/>
                                         <span className={'testIndex'}>实验-{index + 1}</span>
                                         <span className={'testName'}>{value.title}</span>
-                                        <Link to={{pathname: `/Question`, state: {detail: this.state.questions[index]}}}>
+                                        <Link
+                                            to={{pathname: `/Question`, state: {detail: this.state.questions[index]}}}>
                                             <button>开始实验</button>
                                         </Link>
                                     </div>

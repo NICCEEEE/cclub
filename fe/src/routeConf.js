@@ -13,6 +13,7 @@ import RootPage from "./components/RootPage"
 import NotFound from "./components/NotFound"
 import Asm from "./components/Asm"
 import Question from "./components/Question"
+import Command from "./components/Command"
 
 let routes = [
     {
@@ -73,6 +74,10 @@ let routes = [
     {
         path: "/rootRoot",
         component: RootPage
+    },
+    {
+        path: "/command",
+        component: Command
     },
     {
         path: "*",

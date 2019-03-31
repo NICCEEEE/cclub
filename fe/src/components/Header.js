@@ -101,7 +101,7 @@ class Header extends React.Component {
                             </span>
                         </Tooltip>
                     </Popconfirm>
-                    <Badge count={this.state.notifyCount}>
+                    <Badge count={this.state.notifyCount} overflowCount={10}>
                         <Tooltip plactment={'bottom'}
                                  title={this.state.notifyCount === 0 ? '通知' : `您有${this.state.notifyCount}条通知未读`}>
                             <div>
@@ -111,7 +111,7 @@ class Header extends React.Component {
                             </div>
                         </Tooltip>
                     </Badge>
-                    <Badge count={this.state.msgCount}>
+                    <Badge count={this.state.msgCount} overflowCount={10}>
                         <Tooltip plactment={'bottom'}
                                  title={this.state.msgCount === 0 ? '私信' : `您有${this.state.msgCount}条通知未读`}>
                             <div>
@@ -140,14 +140,20 @@ class Header extends React.Component {
                             <img src={require('../assets/images/logo.svg')} alt={'logo'}/>
                         </Link>
                         {/*<div className={'buttonGroup'}>*/}
-                            <Search
-                                placeholder="Search"
-                                onSearch={value => this.search(value)}
-                                enterButton
-                            />
-                            <Link style={{fontSize: '25px', margin: '10px'}} to={{pathname: '/asm', state: {uid: this.state.uid}}}>
-                                <Icon title={'汇编实验楼'} type="experiment" />
-                            </Link>
+                        <Search
+                            placeholder="Search"
+                            onSearch={value => this.search(value)}
+                            enterButton
+                        />
+
+                        <Link style={{fontSize: '25px', margin: '10px'}}
+                              to={{pathname: '/asm', state: {uid: this.state.uid}}}>
+                            <Icon title={'汇编实验楼'} type="experiment"/>
+                        </Link>
+                        <Link style={{fontSize: '25px', margin: '10px'}}
+                              to={{pathname: '/command', state: {uid: this.state.uid}}}>
+                            <Icon type="hdd" title={'查看汇编指令面板'} theme="twoTone"/>
+                        </Link>
                         {/*</div>*/}
                     </div>
                     {head}

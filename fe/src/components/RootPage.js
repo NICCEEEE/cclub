@@ -5,10 +5,7 @@ import axios from 'axios'
 import {error, success} from "../utilities"
 import '../assets/css/RootPage.css'
 import qs from 'qs'
-import CodeBlock from "../code-block"
-import Markdown from 'react-markdown'
 
-const TabPane = Tabs.TabPane;
 const {TextArea} = Input;
 const confirm = Modal.confirm;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
@@ -146,7 +143,7 @@ class RootPage extends React.Component {
                     <Button onClick={this.delTopic} type="primary">删除帖子</Button>
                     <input ref={'delTopicId'} placeholder={'输入帖子ID'}/>
                 </div>
-                <form>
+                <form className={'createTest'}>
                     <h2>创建新的实验题目</h2>
                     <div className={'form-acm-title'}>
                         <label htmlFor={'acm-title'}>实验标题：</label>

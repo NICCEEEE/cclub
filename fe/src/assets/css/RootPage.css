@@ -1,4 +1,4 @@
-form {
+form.createTest {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -8,13 +8,13 @@ form {
   border-radius: 50px;
   padding: 15px;
   margin: 0 auto; }
-  form div {
+  form.createTest div {
     width: 90%;
     padding: 5px 0;
     font-weight: bold; }
-  form button + button {
+  form.createTest button + button {
     margin-left: 10px; }
-  form textarea {
+  form.createTest textarea {
     font-size: 17px !important; }
 
 /*# sourceMappingURL=RootPage.css.map */
