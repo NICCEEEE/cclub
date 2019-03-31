@@ -16,10 +16,11 @@ from models.topic import Topic
 from models.notify import Notify
 from models.comment import Comment
 from models.message import Message
+from models.acm import Acm
 from models import codeword
 from random import randint
 import time
-import pandas as pd
+import json
 
 main = Blueprint('api', __name__)
 
@@ -426,3 +427,28 @@ def del_topic(tid):
     return 'true'
 
 
+@main.route('/create-test', methods=['POST'])
+def create_test():
+    username = session.get('username', None)
+    if username is None:
+        return 'false'
+    user = User.find_one({}, username=username)
+    if user is None:
+        return 'false'
+    if user.get('authority') != 777:
+        return 'false'
+    test_info = request.form
+    res = Acm.create_test(test_info)
+    if res is True:
+        return 'success'
+    return 'false'
+
+
+@main.route('/questions', methods=['GET'])
+def get_test():
+    username = session.get('username', None)
+    if username is not None:
+        User.update_one({'username': username}, {'active_time': time.time()})
+    result = Acm.get_all({})
+    print(result)
+    return jsonify(result)

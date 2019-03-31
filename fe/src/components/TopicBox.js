@@ -44,7 +44,7 @@ class TopicBox extends React.Component {
             })
         }
     };
-    switchBox = (checked) => {
+    switchBox = () => {
         this.setState({
             preview: !this.state.preview
         })

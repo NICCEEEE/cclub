@@ -2,13 +2,25 @@ import React from 'react'
 import '../assets/css/Asm.css'
 import {Icon, Breadcrumb, Avatar} from 'antd'
 import {Link} from 'react-router-dom'
+import axios from 'axios'
 
 class Asm extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            board: '汇编实验楼'
+            board: '汇编实验楼',
+            questions: null
         }
+    }
+
+    componentWillMount() {
+        axios.get('http://0.0.0.0:2000/api/questions')
+            .then((res) => {
+                this.setState({
+                    questions: res.data
+                })
+                console.log(res.data)
+            })
     }
 
     render() {
@@ -34,48 +46,25 @@ class Asm extends React.Component {
                                 本课程实验是基于《微型计算机系统原理及应用》（杨素行 编著，清华大学出版社）制作，
                                 可以配合该教材使用，在CCLUB汇编实验楼环境中完成教材中所有实例及实验。
                             </div>
-                            <button>开始实验</button>
+                            <button>查看指令面板</button>
                         </div>
                         <div className={'testList'}>
                             <ul>
                                 <li>实验列表</li>
                             </ul>
-                            <div className={'testItem'}>
-                                <Icon style={{'fontSize': '20px', 'margin': '0 15px', 'color': 'lightgray'}} type="check-circle" theme="filled" />
-                                <span className={'testIndex'}>实验一</span>
-                                <span className={'testName'}>简单汇编程序调试一</span>
-                                <Link to={'/Question'}><button>开始实验</button></Link>
-                            </div>
-                            <div className={'testItem'}>
-                                <Icon style={{'fontSize': '20px', 'margin': '0 15px', 'color': 'lightgray'}} type="check-circle" theme="filled" />
-                                <span className={'testIndex'}>实验一</span>
-                                <span className={'testName'}>简单汇编程序调试一</span>
-                                <button>开始实验</button>
-                            </div>
-                            <div className={'testItem'}>
-                                <Icon style={{'fontSize': '20px', 'margin': '0 15px', 'color': 'lightgray'}} type="check-circle" theme="filled" />
-                                <span className={'testIndex'}>实验一</span>
-                                <span className={'testName'}>简单汇编程序调试一</span>
-                                <button>开始实验</button>
-                            </div>
-                            <div className={'testItem'}>
-                                <Icon style={{'fontSize': '20px', 'margin': '0 15px', 'color': 'lightgray'}} type="check-circle" theme="filled" />
-                                <span className={'testIndex'}>实验一</span>
-                                <span className={'testName'}>简单汇编程序调试一</span>
-                                <button>开始实验</button>
-                            </div>
-                            <div className={'testItem'}>
-                                <Icon style={{'fontSize': '20px', 'margin': '0 15px', 'color': 'lightgray'}} type="check-circle" theme="filled" />
-                                <span className={'testIndex'}>实验一</span>
-                                <span className={'testName'}>简单汇编程序调试一</span>
-                                <button>开始实验</button>
-                            </div>
-                            <div className={'testItem'}>
-                                <Icon style={{'fontSize': '20px', 'margin': '0 15px', 'color': 'lightgray'}} type="check-circle" theme="filled" />
-                                <span className={'testIndex'}>实验一</span>
-                                <span className={'testName'}>简单汇编程序调试一</span>
-                                <button>开始实验</button>
-                            </div>
+                            {
+                                this.state.questions === null ? null : this.state.questions.map((value, index) => {
+                                    return <div key={index} className={'testItem'}>
+                                        <Icon style={{'fontSize': '20px', 'margin': '0 15px', 'color': 'lightgray'}}
+                                              type="check-circle" theme="filled"/>
+                                        <span className={'testIndex'}>实验-{index + 1}</span>
+                                        <span className={'testName'}>{value.title}</span>
+                                        <Link to={{pathname: `/Question`, state: {detail: this.state.questions[index]}}}>
+                                            <button>开始实验</button>
+                                        </Link>
+                                    </div>
+                                })
+                            }
                         </div>
                     </div>
                     <aside className={'rightBox'}>
@@ -107,7 +96,7 @@ class Asm extends React.Component {
                             </ul>
                             <div className={'teacherDetail'}>
                                 <div>
-                                    <Avatar size={64} src={require('../assets/images/github.png')} />
+                                    <Avatar size={64} src={require('../assets/images/github.png')}/>
                                 </div>
                                 <div className={'profile'}>
                                     <div>杨素行</div>

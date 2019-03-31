@@ -90,7 +90,9 @@ class Login extends React.Component {
 
     render() {
         if (this.state.loginSuccess === 'success') {
-            document.location.reload()
+            setTimeout(() => {
+                document.location.reload()
+            }, 100)
             return (<Redirect to={{pathname: '/', state: {loginStatus: this.state.loginSuccess}}}/>);
         }
         return (

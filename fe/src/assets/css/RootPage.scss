@@ -1,0 +1,23 @@
+form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  font-size: 17px;
+  width: 800px;
+  background: mintcream;
+  border-radius: 50px;
+  padding: 15px;
+  margin: 0 auto;
+  div {
+    width: 90%;
+    padding: 5px 0;
+    font-weight: bold;
+  }
+  button + button {
+    margin-left: 10px;
+  }
+  textarea {
+    font-size: 17px !important;
+  }
+}
+

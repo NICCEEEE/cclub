@@ -17,16 +17,22 @@ import {compile, display, stateDis} from '../coreCompile';
 import '../assets/css/Asm.css'
 import {Link} from 'react-router-dom'
 import '../assets/css/Question.css'
-import {Icon, Tabs, Menu, Dropdown, Button} from 'antd'
+import {Icon, Tabs, Menu, Dropdown, Button, notification} from 'antd'
 import CodeBlock from "../code-block"
 import Markdown from 'react-markdown'
-
 
 /*
 Todo:
 1.创建管理员题库添加组件，用于添加题目描述、解答，构建数据库和api
 2.添加支持的汇编指令的相关文档
  */
+
+const openNotificationWithIcon = (type) => {
+    notification[type]({
+        message: '复制成功 🎉',
+        description: '链接链接复制成功，快去分享吧：）',
+    });
+};
 
 const experiment = `#### 一、实验目的
 
@@ -147,8 +153,21 @@ class Question extends React.Component {
             theme: 'eclipse',
             keymap: 'sublime',
             tab: 4,
-            state: '通过此窗口查看代码执行情况...'
+            state: '通过此窗口查看代码执行情况...',
+            name: ''
         }
+    }
+    copyUrl = (e) => {
+        let Url = document.location.href
+        let oInput = document.createElement('input');
+        oInput.value = Url;
+        document.body.appendChild(oInput);
+        oInput.select(); // 选择对象
+        document.execCommand("Copy"); // 执行浏览器复制命令
+        oInput.remove()
+        e.target.style.color = 'brown'
+        e.target.style.transition = 'all .5s'
+        openNotificationWithIcon('success')
     }
 
     handleMenuClick(type, event) {
@@ -200,9 +219,14 @@ class Question extends React.Component {
             value: display(),
             state: stateDis()
         })
+        let logBox = document.querySelector('.consoleContent')
+        setTimeout(() => {
+            logBox.scrollTo(0, logBox.scrollHeight)
+        }, 0)
     }
 
     render() {
+        const detail = this.props.location.state.detail
         const fontMenu = (
             <Menu name={'font'} style={{width: '200px'}} onClick={this.handleMenuClick.bind(this, 'font')}>
                 <Menu.Item style={{fontSize: '20px', margin: '3px 0'}} key="1">14px</Menu.Item>
@@ -312,12 +336,12 @@ class Question extends React.Component {
             <div className={'questionContainer'}>
                 <div className={'questionHeader'}>
                     <div className={'leftBox'}>
-                        <div className={'title'}>1.简单汇编调试</div>
+                        <div className={'title'}>{detail.aid - 59999 + '.' + detail.title}</div>
                         <ul className={'titleDetail'}>
                             <li className={'difficulty'}>
-                                难度&nbsp;<span>&nbsp;简单</span>
+                                难度&nbsp;<span>&nbsp;{detail.difficult}</span>
                             </li>
-                            <li className={'share'}>
+                            <li onClick={this.copyUrl} className={'share'} style={{cursor: 'pointer'}}>
                                 <Icon style={{fontSize: '16px'}} type="export"/>&nbsp;分享
                             </li>
                         </ul>
@@ -325,28 +349,28 @@ class Question extends React.Component {
                     <div className={'rightBox'}>
                         <div className={'acceptCount'}>
                             <div className={'countType'}>通过次数</div>
-                            <div className={'count'}>257205</div>
+                            <div className={'count'}>{detail.acceptCount}</div>
                         </div>
                         <div className={'submitCount'}>
                             <div className={'countType'}>提交次数</div>
-                            <div className={'count'}>574280</div>
+                            <div className={'count'}>{detail.submitCount}</div>
                         </div>
                     </div>
                 </div>
                 <div className={'questionBody'}>
                     <div className={'questionDetail'}>
                         <div className="card-container">
-                            <Tabs type="card" size={'large'}>
+                            <Tabs type="card">
                                 <TabPane tab={<span><Icon type="profile"/>描述</span>} key="1">
                                     <Markdown className={'experiment'}
-                                              source={experiment}
+                                              source={detail.content}
                                               skipHtml={true}
                                               escapeHtml={true}
                                               renderers={{code: CodeBlock}}/>
                                 </TabPane>
                                 <TabPane tab={<span><Icon type="bulb"/>解答</span>} key="2">
                                     <Markdown className={'experiment'}
-                                              source={result}
+                                              source={detail.answer}
                                               skipHtml={true}
                                               escapeHtml={true}
                                               renderers={{code: CodeBlock}}/>
