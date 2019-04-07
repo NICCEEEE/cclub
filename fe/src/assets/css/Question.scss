@@ -275,6 +275,9 @@
       }
     }
   }
+  div.CodeMirror-linebackground[class~=active] {
+    background: limegreen;
+  }
 }
 
 

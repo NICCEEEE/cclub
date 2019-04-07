@@ -13,19 +13,13 @@ import 'codemirror/theme/mbo.css';
 import 'codemirror/theme/mdn-like.css';
 import 'codemirror/theme/rubyblue.css';
 import 'codemirror/theme/the-matrix.css';
-import {compile, display, stateDis} from '../coreCompile';
+import {compile, display, stateDis, stepCompile, step} from '../coreCompile';
 import '../assets/css/Asm.css'
 import {Link} from 'react-router-dom'
 import '../assets/css/Question.css'
 import {Icon, Tabs, Menu, Dropdown, Button, notification} from 'antd'
 import CodeBlock from "../code-block"
 import Markdown from 'react-markdown'
-
-/*
-Todo:
-1.创建管理员题库添加组件，用于添加题目描述、解答，构建数据库和api
-2.添加支持的汇编指令的相关文档
- */
 
 const openNotificationWithIcon = (type) => {
     notification[type]({
@@ -34,99 +28,6 @@ const openNotificationWithIcon = (type) => {
     });
 };
 
-const experiment = `#### 一、实验目的
-
-1. 熟悉8086常用指令
-
-2. 掌握Wdm86集成操作软件的操作指令
-
-
-#### 二、实验内容
-
- 1. 在右侧虚拟编辑环境下输入下列程序片段，单击**执行代码**按钮并记录结果。
-
-
-----
- - 程序段1
-
-\`\`\`语种
-MOV  AX, 2000H
-MOV  DS, AX    ;DS=
-MOV  DX, 0100H
-MOV  SI, 0000H
-MOV  BYTE PTR[SI+0100H], 0AAH	;DS: 0100=      DS: 0100=
-MOV  AL, [SI+0100H]    ;AL=
-MOV  BX, 0100H
-MOV  WORD PTR[SI+BX], 1234H
-MOV  AX, [SI+BX+0H]    ;AX=
-INT   20H
-\`\`\`
-----
-
- - 程序段2
-
-\`\`\`语种
-MOV  AL, 0FFH
-MOV  AH, 00H	;AX=
-XCHG  AL, AH	;AX=
-MOV  AL, 07H
-MOV  AH, 00H
-MOV  BL, 08H
-ADD  AL, BL	;AH=          AL=
-AAA		;AH=          AL=
-MOV  AX, 0FFFFH
-MOV  BX, 8080H
-SUB  AX, BX	;AX=
-MOV  AX, 0FFFFH
-MOV  BX, 0FFFFH
-MUL  BX		;DX=          AX=
-MOV  AX, 1000H
-MOV  DX, 2000H
-MOV  CX, 4000H
-DIV   CX	;DX=          AX=
-INT   20H
-\`\`\``
-
-const result = `----
-    - 程序段1
-
-\`\`\`语种
-MOV  AX, 2000H
-MOV  DS, AX    ;DS=1234H
-MOV  DX, 0100H
-MOV  SI, 0000H
-MOV  BYTE PTR[SI+0100H], 0AAH	;DS: 0100=4321H      DS: 0100=1234H
-MOV  AL, [SI+0100H]    ;AL=1234H
-MOV  BX, 0100H
-MOV  WORD PTR[SI+BX], 1234H
-MOV  AX, [SI+BX+0H]    ;AX=1234H
-INT   20H
-\`\`\`
-----
-
- - 程序段2
-
-\`\`\`语种
-MOV  AL, 0FFH
-MOV  AH, 00H	;AX=1234H
-XCHG  AL, AH	;AX=1234H
-MOV  AL, 07H
-MOV  AH, 00H
-MOV  BL, 08H
-ADD  AL, BL	;AH=1234H          AL=1234H
-AAA		;AH=1234H          AL=1234H
-MOV  AX, 0FFFFH
-MOV  BX, 8080H
-SUB  AX, BX	;AX=1234H
-MOV  AX, 0FFFFH
-MOV  BX, 0FFFFH
-MUL  BX		;DX=1234H          AX=1234H
-MOV  AX, 1000H
-MOV  DX, 2000H
-MOV  CX, 4000H
-DIV   CX	;DX=1234H          AX=1234H
-INT   20H
-\`\`\``
 const code = `;在这里你不再需要输入诸如
 ;	DATA	SEGMENT
 ;	DATA	ENDS
@@ -154,9 +55,11 @@ class Question extends React.Component {
             keymap: 'sublime',
             tab: 4,
             state: '通过此窗口查看代码执行情况...',
-            name: ''
+            name: '',
+            isStep: false
         }
     }
+
     copyUrl = (e) => {
         let Url = document.location.href
         let oInput = document.createElement('input');
@@ -223,6 +126,60 @@ class Question extends React.Component {
         setTimeout(() => {
             logBox.scrollTo(0, logBox.scrollHeight)
         }, 0)
+    }
+
+    stepMode = () => {
+        let rawCode = this.refs.editor.editor.getValue()
+        stepCompile(rawCode)
+        this.setState({
+            state: '开始单步调试，单击『单步执行』按钮继续...',
+            isStep: true
+        })
+    }
+
+    cancelStep = () => {
+        if (this.state.line != null) {
+            this.refs.editor.editor.removeLineClass(this.state.line - 1, 'background', 'active')
+        }
+        this.setState({
+            isStep: false,
+            line: null,
+            state: '通过此窗口查看代码执行情况...\n'
+        })
+    }
+
+    runStep = () => {
+        let res = step()
+        let logBox = document.querySelector('.consoleContent')
+        if (res === 'error') {
+            this.setState({
+                value: display(),
+                state: stateDis(),
+                isStep: false
+            })
+        } else if (res === 'over') {
+            this.refs.editor.editor.removeLineClass(this.state.line - 1, 'background', 'active')
+            this.setState({
+                state: '执行完毕！',
+                isStep: false,
+                line: null
+            })
+        } else {
+            this.setState({
+                value: display(),
+                state: stateDis(),
+                line: res
+            })
+            setTimeout(() => {
+                logBox.scrollTo(0, logBox.scrollHeight)
+            }, 0)
+            if (--res === 0) {
+                this.refs.editor.editor.addLineClass(res, 'background', 'active')
+            } else {
+                this.refs.editor.editor.removeLineClass(res - 1, 'background', 'active')
+                this.refs.editor.editor.addLineClass(res, 'background', 'active')
+            }
+        }
     }
 
     render() {
@@ -332,6 +289,10 @@ class Question extends React.Component {
                 </div>
             </div>
         </div>
+        const cancleButton = <Button onClick={this.cancelStep} size={'large'} disabled={!this.state.isStep}
+                                     type="danger">取消单步</Button>
+        const stepButton = <Button onClick={this.runStep} size={'large'} disabled={!this.state.isStep}
+                                   type="primary">单步执行</Button>
         return (
             <div className={'questionContainer'}>
                 <div className={'questionHeader'}>
@@ -458,8 +419,15 @@ class Question extends React.Component {
                     <div className={'consoleHead'}>
                         <span className={'headLeft'}><Icon type={'tool'}/> 控制台</span>
                         <div>
-                            <Button onClick={this.runCode} size={'large'} type="primary" ghost>执行代码</Button>
-                            <Button size={'large'} type="danger" ghost>提交代码</Button>
+                            {
+                                this.state.isStep ? stepButton : null
+                            }
+                            {
+                                this.state.isStep ? cancleButton : null
+                            }
+                            <Button disabled={this.state.isStep} onClick={this.stepMode} size={'large'} type="danger"
+                                    ghost>单步调试</Button>
+                            <Button disabled={this.state.isStep} onClick={this.runCode} size={'large'} type="primary" ghost>执行代码</Button>
                         </div>
                     </div>
                     <div className={'consoleBox'}>

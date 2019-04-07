@@ -4,10 +4,11 @@
   padding: 30px;
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
   align-content: space-between; }
   .typeBox .ant-card {
-    flex-basis: 33%;
+    flex-basis: 32%;
     margin: 2px;
     font-size: 15px;
     font-weight: bold; }

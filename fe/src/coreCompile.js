@@ -43,6 +43,7 @@ let instructions = {
 }
 
 let messages = []
+let codeQueue = []
 
 // 运行状态查看器
 function consoleInfo(message) {
@@ -1244,6 +1245,45 @@ export function compile(rawCode) {
         }
     }
     consoleInfo('执行完毕！')
+}
+
+export function stepCompile(rawCode) {
+    reset()
+    codeQueue = []
+    consoleInfo('编译执行中，请稍候...')
+    // 获取指令序列
+    let codeLines = rawCode.trim().split(/\n+/)
+    codeLines.forEach((value, index) => {
+        codeQueue.push({
+            code: value,
+            line: ++index
+        })
+    })
+}
+
+export function step() {
+    let codeLines = codeQueue.shift()
+    if (codeLines == null) {
+        return 'over'
+    }
+    let ins = codeLines.code.trim().split(/\s+/)[0]
+    consoleInfo(`第${codeLines.line}行指令为:【${codeLines.code}】指令头为:【${ins}】`)
+    if (ins.toLowerCase() in instructions) {
+        // 指令存在则执行相应操作
+        let res = instructions[ins.toLowerCase()](codeLines.code, codeLines.line)
+        if (res === 'error') {
+            return 'error'
+        }
+    } else if (ins.startsWith(';')) {
+        // 纯注释行则无动作
+        consoleInfo(`第${codeLines.line}行为纯注释行!`)
+    }
+    else {
+        // 指令不存在则报错
+        consoleInfo(`第${codeLines.line}行指令错误！`)
+        return 'error'
+    }
+    return codeLines.line
 }
 
 // 寄存器显示

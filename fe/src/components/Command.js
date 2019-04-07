@@ -24,7 +24,7 @@ class Command extends React.Component {
                 </Breadcrumb>
                 <div className={'typeBox'}>
                     <p name="type">数据传送指令：</p>
-                    <Card title="MOV指令" bordered={true}>
+                    <Card  title="MOV指令" bordered={true}>
                         <p>描述：赋值指令</p>
                         <p>格式：MOV DST,SRC</p>
                         <p>功能：将SRC赋值给DST</p>

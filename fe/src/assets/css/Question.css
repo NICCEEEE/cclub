@@ -214,5 +214,7 @@
           justify-content: space-between;
           align-items: center;
           font-size: 20px; }
+  .questionContainer div.CodeMirror-linebackground[class~=active] {
+    background: limegreen; }
 
 /*# sourceMappingURL=Question.css.map */
