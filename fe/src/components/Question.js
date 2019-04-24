@@ -36,7 +36,6 @@ const code = `;在这里你不再需要输入诸如
 ;	CODE	ENDS
 ;		END  START
 ;等标准头、尾部代码，直接输入START之后的主体代码即可, 如下 ⬇️⬇️⬇️
-
 MOV AX, B800h    　　; 将ax设置为 B800h.
 MOV DS, AX        　　　; 将 AX 值拷贝到 DS.
 MOV CH, 01011111b 　　; 将ch设置为二进制的01011111b
@@ -51,12 +50,13 @@ class Question extends React.Component {
         this.state = {
             mask: false,
             font: '14px',
-            theme: 'eclipse',
+            theme: 'mdn-like',
             keymap: 'sublime',
             tab: 4,
             state: '通过此窗口查看代码执行情况...',
             name: '',
-            isStep: false
+            isStep: false,
+            scope: 'register'
         }
     }
 
@@ -179,6 +179,14 @@ class Question extends React.Component {
                 this.refs.editor.editor.removeLineClass(res - 1, 'background', 'active')
                 this.refs.editor.editor.addLineClass(res, 'background', 'active')
             }
+        }
+    }
+
+    handleScope = (e) => {
+        if (this.state.scope !== e.target.getAttribute('name')) {
+            this.setState({
+                scope: e.target.getAttribute('name')
+            })
         }
     }
 
@@ -359,10 +367,14 @@ class Question extends React.Component {
                     </div>
                     <div className={'registerScope'}>
                         <div className={'scopeHead'}>
-                            <span><Icon style={{fontSize: '15px'}} type="bars"/> 寄存器查看器</span>
+                            <span name="register" onClick={this.handleScope}><Icon style={{fontSize: '15px'}}
+                                                                                   type="bars"/> 寄存器查看器</span>
+                            <span name="memory" onClick={this.handleScope}><Icon style={{fontSize: '15px'}}
+                                                                                 type="bars"/> 内存信息</span>
+                            <span name="stack" onClick={this.handleScope}><Icon style={{fontSize: '15px'}} type="bars"/> 堆栈信息</span>
                         </div>
                         <div className={'scope'}>
-                            <ul>
+                            <ul className={this.state.scope !== 'register' ? 'hide' : null}>
                                 <li>
                                     <div>AX</div>
                                     <div>{this.state.value ? this.state.value.AX.toUpperCase() : '0000'}</div>
@@ -412,6 +424,33 @@ class Question extends React.Component {
                                     <div>{this.state.value ? this.state.value.CS.toUpperCase() : '0000'}</div>
                                 </li>
                             </ul>
+                            <ul className={this.state.scope !== 'memory' ? 'hide' : null}>
+                                <li>
+                                    <div>内存地址</div>
+                                    <div>内存数据</div>
+                                </li>
+                                {
+                                    this.state.value && Object.keys(this.state.value.memories).map((item, index) => {
+                                        return <li key={index}>
+                                            <div>{item.toUpperCase()}</div>
+                                            <div>{this.state.value.memories[item].toUpperCase()}</div>
+                                        </li>
+                                    })
+                                }
+                            </ul>
+                            <ul className={this.state.scope !== 'stack' ? 'hide' : null}>
+                                <li>
+                                    <div>堆栈数据</div>
+                                    <div>栈顶到栈底</div>
+                                </li>
+                                {
+                                    this.state.value && this.state.value.stack.map((item, index) => {
+                                        return <li key={index}>
+                                            <div style={{flexBasis: '100%'}}>{item.toUpperCase()}</div>
+                                        </li>
+                                    })
+                                }
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -427,7 +466,8 @@ class Question extends React.Component {
                             }
                             <Button disabled={this.state.isStep} onClick={this.stepMode} size={'large'} type="danger"
                                     ghost>单步调试</Button>
-                            <Button disabled={this.state.isStep} onClick={this.runCode} size={'large'} type="primary" ghost>执行代码</Button>
+                            <Button disabled={this.state.isStep} onClick={this.runCode} size={'large'} type="primary"
+                                    ghost>执行代码</Button>
                         </div>
                     </div>
                     <div className={'consoleBox'}>

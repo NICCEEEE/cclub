@@ -46,8 +46,8 @@ let messages = []
 let codeQueue = []
 
 // 运行状态查看器
-function consoleInfo(message) {
-    console.log(message)
+function consoleInfo(...message) {
+    console.log(...message)
     messages.push(message)
 }
 
@@ -411,26 +411,26 @@ function funcMov(cmdLine, lineNum) {
         if (typeSrc === 'reg16') {
             src = reg16[src]
             src = '0'.repeat(4 - src.length) + src
-            memories[typeDst.split(':')[1]] = src
+            memories[typeDst.split(':')[1].padStart(4, '0')] = src
         } else if (typeSrc === 'reg88') {
-            memories[typeDst.split(':')[1]] = reg88[src].h + reg88[src].l
+            memories[typeDst.split(':')[1].padStart(4, '0')] = reg88[src].h + reg88[src].l
         } else if (typeSrc === 'sreg') {
             src = sreg[src]
             src = '0'.repeat(4 - src.length) + src
-            memories[typeDst.split(':')[1]] = src
+            memories[typeDst.split(':')[1].padStart(4, '0')] = src
         } else if (typeSrc === 'reg8') {
             src = reg88[src[0] + 'x'][src[1]]
             src = '0'.repeat(4 - src.length) + src
-            memories[typeDst.split(':')[1]] = src
+            memories[typeDst.split(':')[1].padStart(4, '0')] = src
         } else if (typeSrc === 'immediate-h' || typeSrc === 'immediate-l') {
             src = src.split(/[hH]/)[0]
             src = parseInt(src, 16).toString(16)
             src = '0'.repeat(4 - src.length) + src
-            memories[typeDst.split(':')[1]] = src
+            memories[typeDst.split(':')[1].padStart(4, '0')] = src
         } else if (typeSrc === 'bin8' || typeSrc === 'bin16') {
             src = parseInt(src, 2).toString(16)
             src = '0'.repeat(4 - src.length) + src
-            memories[typeDst.split(':')[1]] = src
+            memories[typeDst.split(':')[1].padStart(4, '0')] = src
         } else {
             consoleInfo(`第${lineNum}行语法错误!`)
             return 'error'
@@ -459,7 +459,7 @@ function funcPush(cmdLine, lineNum) {
         consoleInfo(`第${lineNum}行语法错误`)
         return 'error'
     }
-    consoleInfo(stack)
+    consoleInfo('stack =>', stack)
     consoleInfo(cmdLine)
 }
 
@@ -473,7 +473,9 @@ function funcPop(cmdLine, lineNum) {
     if (src in reg16) {
         reg16[src] = stack.pop()
     } else if (src in reg88) {
+        console.log('stack', stack)
         let value = stack.pop()
+        console.log('stack', value)
         reg88[src].h = value.slice(0, 2)
         reg88[src].l = value.slice(2, 4)
     } else if (src in sreg) {
@@ -1244,6 +1246,7 @@ export function compile(rawCode) {
             break
         }
     }
+    consoleInfo('memoery------', memories)
     consoleInfo('执行完毕！')
 }
 
@@ -1300,7 +1303,9 @@ export function display() {
         DS: sreg.ds,
         ES: sreg.es,
         SS: sreg.ss,
-        CS: sreg.cs
+        CS: sreg.cs,
+        memories,
+        stack: [...stack].reverse()
     }
 }
 

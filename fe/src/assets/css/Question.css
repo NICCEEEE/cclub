@@ -73,22 +73,29 @@
         border-right: 1px solid lightgray; }
         .questionContainer .questionBody .codeBox .codeMirror .CodeMirror {
           border-radius: 0px; }
-    .questionContainer .questionBody .registerScope {
-      flex-grow: 1; }
-      .questionContainer .questionBody .registerScope .scopeHead {
-        height: 39px;
-        line-height: 39px;
-        font-size: 15px; }
-        .questionContainer .questionBody .registerScope .scopeHead span {
-          border: 1px solid lightgray;
-          border-radius: 5px;
-          padding: 6px;
-          color: gray; }
-        .questionContainer .questionBody .registerScope .scopeHead span:hover {
-          border: 1px solid black;
-          transition: .5s; }
+    .questionContainer .questionBody .registerScope .scopeHead {
+      height: 39px;
+      line-height: 39px;
+      font-size: 15px; }
+      .questionContainer .questionBody .registerScope .scopeHead span {
+        border: 1px solid lightgray;
+        border-radius: 5px;
+        padding: 6px;
+        margin-right: 10px;
+        color: gray;
+        cursor: pointer; }
+      .questionContainer .questionBody .registerScope .scopeHead span:hover {
+        border: 1px solid black;
+        transition: .5s; }
+    .questionContainer .questionBody .registerScope .scope {
+      position: relative; }
       .questionContainer .questionBody .registerScope .scope ul {
+        position: absolute;
+        top: 0;
+        left: 0;
         list-style: none;
+        display: block;
+        width: 100%;
         padding: 0px;
         border-top: 1px solid lightgray;
         border-bottom: 1px solid lightgray; }
@@ -108,6 +115,8 @@
               border-left: 1px solid lightgray; }
           .questionContainer .questionBody .registerScope .scope ul li + li {
             border-top: 1px solid lightgray; }
+      .questionContainer .questionBody .registerScope .scope ul.hide {
+        opacity: 0; }
   .questionContainer .consoleContainer {
     height: 300px;
     background-color: #fafafa; }

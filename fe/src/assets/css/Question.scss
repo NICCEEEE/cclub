@@ -95,7 +95,6 @@
       }
     }
     .registerScope {
-      flex-grow: 1;
       .scopeHead {
         height: 39px;
         line-height: 39px;
@@ -104,7 +103,9 @@
           border: 1px solid lightgray;
           border-radius: 5px;
           padding: 6px;
+          margin-right: 10px;
           color: gray;
+          cursor: pointer;
         }
         span:hover {
           border: 1px solid black;
@@ -112,8 +113,14 @@
         }
       }
       .scope {
+        position: relative;
         ul {
+          position: absolute;
+          top: 0;
+          left: 0;
           list-style: none;
+          display: block;
+          width: 100%;
           padding: 0px;
           border-top: 1px solid lightgray;
           border-bottom: 1px solid lightgray;
@@ -139,6 +146,9 @@
               border-top: 1px solid lightgray;
             }
           }
+        }
+        ul.hide {
+          opacity: 0;
         }
       }
     }
